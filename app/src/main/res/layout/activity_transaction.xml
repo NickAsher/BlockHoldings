@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:orientation="vertical"
+            android:paddingBottom="112dp"
+            android:layout_gravity="top"
+            >
+
+            <TextView
+                android:id="@+id/activityTransaction_TextView_CoinName"
+                style="@style/TextView_HeadingBig"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Ethereum" />
+
+            <RadioGroup
+                android:id="@+id/activityTransaction_RadioGroup_BuySell"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/activityTransaction_RadioButton_Buy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Buy" />
+
+
+                <RadioButton
+                    android:id="@+id/activityTransaction_RadioButton_Sell"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sell" />
+
+            </RadioGroup>
+
+
+            <RelativeLayout
+                android:id="@+id/activityTransaction_RelLt_ExchangeContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+
+                >
+
+                <TextView
+                    android:id="@+id/activityTransaction_TextView_DescriptionExchange"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Exchange"
+                    android:textColor="#777"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/activityTransaction_TextView_ValueExchange"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/activityTransaction_TextView_DescriptionExchange"
+                    android:text="Global Average"
+                    android:textColor="#222"
+                    android:textSize="18sp"
+
+                    />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@id/activityTransaction_TextView_DescriptionExchange"
+                    android:gravity="bottom|right"
+                    android:paddingRight="16dp"
+                    android:text=">"
+                    android:textSize="18sp" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="8dp"
+                android:background="#666" />
+
+
+            <RelativeLayout
+                android:id="@+id/activityTransaction_RelLt_ContainerTradingPair"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+
+                >
+
+                <TextView
+                    android:id="@+id/activityTransaction_TextView_DescriptionTradingPair"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Trading Pair"
+                    android:textColor="#777"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/activityTransaction_TextView_ValueTradingPair"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/activityTransaction_TextView_DescriptionTradingPair"
+                    android:hint="N/A"
+                    android:text=""
+                    android:textColor="#222"
+                    android:textSize="18sp"
+
+                    />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@id/activityTransaction_TextView_DescriptionTradingPair"
+                    android:gravity="bottom|right"
+                    android:paddingRight="16dp"
+                    android:text=">"
+                    android:textSize="18sp" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="8dp"
+                android:background="#666" />
+
+            <RelativeLayout
+                android:id="@+id/activityTransaction_RelLt_ContainerSingleCoinPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+
+                >
+
+                <TextView
+                    android:id="@+id/activityTransaction_TextView_DescriptionSingleCoinPrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Price in USD"
+                    android:textColor="#777"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/activityTransaction_EditText_ValueSingleCoinPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/activityTransaction_TextView_DescriptionSingleCoinPrice"
+                    android:hint="N/A"
+                    android:text=""
+                    android:textColor="#222"
+                    android:textSize="18sp"
+
+
+                    />
+
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="8dp"
+                android:background="#666" />
+
+            <RelativeLayout
+                android:id="@+id/activityTransaction_RelLt_ContainerQuantity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+
+                >
+
+                <TextView
+                    android:id="@+id/activityTransaction_TextView_DescriptionQuantity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Quantity"
+                    android:textColor="#777"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/activityTransaction_EditText_ValueQuantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/activityTransaction_TextView_DescriptionQuantity"
+                    android:hint="0"
+                    android:text=""
+                    android:textColor="#222"
+                    android:textSize="18sp"
+
+
+                    />
+
+
+            </RelativeLayout>
+
+            <!--<View-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="1dp"-->
+                <!--android:layout_marginBottom="16dp"-->
+                <!--android:background="#666" />-->
+
+
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:text="Total Cost" />-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/activityTransaction_TextView_TotalCost"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:text="$0"-->
+                <!--android:textSize="20sp"-->
+                <!--android:textStyle="bold"-->
+                <!--android:layout_marginBottom="16dp"-->
+                <!--/>-->
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="8dp"
+                android:background="#666" />
+
+
+            <RelativeLayout
+                android:id="@+id/activityTransaction_RelLt_ContainerTradingDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+
+                >
+
+                <TextView
+                    android:id="@+id/activityTransaction_TextView_DescriptionDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Date"
+                    android:textColor="#777"
+                    android:textSize="14sp" />
+
+                <View
+                    android:layout_width="3dp"
+                    android:layout_height="match_parent"
+                    android:background="#666"
+                    android:layout_toRightOf="@id/activityTransaction_TextView_DescriptionDate"
+                    android:layout_toLeftOf="@id/activityTransaction_TextView_ValueDate"
+                    android:layout_centerHorizontal="true"
+
+                    />
+
+                <TextView
+                    android:id="@+id/activityTransaction_TextView_ValueDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/activityTransaction_TextView_DescriptionDate"
+                    android:text="Janury 15 2019"
+                    android:textColor="#222"
+                    android:textSize="18sp"
+
+                    />
+
+
+                <TextView
+                    android:id="@+id/activityTransaction_TextView_ValueTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@id/activityTransaction_TextView_DescriptionDate"
+                    android:gravity="bottom|right"
+                    android:paddingRight="16dp"
+                    android:text="7:00 pm"
+                    android:textColor="#222"
+                    android:textSize="18sp" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="8dp"
+                android:background="#666" />
+
+
+            <RelativeLayout
+                android:id="@+id/activityTransaction_RelLt_ContainerNote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+
+                >
+
+                <TextView
+                    android:id="@+id/activityTransaction_TextView_DescriptionNote"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Note"
+                    android:textColor="#777"
+                    android:textSize="14sp" />
+
+
+
+                <EditText
+                    android:id="@+id/activityTransaction_EditText_ValueNote"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/activityTransaction_TextView_DescriptionNote"
+                    android:hint="Enter a note Here"
+                    android:textColor="#222"
+                    android:textSize="18sp"
+
+                    />
+
+
+
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="8dp"
+                android:background="#666" />
+
+
+
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+    <RelativeLayout
+        android:id="@+id/activityTransaction_relLt_BtnAddTransaction"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom"
+        android:background="#00ee00"
+        android:focusableInTouchMode="true"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Transaction"
+            android:layout_centerInParent="true"
+            />
+
+
+    </RelativeLayout>
+</FrameLayout>

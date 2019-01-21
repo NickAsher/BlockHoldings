@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="application_TextView_ToolbarLogoText_TextSize">24sp</dimen>
+    <dimen name="activitySplash_TextView_MainLogoText_TextSize">100sp</dimen>
+
+
+
+    <!-- ******************* Activity  Home ****************** -->
+    <dimen name="activity_TextView_HeadingBig_TextSize">36sp</dimen>
+
+    <dimen name="activityHome_FrameLayout_MainContent_Height">200dp</dimen>
+    <dimen name="activityHome_TextView_MainContent_TextSize">56sp</dimen>
+
+
+    <dimen name="activityHome_FrameLayout_Footer_Height">200dp</dimen>
+    <dimen name="activityHome_ImageButton_BottomButtons_Height">40dp</dimen>
+
+
+
+
+
+    <!-- ******************* Dialog Call ****************** -->
+    <dimen name="dialogCall_RelativeLt_ContactBackdrop_Height">96dp</dimen>
+    <dimen name="dialogCall_TextView_ContactHeading_TextSize">24sp</dimen>
+
+    <dimen name="dialogCall_TextView_MarginBetweenCards_MarginBottom">32dp</dimen>
+
+    <dimen name="dialogCall_TextView_ContactnPhoneHeading_TextSize">16sp</dimen>
+    <dimen name="dialogCall_LinearLayout_DialnSaveButton_Height">40dp</dimen>
+    <dimen name="dialogCall_TextView_DialnSaveButton_TextSize">12sp</dimen>
+
+
+
+
+    <!-- ******************* Activity  Content ****************** -->
+
+
+    <dimen name="activityContent_TextView_ParallaxHeading_TextSize">56sp</dimen>
+    <dimen name="activityContent_TextView_ParallaxHeading_MarginLeft">16dp</dimen>
+
+    <dimen name="activityContent_TextView_ParallaxRead_TextSize">20sp</dimen>
+    <dimen name="activityContent_TextView_ParallaxRead_PaddingLeft">16dp</dimen>
+    <dimen name="activityContent_TextView_ParallaxRead_PaddingRight">16dp</dimen>
+    <dimen name="activityContent_TextView_ParallaxRead_PaddingTop">8sp</dimen>
+    <dimen name="activityContent_TextView_ParallaxRead_PaddinBottom">8sp</dimen>
+    <dimen name="activityContent_TextView_ParallaxRead_MarginBottom">16dp</dimen>
+
+    <dimen name="activityContent_ImageButton_ParallaxDownArrow_MarginBottom">32dp</dimen>
+
+
+    <dimen name="activityContent_TextView_HeadingDescription_TextSize">18sp</dimen>
+    <dimen name="activityContent_TextView_HeadingDescription_MarginLeft">16dp</dimen>
+    <dimen name="activityContent_TextView_HeadingDescription_MarginTop">8dp</dimen>
+    <dimen name="activityContent_TextView_HeadingDescription_MarginBotton">8dp</dimen>
+
+    <dimen name="activityContent_TextView_MainContent_TextSize">16sp</dimen>
+    <dimen name="activityContent_TextView_MainContent_MarginLeft">24dp</dimen>
+    <dimen name="activityContent_TextView_MainContent_MarginRight">24dp</dimen>
+    <dimen name="activityContent_TextView_MainContent_MarginBotton">32dp</dimen>
+
+    <dimen name="activityContent_ViewPager_SlideShow_Height">200dp</dimen>
+    <dimen name="activityContent_ViewPager_SlideShow_MarginLeft">24dp</dimen>
+    <dimen name="activityContent_ViewPager_SlideShow_MarginRight">24dp</dimen>
+    <dimen name="activityContent_ViewPager_SlideShow_MarginBotton">8dp</dimen>
+
+    <dimen name="activityContent_TextView_ViewPagerCounter_TextSize">10sp</dimen>
+    <dimen name="activityContent_TextView_ViewPagerCounter_MarginBotton">16dp</dimen>
+
+    <dimen name="activityContent_TextView_BottomContactBtn_TextSize">14sp</dimen>
+    <dimen name="activityContent_TextView_BottomContactBtn_Width">200dp</dimen>
+    <dimen name="activityContent_TextView_BottomContactBtn_Height">56dp</dimen>
+    <dimen name="activityContent_TextView_BottomFirstBtn_MarginBottom">24dp</dimen>
+    <dimen name="activityContent_TextView_BottomContactBtn_MarginBottom">40dp</dimen>
+
+
+
+
+
+
+
+
+
+
+</resources>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.Activity_Tester">
+
+    <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Coin Id"
+    android:layout_marginBottom="4dp"
+    />
+    <EditText
+        android:id="@+id/activityTester_TextView_EditText1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Coin Symbol"
+        android:layout_marginBottom="4dp"
+        />
+    <EditText
+        android:id="@+id/activityTester_TextView_EditText2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Coin Name"
+        android:layout_marginBottom="4dp"
+        />
+    <EditText
+        android:id="@+id/activityTester_TextView_EditText3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Coin ImageLogoLink"
+        android:layout_marginBottom="4dp"
+        />
+    <EditText
+        android:id="@+id/activityTester_TextView_EditText4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Coin TwitterLink"
+        android:layout_marginBottom="4dp"
+        />
+    <EditText
+        android:id="@+id/activityTester_TextView_EditText5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        />
+
+    <Button
+        android:id="@+id/activityTester_Button_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save This to db"
+        />
+
+
+    <Button
+        android:id="@+id/activityTester_Button_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Refresh Data"
+        />
+
+
+    <TextView
+        android:id="@+id/activityTester_TextView_Display"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/singleRowPortfolio_RelativeLayout_Main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="8dp"
+    android:paddingTop="8dp"
+    >
+
+    <ImageView
+        android:id="@+id/singleRowPortfolio_ImageView_CoinImage"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/logo_btc"
+
+        />
+
+    <TextView
+        android:id="@+id/singleRowPortfolio_TextView_CoinName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bitcoin"
+        android:textColor="#333"
+        android:textSize="16sp"
+        android:maxLines="2"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="4dp"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/singleRowPortfolio_ImageView_CoinImage"
+        android:layout_alignParentTop="true"
+        />
+
+
+    <TextView
+        android:id="@+id/singleRowPortfolio_TextView_SingleCoinPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$3572.21"
+        android:textColor="#000"
+        android:textSize="14sp"
+        android:maxLines="4"
+        android:layout_marginBottom="8dp"
+        android:layout_centerHorizontal="true"
+        />
+
+    <TextView
+        android:id="@+id/singleRowPortfolio_TextView_24hChange"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$167.24"
+        android:textColor="#999"
+        android:textSize="14sp"
+        android:maxLines="4"
+        android:layout_marginBottom="8dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/singleRowPortfolio_TextView_SingleCoinPrice"
+
+        />
+
+
+    <TextView
+        android:id="@+id/singleRowPortfolio_TextView_TotalCost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$357200"
+        android:textColor="#333"
+        android:textSize="16sp"
+        android:maxLines="2"
+        android:layout_marginBottom="4dp"
+        android:layout_marginRight="16dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        />
+
+
+    <TextView
+        android:id="@+id/singleRowPortfolio_TextView_NoOfCoins"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="100 BTC"
+        android:textColor="#999"
+        android:textSize="14sp"
+        android:maxLines="4"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/singleRowPortfolio_TextView_TotalCost"
+        android:layout_alignBaseline="@+id/singleRowPortfolio_TextView_24hChange"
+
+        />
+
+
+
+</RelativeLayout>

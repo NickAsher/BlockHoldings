@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/singleRow_RelativeLayout_Main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="16dp"
+    android:paddingTop="8dp"
+    >
+
+    <ImageView
+        android:id="@+id/singleRow_ImageView_ArticleImage"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginRight="24dp"
+        />
+
+    <TextView
+        android:id="@+id/singleRow_TextView_ArticleTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#333"
+        android:textSize="16sp"
+        android:maxLines="2"
+        android:layout_marginBottom="4dp"
+        android:layout_toRightOf="@id/singleRow_ImageView_ArticleImage"
+        android:layout_alignParentTop="true"
+        />
+
+
+    <TextView
+        android:id="@+id/singleRow_TextView_ArticleDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#999"
+        android:textSize="14sp"
+        android:maxLines="4"
+        android:layout_marginBottom="8dp"
+        android:layout_toRightOf="@id/singleRow_ImageView_ArticleImage"
+        android:layout_below="@id/singleRow_TextView_ArticleTitle"
+
+        />
+
+    <TextView
+        android:id="@+id/singleRow_TextView_ArticleDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2 Hours ago"
+        android:textColor="#bbb"
+        android:textSize="10sp"
+        android:layout_marginLeft="68dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/singleRow_TextView_ArticleDescription"
+        android:layout_toRightOf="@id/singleRow_TextView_ArticleOrigin"
+        />
+
+    <TextView
+        android:id="@+id/singleRow_TextView_ArticleOrigin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Coin Telegraph"
+        android:textColor="#bbb"
+        android:textSize="10sp"
+        android:layout_marginRight="24dp"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/singleRow_TextView_ArticleDescription"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#777"
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/singleRow_TextView_ArticleOrigin"
+        android:layout_alignParentBottom="true"
+        />
+
+</RelativeLayout>

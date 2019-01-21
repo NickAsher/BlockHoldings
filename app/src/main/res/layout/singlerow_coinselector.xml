@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/singleRowCoinSelector_RelativeLayout_Main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="16dp"
+    android:paddingTop="8dp"
+    >
+
+    <ImageView
+        android:id="@+id/singleRowCoinSelector_ImageView_CoinImage"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginRight="24dp"
+        />
+
+    <TextView
+        android:id="@+id/singleRowCoinSelector_TextView_CoinName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#333"
+        android:textSize="16sp"
+        android:maxLines="2"
+        android:layout_marginBottom="4dp"
+        android:layout_toRightOf="@id/singleRowCoinSelector_ImageView_CoinImage"
+        android:layout_alignParentTop="true"
+        />
+
+
+    <TextView
+        android:id="@+id/singleRowCoinSelector_TextView_CoinSymbol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#999"
+        android:textSize="14sp"
+        android:maxLines="4"
+        android:layout_marginBottom="8dp"
+        android:layout_toRightOf="@id/singleRowCoinSelector_ImageView_CoinImage"
+        android:layout_below="@id/singleRowCoinSelector_TextView_CoinName"
+
+        />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#777"
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/singleRowCoinSelector_TextView_CoinSymbol"
+        android:layout_alignParentBottom="true"
+        />
+
+</RelativeLayout>
