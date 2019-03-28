@@ -3,9 +3,10 @@ package apps.yoo.com.blockholdings.ui.transaction;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -37,10 +38,16 @@ import java.util.List;
 
 import apps.yoo.com.blockholdings.R;
 import apps.yoo.com.blockholdings.data.AppDatabase;
-import apps.yoo.com.blockholdings.data.Objects.Object_Coin;
-import apps.yoo.com.blockholdings.data.Objects.Object_Transaction;
+import apps.yoo.com.blockholdings.data.AppExecutors;
+import apps.yoo.com.blockholdings.data.MySharedPreferences;
+import apps.yoo.com.blockholdings.data.models.Object_Coin;
+import apps.yoo.com.blockholdings.data.models.Object_Currency;
+import apps.yoo.com.blockholdings.data.models.Object_Exchange;
+import apps.yoo.com.blockholdings.data.models.Object_Transaction;
+import apps.yoo.com.blockholdings.data.models.Object_TransactionFullData;
 import apps.yoo.com.blockholdings.util.Constants;
 import apps.yoo.com.blockholdings.util.Message;
+import apps.yoo.com.blockholdings.util.MyGlobals;
 import apps.yoo.com.blockholdings.util.MyListener;
 
 public class Activity_Transaction extends AppCompatActivity implements MyListener.DialogFragments_to_ActivityTransaction{
@@ -57,11 +64,12 @@ public class Activity_Transaction extends AppCompatActivity implements MyListene
     RadioGroup radioGroup_BuySell ;
 
     Object_Coin currentCoin ;
+    Object_TransactionFullData currentTransactionFD ;
+    Object_Currency currencyObj ;
     Table<String, String, String> table_ExchangePairData ;
-    String coinNewImageLink ;
     String p24hChange ;
     String singleCoinPrice_Currency ;
-
+    String tradingPairPrice_Currency ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,8 +81,12 @@ public class Activity_Transaction extends AppCompatActivity implements MyListene
 
         if(getIntent().getStringExtra("coin") != null){
             try {
+                Helper_Transaction.makeNewTransactionFullDataObejct();
                 currentCoin = new Object_Coin(new JSONObject(getIntent().getStringExtra("coin")));
-
+                currentTransactionFD = new Object_TransactionFullData() ;
+                currentTransactionFD.setCoinObject(currentCoin);
+                currentTransactionFD.getTransactionObject().setCoinId(currentCoin.getId());
+                currencyObj = MySharedPreferences.getCurrencyObj_FromPreference(getApplicationContext()) ;
                 getCoinData();
                 getReferences() ;
                 setBasicUi();
@@ -137,9 +149,9 @@ public class Activity_Transaction extends AppCompatActivity implements MyListene
     }
 
     private void processData(String respoonse) {
-        Helper_Transaction.getTransactionObject().setCoinId(currentCoin.getId());
-        Helper_Transaction.getTransactionObject().setCoinName(currentCoin.getName());
-        Helper_Transaction.getTransactionObject().setCoinSymbol(currentCoin.getSymbol());
+
+//        Helper_Transaction.getTransactionObject().setCoinName(currentCoin.getName());
+//        Helper_Transaction.getTransactionObject().setCoinSymbol(currentCoin.getSymbol());
 
         try{
             JSONObject responseObject = new JSONObject(respoonse) ;
@@ -147,18 +159,19 @@ public class Activity_Transaction extends AppCompatActivity implements MyListene
                 return;
             }
 
-            table_ExchangePairData = Helper_Transaction.getExchangePairDataForCoin(responseObject.getJSONArray("tickers"), currentCoin.getName()) ;
-            coinNewImageLink = responseObject.getJSONObject("image").getString("small") ;
+
+
+            table_ExchangePairData = Helper_Transaction.getExchangePairDataForCoin(responseObject.getJSONArray("tickers")) ;
             p24hChange = responseObject.getJSONObject("market_data").getString("price_change_percentage_24h") ;
-            singleCoinPrice_Currency = responseObject.getJSONObject("market_data").getJSONObject("current_price").getString("usd") ;
+            singleCoinPrice_Currency = responseObject.getJSONObject("market_data").getJSONObject("current_price").getString(MySharedPreferences.getCurrencyObj_FromPreference(getApplicationContext()).getCurrencyId()) ;
 
 
         }catch (JSONException e){
-
+            Log.e(LOG_TAG, e.toString());
         }
 
+//        Object_Coin.insertIntoDB_FullCoinData(respoonse, context, db, MySharedPreferences.getCurrencyObj_FromPreference(context.getApplicationContext()).getCurrencyId(),  currentCoin);
 
-        db.coinDao().updateCoin_Image(currentCoin.getId(), coinNewImageLink);
 
         setupExhangeDialogFragment();
 
@@ -175,7 +188,7 @@ public class Activity_Transaction extends AppCompatActivity implements MyListene
     private void setupBuySellRadioButton(){
         radioButton_Buy.setChecked(true);
         radioButton_Sell.setChecked(false);
-        Helper_Transaction.getTransactionObject().setType(Object_Transaction.TYPE_BUY);
+        Helper_Transaction.getTransactionFullDataObject().getTransactionObject().setType(Object_Transaction.TYPE_BUY);
     }
 
 
@@ -196,15 +209,31 @@ public class Activity_Transaction extends AppCompatActivity implements MyListene
 
 
     @Override
-    public void onSelectingExchange() {
+    public void onSelectingExchange(Object_Exchange exchangeObj) {
         // TODO make the trading pair text view unselectable before and make it selectable now
         Message.display(context, "Exchange is now selected ");
-        Log.e(LOG_TAG, Helper_Transaction.getTransactionObject().toString()) ;
-
-        textView_Exchange.setText(Helper_Transaction.getTransactionObject().getExchangeName());
+        currentTransactionFD.setExchangeObject(exchangeObj);
+        currentTransactionFD.getTransactionObject().setExchangeId(exchangeObj.getId());
+        textView_Exchange.setText(exchangeObj.getName());
         setupTradingPairDialogFragment() ;
     }
 
+    @Override
+    public void onSelectingExchange_GlobalAverage(String price) {
+        Message.display(context, "Exchange is now selected ");
+        Object_Exchange selectedExchange = Object_Exchange.getGlobalAverage() ;
+        currentTransactionFD.setExchangeObject(selectedExchange);
+        currentTransactionFD.getTransactionObject().setExchangeId(selectedExchange.getId());
+        textView_Exchange.setText(selectedExchange.getName());
+
+
+        relLt_TradingPair.setClickable(false);
+        currentTransactionFD.getTransactionObject().setTradingPair(null);
+        textView_TradingPair.setText("N/A");
+        editText_SingleCoinPrice.setText(currencyObj.getCurrencySymbol() + price);
+
+
+    }
 
     private void setupTradingPairDialogFragment() {
         relLt_TradingPair.setOnClickListener(new View.OnClickListener() {
@@ -212,8 +241,9 @@ public class Activity_Transaction extends AppCompatActivity implements MyListene
             public void onClick(View v) {
                 DialogFragment_TradingPair dfTradingPair = new DialogFragment_TradingPair() ;
                 Bundle bundle = new Bundle() ;
-                List<String> tradingPairKeysList = new ArrayList<>(table_ExchangePairData.row(Helper_Transaction.getTransactionObject().getExchangeId()).keySet()) ;
+                List<String> tradingPairKeysList = new ArrayList<>(table_ExchangePairData.row(currentTransactionFD.getTransactionObject().getExchangeId()).keySet()) ;
                 bundle.putStringArrayList("tradingPairList", new ArrayList<>(tradingPairKeysList));
+                bundle.putString("coinSymbol", currentTransactionFD.getCoinObject().getSymbol());
                 dfTradingPair.setArguments(bundle);
                 dfTradingPair.show(fragmentManager, "dfTradingPair");
 
@@ -223,17 +253,22 @@ public class Activity_Transaction extends AppCompatActivity implements MyListene
     }
 
     @Override
-    public void onSelectingTradingPair() {
+    public void onSelectingTradingPair(String tradingPairSymbol) {
+        currentTransactionFD.getTransactionObject().setTradingPair(tradingPairSymbol);
         Message.display(context, "Trading Pair is now selected + ");
-        Log.e(LOG_TAG, Helper_Transaction.getTransactionObject().toString()) ;
-        textView_TradingPair.setText(Helper_Transaction.getTransactionObject().getCoinSymbol() + "/" + Helper_Transaction.getTransactionObject().getTradingPair());
+        textView_TradingPair.setText(currentTransactionFD.getCoinObject().getSymbol() + "/" + tradingPairSymbol);
         setupCoinPrice();
         setupAddTransactionButton();
+    }
+
+    @Override
+    public void onSelectingDateTime(long timeInLong) {
+
 
     }
 
     private void setupCoinPrice(){
-        String singleCoinPrice = table_ExchangePairData.get(Helper_Transaction.getTransactionObject().getExchangeId(), Helper_Transaction.getTransactionObject().getTradingPair()) ;
+        String singleCoinPrice = table_ExchangePairData.get(currentTransactionFD.getTransactionObject().getExchangeId(), currentTransactionFD.getTransactionObject().getTradingPair()) ;
         editText_SingleCoinPrice.setText(singleCoinPrice);
     }
 
@@ -330,57 +365,142 @@ public class Activity_Transaction extends AppCompatActivity implements MyListene
         relLt_BtnAddTransaction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                relLt_BtnAddTransaction.setClickable(false);
 
-
-                int selectedRadioButtonId = radioGroup_BuySell.getCheckedRadioButtonId() ;
-                switch (selectedRadioButtonId){
-                    case R.id.activityTransaction_RadioButton_Buy :
-                        Helper_Transaction.getTransactionObject().setType(Object_Transaction.TYPE_BUY);
-                        break;
-                    case R.id.activityTransaction_RadioButton_Sell :
-                        Helper_Transaction.getTransactionObject().setType(Object_Transaction.TYPE_SELL);
-                        break;
-                    default:
-                        Helper_Transaction.getTransactionObject().setType(Object_Transaction.TYPE_BUY);
-                        break;
+                if(currentTransactionFD.getTransactionObject().getTradingPair() == null){
+                    // this means that global average is selected .
+                    // so transaction is added directly without fetching price
+                    makeTransaction_with_TradingPairPrice( null) ;
+                    return;
                 }
 
-                String resultantDateString = textView_Date.getText() + " " + textView_Time.getText() ;
-                SimpleDateFormat sdf5 = new SimpleDateFormat("MMMM dd yyyy hh:mm a") ;
-                try {
-                    Helper_Transaction.getTransactionObject().setTransactionDateTime(sdf5.parse(resultantDateString));
-                } catch (Exception e){
-                    Log.e(LOG_TAG, "Unable to store date time in transactionObject : " + e.toString()) ;
+                Object_Coin tradingPairCoinObject = db.coinDao().getCoinBySymbol(currentTransactionFD.getTransactionObject().getTradingPair().toLowerCase()) ;
+                if(tradingPairCoinObject == null){
+                    // this means that this trading pair is not a coin on the website
+                    // so we do not need to make a url call for the price of this coin
+
+                    makeTransaction_with_TradingPairPrice( null) ;
+                    return;
                 }
-                Helper_Transaction.getTransactionObject().setNote(editText_Note.getText().toString());
+                String tradingPairId = tradingPairCoinObject.getId() ;
+                Log.e(LOG_TAG, tradingPairId) ;
 
-
-
-
-                Helper_Transaction.getTransactionObject().setPrice24hChange(p24hChange);
-                Helper_Transaction.getTransactionObject().setSingleCoinPrice_Currency(singleCoinPrice_Currency);
-
-
-
-                Helper_Transaction.getTransactionObject().setSingleCoinPrice_TradingPair(editText_SingleCoinPrice.getText().toString());
-                Helper_Transaction.getTransactionObject().setNoOfCoins(editText_Quantity.getText().toString());
-//                Helper_Transaction.getTransactionObject().setTotalValue(textView_TotalCost.getText().toString());
-
-                String totalValue = new BigDecimal(singleCoinPrice_Currency).multiply(new BigDecimal(editText_Quantity.getText().toString())).toString() ;
-                Helper_Transaction.getTransactionObject().setTotalValue(totalValue);
-
-                Log.e(LOG_TAG, Helper_Transaction.getTransactionObject().toString()) ;
-
-                db.transactionDao().insertTransaction(Helper_Transaction.getTransactionObject());
-                Message.display(context, "Transaction is added !");
-                finish();
-
-
+                getCurrencyPriceForTradingPair(tradingPairId);
             }
         });
+    }
 
 
 
+    private void getCurrencyPriceForTradingPair(String tradingPairId){
+
+        String dateString  = "";
+        try {
+            dateString = new SimpleDateFormat("dd-MM-yyyy").format(new SimpleDateFormat("MMMM dd yyyy").parse(textView_Date.getText().toString()));
+        }catch (Exception e){
+            Log.e(LOG_TAG, "Problem in parsing date" + e.toString()) ;
+        }
+
+
+        String url = Constants.getURL_APICALL_HISTORICAL_PRICE(tradingPairId, dateString) ;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        tradingPairPrice_Currency = processCurrencyPriceForTradingPair(response);
+                        makeTransaction_with_TradingPairPrice(tradingPairPrice_Currency);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Message.display(context, "Error in making volley request");
+                Log.e(LOG_TAG, error.toString() ) ;
+            }
+        }) ;
+
+        requestQueue.add(stringRequest) ;
 
     }
+
+    private String processCurrencyPriceForTradingPair(String response){
+        try {
+            JSONObject responseObject = new JSONObject(response);
+            if(!responseObject.has("id")){
+                return null ;
+            }
+            return responseObject.getJSONObject("market_data").getJSONObject("current_price").getString(MySharedPreferences.getCurrencyObj_FromPreference(getApplicationContext()).getCurrencyId()) ;
+        }catch (Exception e){
+            Log.e(LOG_TAG, "error dude " + e.toString() + "\n \n the response from server was" + response) ;
+
+            return null ;
+        }
+    }
+
+
+    private void makeTransaction_with_TradingPairPrice(String tradingPairPrice_Currency){
+
+        if(tradingPairPrice_Currency == null){
+            singleCoinPrice_Currency = singleCoinPrice_Currency ;
+        } else {
+            Log.e(LOG_TAG, "Original singleCoinPrice_Currency : " + singleCoinPrice_Currency) ;
+            singleCoinPrice_Currency = new BigDecimal(editText_SingleCoinPrice.getText().toString())
+                    .multiply(new BigDecimal(tradingPairPrice_Currency))
+                    .toPlainString() ;
+            Log.e(LOG_TAG, "New singleCoinPrice_Currency : " + singleCoinPrice_Currency) ;
+        }
+        int selectedRadioButtonId = radioGroup_BuySell.getCheckedRadioButtonId() ;
+        switch (selectedRadioButtonId){
+            case R.id.activityTransaction_RadioButton_Buy :
+                currentTransactionFD.getTransactionObject().setType(Object_Transaction.TYPE_BUY);
+                break;
+            case R.id.activityTransaction_RadioButton_Sell :
+                currentTransactionFD.getTransactionObject().setType(Object_Transaction.TYPE_SELL);
+                break;
+            default:
+                currentTransactionFD.getTransactionObject().setType(Object_Transaction.TYPE_BUY);
+                break;
+        }
+
+        String resultantDateString = textView_Date.getText() + " " + textView_Time.getText() ;
+        SimpleDateFormat sdf5 = new SimpleDateFormat("MMMM dd yyyy hh:mm a") ;
+        try {
+            currentTransactionFD.getTransactionObject().setTransactionDateTime(sdf5.parse(resultantDateString));
+        } catch (Exception e){
+            Log.e(LOG_TAG, "Unable to store date time in transactionObject : " + e.toString()) ;
+        }
+        currentTransactionFD.getTransactionObject().setNote(editText_Note.getText().toString());
+
+
+
+
+        currentTransactionFD.getTransactionObject().setPrice24hChange(p24hChange);
+        currentTransactionFD.getTransactionObject().setSingleCoinPrice_CurrencyOriginal(singleCoinPrice_Currency);
+        currentTransactionFD.getTransactionObject().setSingleCoinPrice_CurrencyCurrent(singleCoinPrice_Currency);
+
+
+
+        currentTransactionFD.getTransactionObject().setSingleCoinPrice_TradingPair(editText_SingleCoinPrice.getText().toString());
+        currentTransactionFD.getTransactionObject().setNoOfCoins(editText_Quantity.getText().toString());
+
+        String totalValue = new BigDecimal(singleCoinPrice_Currency).multiply(new BigDecimal(editText_Quantity.getText().toString())).toString() ;
+        currentTransactionFD.getTransactionObject().setTotalValue_Original(totalValue);
+        currentTransactionFD.getTransactionObject().setTotalValue_Current(totalValue);
+        currentTransactionFD.getTransactionObject().setPortFolioId(MyGlobals.getCurrentPortfolioObj().getPortfolioId());
+
+        Log.e(LOG_TAG, Helper_Transaction.getTransactionFullDataObject().getTransactionObject().toString()) ;
+
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                db.transactionDao().insertTransaction(currentTransactionFD.getTransactionObject());
+                MyGlobals.refreshPortfolioValue(db);
+                Log.v(LOG_TAG, "Transaction is added : " + currentTransactionFD) ;
+                Helper_Transaction.makeNewTransactionFullDataObejct();
+                finish();
+            }
+        });
+    }
+
+
+
 }

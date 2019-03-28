@@ -9,6 +9,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Light">
@@ -22,9 +23,32 @@
         <activity android:name=".ui.home.Activity_Portfolio" />
         <activity android:name=".ui.settings.Activity_Settings" />
         <activity android:name=".ui.news.Activity_News" />
-        <activity android:name=".ui.Activity_Tester" />
         <activity android:name=".ui.home.Activity_CoinSelector" />
-        <activity android:name=".ui.transaction.Activity_Transaction"></activity>
+        <activity android:name=".ui.transaction.Activity_Transaction" />
+        <activity android:name=".ui.transaction.Activity_Transaction2" />
+        <activity android:name=".ui.detail.Activity_Detail" />
+        <activity android:name=".ui.transaction.Activity_DetailTransactionEdit" />
+        <activity android:name=".ui.watchlist.Activity_WatchlistContainer" />
+        <service android:name=".ui.general.Service_CloseNotification" />
+
+        <receiver android:name=".ui.general.Widget_CoinPrice">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget__coin_price_info" />
+        </receiver>
+
+
+        <activity android:name=".ui.general.Activity_ConfigureWidget_CoinPrice">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <service android:name=".ui.general.Service_StartBackgroundUpdater" />
     </application>
 
 </manifest>

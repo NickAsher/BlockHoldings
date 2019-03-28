@@ -1,24 +1,62 @@
 package apps.yoo.com.blockholdings.data.dao;
 
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Delete;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.OnConflictStrategy;
-import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Update;
+import androidx.lifecycle.LiveData;
+import androidx.room.Dao;
+import androidx.room.Delete;
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
+import androidx.room.Query;
+import androidx.room.Update;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import apps.yoo.com.blockholdings.data.Objects.Object_Transaction;
+import apps.yoo.com.blockholdings.data.models.Object_Transaction;
+import apps.yoo.com.blockholdings.data.models.Object_TransactionFullData;
+
 @Dao
 public interface Dao_Transaction {
+
+    @Query("SELECT * FROM table_transaction")
+    List<Object_Transaction> getListOfAllTransactionsa();
+
+
     @Query("SELECT * FROM table_transaction ORDER BY coinId ASC")
     List<Object_Transaction> getListOfAllTransactions();
 
+    @Query("SELECT * FROM table_transaction WHERE portfolioId = :portfolioId ORDER BY coinId ASC")
+    List<Object_Transaction> getListOfAllTransactions_OfPortfolio(int portfolioId);
 
-    @Query("SELECT * FROM table_transaction WHERE coinId = :coinId")
-    Object_Transaction getTransactionByCoinId(int coinId);
+    @Query("SELECT * FROM table_transaction WHERE coinId = :coinId ORDER BY transactionDateTime ASC")
+    List<Object_Transaction> getListOfTransaction_ForCoin_SortByDate(String coinId);
+
+
+    @Query("SELECT  * FROM table_transaction INNER JOIN table_coin ON table_transaction.coinId = table_coin.coin_Id INNER JOIN table_exchange ON table_transaction.exchangeId = table_exchange.exchange_Id  ORDER BY table_transaction.transactionNo")
+    LiveData<List<Object_TransactionFullData>> getListOfAllTransaction_FullData_All() ;
+
+
+    @Query("SELECT  * FROM table_transaction INNER JOIN table_coin ON table_transaction.coinId = table_coin.coin_Id INNER JOIN table_exchange ON table_transaction.exchangeId = table_exchange.exchange_Id WHERE table_transaction.portfolioId = :portfolioId ORDER BY table_coin.coinName")
+    List<Object_TransactionFullData> getListOfAllTransaction_FullData(int portfolioId) ;
+
+
+    @Query("SELECT  *, SUM(table_transaction.noOfCoins) AS noOfCoins FROM table_transaction INNER JOIN table_coin ON table_transaction.coinId = table_coin.coin_Id INNER JOIN table_exchange ON table_transaction.exchangeId = table_exchange.exchange_Id WHERE table_transaction.portfolioId = :portfolioId GROUP BY table_transaction.coinId ORDER BY table_coin.coinName")
+    List<Object_TransactionFullData> getListOfAllTransaction_FullData_Summed(int portfolioId) ;
+
+
+    @Query("SELECT  * FROM table_transaction INNER JOIN table_coin ON table_transaction.coinId = table_coin.coin_Id INNER JOIN table_exchange ON table_transaction.exchangeId = table_exchange.exchange_Id WHERE table_transaction.portfolioId = :portfolioId AND table_transaction.coinId = :coinId ORDER BY table_transaction.transactionDateTime DESC")
+    LiveData<List<Object_TransactionFullData>> getListOfAllTransaction_FullData_OfCoin(int portfolioId, String coinId) ;
+
+
+
+    @Query("SELECT  * FROM table_transaction INNER JOIN table_coin ON table_transaction.coinId = table_coin.coin_Id INNER JOIN table_exchange ON table_transaction.exchangeId = table_exchange.exchange_Id WHERE table_transaction.transactionNo = :txnId")
+    Object_TransactionFullData getTransactionFullData_ById(int txnId) ;
+
+
+    // the following method gives this
+    // it returns the lists of all transactions
+    // it then filters the list, such that each coin has only one entry
+    // and the the entry returned is that which is the oldest date
+    @Query("SELECT t1.* FROM table_transaction t1 INNER JOIN (SELECT coinId, MIN(transactionDateTime) AS minDateTime FROM table_transaction GROUP BY coinId) t2 ON t1.coinId = t2.coinId AND t1.transactionDateTime = t2.minDateTime ORDER BY t1.coinId ASC")
+    List<Object_Transaction> getListOfAllTransactions_WithSingularCoins_OfOldestDate();
 
     @Insert
     void insertTransaction(Object_Transaction transaction);
@@ -27,9 +65,22 @@ public interface Dao_Transaction {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateTransaction(Object_Transaction transaction);
 
+    @Query("UPDATE table_transaction SET coinPrice_CurrencyCurrent = :singleCoinPriceCurrent, totalValue_Current = :totalValueCurrent WHERE transactionNo = :txnId" )
+    void updateTransactionPriceByTxnId(int txnId, String singleCoinPriceCurrent, String totalValueCurrent);
+
+    @Query("UPDATE table_transaction SET coinPrice_CurrencyCurrent = :singleCoinPriceCurrent, totalValue_Current = :totalValueCurrent, updateLog = :newUpdateLog WHERE transactionNo = :txnId" )
+    void updateTransactionPriceByTxnId(int txnId, String singleCoinPriceCurrent, String totalValueCurrent, String newUpdateLog);
+
+
 
     @Delete
     void deleteTransaction(Object_Transaction transaction);
+
+    @Query("DELETE FROM  table_transaction  WHERE transactionNo = :transactionId")
+    void deleteTransaction_ById(int transactionId) ;
+
+    @Query("DELETE FROM  table_transaction  WHERE portfolioId = :portfolioId")
+    void deleteTransactions_OfPortfolio(int portfolioId) ;
 
     @Query("DELETE FROM table_transaction")
     public void deleteWholeTable();

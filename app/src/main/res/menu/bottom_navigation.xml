@@ -5,22 +5,22 @@
         android:title="Home"
         android:icon="@drawable/ic_home"
         />
+
+    <item
+        android:id="@+id/menuBottomNavigation_Item_Watchlist"
+        android:title="Watchlist"
+        android:icon="@drawable/ic_watchlist"
+        />
+
     <item
         android:id="@+id/menuBottomNavigation_Item_News"
         android:title="News"
         android:icon="@drawable/ic_news"
-
-
-
-
-
         />
 
     <item
         android:id="@+id/menuBottomNavigation_Item_Settings"
         android:title="Settings"
         android:icon="@drawable/ic_settings"
-
-
         />
 </menu>

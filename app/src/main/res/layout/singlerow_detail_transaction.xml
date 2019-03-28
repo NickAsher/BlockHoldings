@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/singleRowDetailTransaction_LinLt_MainContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="8dp"
+    android:paddingTop="8dp"
+    android:orientation="vertical"
+    >
+
+
+    <LinearLayout
+        android:id="@+id/singleRowDetailTransaction_LinLt_Top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="8dp"
+        >
+        <TextView
+            android:id="@+id/singleRowDetailTransaction_TextView_ValueTxnType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BUY"
+            android:textColor="#124e99"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginRight="12dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="via  "
+            android:textColor="?android:attr/textColorTertiary"
+            android:textSize="12sp"
+            />
+
+        <TextView
+            android:id="@+id/singleRowDetailTransaction_TextView_ValueMarketName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BINANCE"
+            android:textColor="?android:attr/textColorTertiary"
+            android:textSize="16sp"
+            android:layout_marginRight="8dp"
+
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="on  "
+            android:textColor="?android:attr/textColorTertiary"
+            android:textSize="12sp"
+            />
+
+        <TextView
+            android:id="@+id/singleRowDetailTransaction_TextView_ValueDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="27 January 2019, 8.45 a.m"
+            android:textColor="?android:attr/textColorTertiary"
+            android:textSize="14sp"
+            android:layout_marginRight="8dp"
+
+            />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/textColorTertiary"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"
+        />
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/singleRowDetailTransaction_LinLt_Top"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            >
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trading Pair"
+                android:textColor="?android:attr/textColorTertiary"
+                android:textSize="12sp"
+                android:layout_marginBottom="4dp"
+                />
+
+            <TextView
+                android:id="@+id/singleRowDetailTransaction_TextView_ValueTradingPair"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="XRP/ETH"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="16sp"
+                android:layout_marginBottom="16dp"
+                />
+
+            <TextView
+                android:id="@+id/singleRowDetailTransaction_TextView_DescriptionAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Amount Bought"
+                android:textColor="?android:attr/textColorTertiary"
+                android:textSize="12sp"
+                android:layout_marginBottom="4dp"
+                />
+
+            <TextView
+                android:id="@+id/singleRowDetailTransaction_TextView_ValueAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="200 XRP"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="16sp"
+                android:layout_marginBottom="16dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Change"
+                android:textColor="?android:attr/textColorTertiary"
+                android:textSize="12sp"
+                android:layout_marginBottom="4dp"
+                />
+
+            <TextView
+                android:id="@+id/singleRowDetailTransaction_TextView_ValuePercentageChange"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-2%"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="16sp"
+                android:layout_marginBottom="16dp"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:id="@+id/singleRowDetailTransaction_TextView_DescriptionSingleCoinPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Buy Price"
+                android:textColor="?android:attr/textColorTertiary"
+                android:textSize="12sp"
+                android:layout_marginBottom="4dp"
+                />
+
+            <TextView
+                android:id="@+id/singleRowDetailTransaction_TextView_ValueSingleCoinPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.0021"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="16sp"
+                android:layout_marginBottom="16dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total Value"
+                android:textColor="?android:attr/textColorTertiary"
+                android:textSize="12sp"
+                android:layout_marginBottom="4dp"
+                />
+
+            <TextView
+                android:id="@+id/singleRowDetailTransaction_TextView_ValueOriginalTotalCost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$ 150"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="16sp"
+                android:layout_marginBottom="16dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Current Value"
+                android:textColor="?android:attr/textColorTertiary"
+                android:textSize="12sp"
+                android:layout_marginBottom="4dp"
+                />
+
+            <TextView
+                android:id="@+id/singleRowDetailTransaction_TextView_ValueCurrentTotalCost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$ 147"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="16sp"
+                android:layout_marginBottom="16dp"
+                />
+
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Notes"
+        android:textColor="?android:attr/textColorTertiary"
+        android:textSize="12sp"
+        android:layout_marginBottom="4dp"
+        />
+
+    <TextView
+        android:id="@+id/singleRowDetailTransaction_TextView_ValueNotes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This is just in case man"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp"
+        />
+
+</LinearLayout>

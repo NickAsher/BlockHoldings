@@ -1,15 +1,15 @@
 package apps.yoo.com.blockholdings.data.dao;
 
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Delete;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.OnConflictStrategy;
-import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Update;
+import androidx.room.Dao;
+import androidx.room.Delete;
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
+import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
-import apps.yoo.com.blockholdings.data.Objects.Object_NewsSite;
+import apps.yoo.com.blockholdings.data.models.Object_NewsSite;
 
 @Dao
 public interface Dao_NewsSite {

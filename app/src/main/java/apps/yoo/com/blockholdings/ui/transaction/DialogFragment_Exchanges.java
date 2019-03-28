@@ -2,15 +2,14 @@ package apps.yoo.com.blockholdings.ui.transaction;
 
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.SearchView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,13 +17,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.common.collect.Collections2;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import apps.yoo.com.blockholdings.R;
 import apps.yoo.com.blockholdings.data.AppDatabase;
-import apps.yoo.com.blockholdings.data.Objects.Object_Exchange;
+import apps.yoo.com.blockholdings.data.MySharedPreferences;
+import apps.yoo.com.blockholdings.data.models.Object_Currency;
+import apps.yoo.com.blockholdings.data.models.Object_Exchange;
+import apps.yoo.com.blockholdings.util.Constants;
+import apps.yoo.com.blockholdings.util.Message;
 import apps.yoo.com.blockholdings.util.MyListener;
 
 
@@ -37,10 +52,14 @@ public class DialogFragment_Exchanges extends DialogFragment implements MyListen
     RecyclerView rv ;
     RVAdapter_Exchanges adapter ;
     SearchView searchView_Main ;
+    RelativeLayout lt_GlobalAverageContainer ;
 
     List<String> listOfExchangeIds ;
     List<Object_Exchange> listOfExchanges ;
     MyListener.DialogFragments_to_ActivityTransaction listener_ActivityTransaction ;
+    String coinId ;
+    Object_Currency currencyObj ;
+
 
 
     @Nullable
@@ -68,16 +87,18 @@ public class DialogFragment_Exchanges extends DialogFragment implements MyListen
 
         context = getActivity() ;
         fragmentManager = ((FragmentActivity)context).getSupportFragmentManager() ;
-        listener_ActivityTransaction = (Activity_Transaction)getActivity() ;
+        listener_ActivityTransaction = (MyListener.DialogFragments_to_ActivityTransaction)getActivity() ;
         db = AppDatabase.getInstance(getActivity().getApplicationContext()) ;
         listOfExchanges = new ArrayList<>() ;
-
+        currencyObj = MySharedPreferences.getCurrencyObj_FromPreference(context.getApplicationContext()) ;
+        coinId = getArguments().getString("coinId") ;
 
 
         getReferences(view);
         getListOfExchanges_From_ExhangeIds() ;
         setupSearchView();
         setupRecyclerView();
+        setupSelectingGlobalAverage();
 
 
 
@@ -88,6 +109,7 @@ public class DialogFragment_Exchanges extends DialogFragment implements MyListen
     private void getReferences(View view){
         searchView_Main = (SearchView) view.findViewById(R.id.dialogFragmentExchanges_SearchView_Main) ;
         rv = (RecyclerView) view.findViewById(R.id.dialogFragmentExchanges_RecyclerView_CoinList) ;
+        lt_GlobalAverageContainer = view.findViewById(R.id.dialogFragmentExchanges_RelLt_GlobalAverageContainer) ;
     }
 
     private void getListOfExchanges_From_ExhangeIds(){
@@ -105,9 +127,10 @@ public class DialogFragment_Exchanges extends DialogFragment implements MyListen
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                List<Object_Exchange> listOfSelectedExchanges = db.exchangeDao().getListOExchanges_WithIds_WhoseNameStartWithAlphabet(listOfExchangeIds, newText) ;
-                Log.e(LOG_TAG, listOfSelectedExchanges.toString()) ;
-                adapter.refreshData(listOfSelectedExchanges);
+                if(!newText.isEmpty()){
+                    Log.v(LOG_TAG, "Filtering exhanges that contain some string") ;
+                    adapter.refreshData(new ArrayList<>(Collections2.filter(listOfExchanges, Object_Exchange.getPredicateFilter_Name_containsString(newText))));
+                }
                 return true;
             }
         });
@@ -123,10 +146,49 @@ public class DialogFragment_Exchanges extends DialogFragment implements MyListen
         rv.setAdapter(adapter);
     }
 
+    private void setupSelectingGlobalAverage(){
+        lt_GlobalAverageContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = Constants.getURL_APICALL_SIMPLEPRICES(coinId, currencyObj.getCurrencyId()) ;
+                Log.e(LOG_TAG, url) ;
+                StringRequest stringRequest2 = new StringRequest(Request.Method.GET, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try{
+                                    Log.e(LOG_TAG, "Response from server : " + response) ;
+                                    JSONObject jsonObject = new JSONObject(response) ;
+                                    String price = jsonObject.getJSONObject(coinId).get(currencyObj.getCurrencyId()).toString();
+                                    dismiss();
+                                    listener_ActivityTransaction.onSelectingExchange_GlobalAverage(price);
+                                }catch (JSONException e){
+                                    Log.e(LOG_TAG, e.toString()) ;
+                                    Message.display(context, "Some server error");
+                                }
+
+
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Message.display(context, "Error in making volley request");
+                        Log.e(LOG_TAG, error.toString() ) ;
+                    }
+                }) ;
+
+                RequestQueue requestQueue = Volley.newRequestQueue(context.getApplicationContext()) ;
+                requestQueue.add(stringRequest2) ;
+            }
+        });
+    }
+
+
+
 
     @Override
-    public void closeDialog() {
+    public void onSelectingExchange(Object_Exchange exchangeObj) {
         dismiss();
-        listener_ActivityTransaction.onSelectingExchange();
+        listener_ActivityTransaction.onSelectingExchange(exchangeObj);
     }
 }

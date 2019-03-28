@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+
+
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fragWatchlistAllCoins_RV_AllCoins"
+        android:layout_width="match_parent"
+        android:layout_marginTop="64dp" android:layout_height="wrap_content"
+
+        />
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/frgWatchlistAllCoins_SearchView_Coins"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:queryHint="Seach for coin name or symbol here"
+        android:layout_marginBottom="16dp"
+        />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fragWatchlistAllCoins_RV_SearchSuggestions"
+        android:layout_width="match_parent"
+        android:layout_marginTop="56dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+
+        />
+
+</FrameLayout>

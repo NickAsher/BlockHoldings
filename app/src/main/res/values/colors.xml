@@ -25,9 +25,19 @@
 
 
     <color name="teal">#008080</color>
-    <color name="red">#ff0000</color>
+    <color name="red">#f44336</color>
     <color name="yellow">#ffff00</color>
+    <color name="green">#4caf50</color>
+    <color name="negative">#FF86A8</color>
 
+    <color name="negative1">#ee0979</color>
+    <color name="negative2">#ff6a00</color>
+
+    <color name="positive1">#92FE9D</color>
+    <color name="positive2">#00C9FF</color>
+
+    <color name="positive3">#FDFC47</color>
+    <color name="positive4">#24FE41</color>
 
     <color name="colorPrimaryWhite">#fff</color>
     <color name="colorPrimaryDarkWhite">#efefef</color>

@@ -3,27 +3,23 @@ package apps.yoo.com.blockholdings.ui.transaction;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.SearchView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import apps.yoo.com.blockholdings.R;
-import apps.yoo.com.blockholdings.data.AppDatabase;
-import apps.yoo.com.blockholdings.data.Objects.Object_Exchange;
 import apps.yoo.com.blockholdings.util.MyListener;
 
 
@@ -40,6 +36,7 @@ public class DialogFragment_TradingPair extends DialogFragment implements MyList
 
     List<String> listOfTradingPairKeys  ;
     MyListener.DialogFragments_to_ActivityTransaction listener_ActivityTransaction ;
+    String coinSymbol ;
 
 
     @Nullable
@@ -67,8 +64,9 @@ public class DialogFragment_TradingPair extends DialogFragment implements MyList
 
         context = getActivity() ;
         fragmentManager = ((FragmentActivity)context).getSupportFragmentManager() ;
-        listener_ActivityTransaction = (Activity_Transaction)getActivity() ;
+        listener_ActivityTransaction = (MyListener.DialogFragments_to_ActivityTransaction)getActivity() ;
         listOfTradingPairKeys = getArguments().getStringArrayList("tradingPairList") ;
+        coinSymbol = getArguments().getString("coinSymbol") ;
 
         setupRecyclerView(view);
 
@@ -81,15 +79,16 @@ public class DialogFragment_TradingPair extends DialogFragment implements MyList
 
     private void setupRecyclerView(View view){
         rv = (RecyclerView) view.findViewById(R.id.dialogFragmentExchanges_RecyclerView_CoinList) ;
-        adapter = new RVAdapter_TradingPair(context, listOfTradingPairKeys, this) ;
+        adapter = new RVAdapter_TradingPair(context, listOfTradingPairKeys, coinSymbol, this) ;
         rv.setLayoutManager(new LinearLayoutManager(context));
         rv.setAdapter(adapter);
     }
 
 
+
     @Override
-    public void closeDialog() {
+    public void onSelectingTradingPair(String tradingPairSymbol) {
         dismiss();
-        listener_ActivityTransaction.onSelectingTradingPair();
+        listener_ActivityTransaction.onSelectingTradingPair(tradingPairSymbol);
     }
 }

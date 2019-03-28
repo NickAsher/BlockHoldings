@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    >
+
+    <TextView
+        android:id="@+id/dialogFragmentPortfolioNames_TextView_HeadingPortfolio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Portfolios"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="24dp"
+        />
+
+    <Button
+        android:id="@+id/dialogFragmentPortfolioNames_Btn_EditPortfolio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit"
+        android:layout_alignBaseline="@+id/dialogFragmentPortfolioNames_TextView_HeadingPortfolio"
+        android:layout_alignParentRight="true"
+        />
+
+    <Button
+        android:id="@+id/dialogFragmentPortfolioNames_TextView_EditSavePortfolioBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:layout_alignBaseline="@+id/dialogFragmentPortfolioNames_TextView_HeadingPortfolio"
+        android:layout_alignParentRight="true"
+        android:visibility="gone"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/dialogFragmentExchanges_RecyclerView_CoinList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:layout_below="@+id/dialogFragmentPortfolioNames_TextView_HeadingPortfolio"
+        />
+
+    <Button
+        android:id="@+id/dialogFragmentPortfolioNames_Btn_AddNewPortfolio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add New Portfolio"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        />
+
+    <RelativeLayout
+        android:id="@+id/dialogFragmentPortfolioNames_RelLt_AddingNewPortfolioContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_alignParentBottom="true"
+
+        >
+
+
+        <TextView
+            android:id="@+id/dialogPortfolioNames_TextView_InnerHeading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Portfolio Name"
+            android:textSize="12sp"
+            android:textColor="?android:attr/textColorTertiary"
+            android:layout_alignParentLeft="true"
+            />
+
+        <EditText
+            android:id="@+id/dialogPortfolioNames_EditText_NewPortfolioName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/dialogPortfolioNames_TextView_InnerHeading"
+            />
+
+        <Button
+            android:id="@+id/dialogPortfolioNames_Btn_InnerSavePortfolio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:layout_alignParentRight="true"
+            android:layout_alignBaseline="@+id/dialogPortfolioNames_EditText_NewPortfolioName"
+            />
+
+    </RelativeLayout>
+
+</RelativeLayout>

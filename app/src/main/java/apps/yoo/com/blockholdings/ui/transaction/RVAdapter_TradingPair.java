@@ -1,7 +1,7 @@
 package apps.yoo.com.blockholdings.ui.transaction;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +17,13 @@ public class RVAdapter_TradingPair extends RecyclerView.Adapter<RVAdapter_Tradin
     private List<String> listOfitems ;
     private Context context ;
     MyListener.RVAdapterTradingPair_to_DialogFragmentTradingPair listener ;
+    String coinSymbol ;
 
 
-    public RVAdapter_TradingPair(Context context, List<String> listOfitems, MyListener.RVAdapterTradingPair_to_DialogFragmentTradingPair listener) {
+    public RVAdapter_TradingPair(Context context, List<String> listOfitems,String coinSymbol,  MyListener.RVAdapterTradingPair_to_DialogFragmentTradingPair listener) {
         this.context = context ;
         this.listOfitems = listOfitems ;
+        this.coinSymbol = coinSymbol ;
         this.listener = listener ;
 
     }
@@ -35,13 +37,12 @@ public class RVAdapter_TradingPair extends RecyclerView.Adapter<RVAdapter_Tradin
 
     @Override
     public void onBindViewHolder(final YoloCartViewHolder holder, final int position) {
-
-        holder.textView_PairName.setText(Helper_Transaction.getTransactionObject().getCoinSymbol() + "/" + listOfitems.get(position));
+        // TODO change getCinId() to getCoinSymbol()
+        holder.textView_PairName.setText(this.coinSymbol + "/" + listOfitems.get(position));
         holder.textView_PairName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Helper_Transaction.getTransactionObject().setTradingPair(listOfitems.get(position));
-                listener.closeDialog();
+                listener.onSelectingTradingPair(listOfitems.get(position));
             }
         });
     }

@@ -8,8 +8,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import apps.yoo.com.blockholdings.data.Objects.Object_Exchange;
-import apps.yoo.com.blockholdings.data.Objects.Object_Coin;
+import apps.yoo.com.blockholdings.data.models.Object_Exchange;
+import apps.yoo.com.blockholdings.data.models.Object_Coin;
 
 public class Helper_Settings {
     private static final String LOG_TAG = "Helper_Settings --> " ;
@@ -29,9 +29,7 @@ public class Helper_Settings {
                 listOfCoins.add(new Object_Coin(
                         jsonObject_Coin.getString("id"),
                         jsonObject_Coin.getString("symbol"),
-                        jsonObject_Coin.getString("name"),
-                        "",
-                        ""
+                        jsonObject_Coin.getString("name")
                 ));
 
 
@@ -47,6 +45,7 @@ public class Helper_Settings {
 
     public static ArrayList<Object_Exchange> getListOfExchanges_FromApi(String response){
         ArrayList<Object_Exchange> listOfExchanges = new ArrayList<>() ;
+        listOfExchanges.add(Object_Exchange.getGlobalAverage()) ;
 
         try {
             JSONArray responseArray = new JSONArray(response);

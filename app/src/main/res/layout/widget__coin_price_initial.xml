@@ -1,0 +1,88 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000"
+    android:padding="16dp"
+    android:id="@+id/widgetCoinPrice_Lt_Parent"
+    >
+
+
+
+
+    <ImageView
+        android:id="@+id/widgetCoinPriceInitial_ImageView_CoinImage"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_centerVertical="true"
+        />
+
+    <TextView
+        android:id="@+id/widgetCoinPriceInitial_TV_CoinName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CoinName"
+        android:textColor="#FFF"
+        android:textSize="14sp"
+        android:layout_toRightOf="@+id/widgetCoinPrice_ImageView_CoinImage"
+        android:layout_centerVertical="true"
+        />
+
+
+
+    <ProgressBar
+        android:id="@+id/widgetCoinPriceInitial_ProgressBar_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="16dp"
+        android:layout_centerVertical="true"
+
+        />
+
+
+
+    <TextView
+        android:id="@+id/widgetCoinPriceInitial_TV_DescPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Price : "
+        android:textColor="#FFF"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:layout_marginRight="16dp"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/widgetCoinPriceInitial_ProgressBar_price"
+
+
+        />
+
+    <TextView
+        android:id="@+id/widgetCoinPriceInitial_TV_DescLastUpdated"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Updated On : "
+        android:textColor="#FFF"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:layout_alignParentBottom="true"
+
+        android:layout_marginRight="16dp"
+        android:layout_toLeftOf="@+id/widgetCoinPriceInitial_TV_ValueLastUpdated"
+        />
+
+    <ProgressBar
+        android:id="@+id/widgetCoinPriceInitial_TV_ValueLastUpdated"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="16dp"
+
+
+
+        />
+
+</RelativeLayout>

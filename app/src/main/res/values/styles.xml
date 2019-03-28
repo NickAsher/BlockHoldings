@@ -6,6 +6,20 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+
+        <item name="android:textColorPrimary">@color/black_Priamry</item>
+        <item name="android:textColorSecondary">@color/black_Secondary</item>
+        <item name="android:textColorTertiary">@color/black_Secondary</item>
+
+        <item name="android:textColorPrimaryInverse">@color/white_Primary</item>
+        <item name="android:textColorSecondaryInverse">@color/white_Secondary</item>
+        <item name="android:textColorTertiaryInverse">@color/white_Secondary</item>
+
+
+        <item name="android:textColorHighlight">@color/black_Priamry</item>
+        <item name="android:textColorHighlightInverse">@color/grey_Secondary</item>
+        <item name="autoCompleteTextViewStyle">@style/SearchAutoCompleteTextView</item>
     </style>
 
 
@@ -53,10 +67,17 @@
 
         <item name="android:textColorHighlight">@color/black_Priamry</item>
         <item name="android:textColorHighlightInverse">@color/grey_Secondary</item>
-
+        <item name="autoCompleteTextViewStyle">@style/SearchAutoCompleteTextView</item>
 
 
     </style>
+
+    <style name="SearchAutoCompleteTextView" parent="Widget.AppCompat.Light.AutoCompleteTextView">
+        <item name="android:textColor">@color/white_Primary</item>
+        <item name="android:textColorHint">@color/white_Primary</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
 
     <style name="TextView_HeadingBig">
         <item name="android:textSize">@dimen/activity_TextView_HeadingBig_TextSize</item>
@@ -64,6 +85,22 @@
         <item name="android:textStyle">bold</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_margin">32dp</item>
+    </style>
+
+    <style name="TextView_DataDesc">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">?android:attr/textColorTertiary</item>
+        <item name="android:layout_marginBottom">2dp</item>
+        <item name="android:textAlignment">textStart</item>
+    </style>
+
+    <style name="TextView_DataVal">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:textAlignment">textStart</item>
+
+
     </style>
 
 </resources>

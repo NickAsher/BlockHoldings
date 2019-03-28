@@ -2,14 +2,15 @@ package apps.yoo.com.blockholdings.ui.news;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.RelativeLayout;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -24,6 +25,7 @@ import apps.yoo.com.blockholdings.R;
 import apps.yoo.com.blockholdings.data.MySharedPreferences;
 import apps.yoo.com.blockholdings.ui.home.Activity_Portfolio;
 import apps.yoo.com.blockholdings.ui.settings.Activity_Settings;
+import apps.yoo.com.blockholdings.ui.watchlist.Activity_WatchlistContainer;
 import apps.yoo.com.blockholdings.util.Constants;
 import apps.yoo.com.blockholdings.util.Message;
 
@@ -37,17 +39,14 @@ public class Activity_News extends AppCompatActivity {
     RecyclerView rv ;
     RVAdapter_NewsArticle adapter ;
 
+    RelativeLayout layout_MainContainer ;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        int theme = MySharedPreferences.getAppThemeFromPreference(getApplicationContext()) ;
-        if(theme == MySharedPreferences.PREFS_VALUE_THEME_DARK){
-            setTheme(R.style.AppTheme_Dark);
-        } else {
-            setTheme(R.style.AppTheme_Light);
-        }
+
 
         setContentView(R.layout.activity_news);
         context = this ;
@@ -56,12 +55,14 @@ public class Activity_News extends AppCompatActivity {
         setupBottomNavigationView();
         fetchData();
         setupRecyclerView();
+
+        layout_MainContainer.setBackground(MySharedPreferences.getAppThemeGradientDrawableOnPreference(getApplicationContext()));
     }
 
     private void getReferences(){
         btmNavigationView = (BottomNavigationView)findViewById(R.id.activityNews_BottomNavigationView_Main) ;
         rv = (RecyclerView)findViewById(R.id.activityNews_RecyclerView_Content) ;
-
+        layout_MainContainer = findViewById(R.id.activityNews_RelLt_MainContainer) ;
 
     }
 
@@ -101,6 +102,12 @@ public class Activity_News extends AppCompatActivity {
                             Intent intent = new Intent(context, Activity_Portfolio.class) ;
                             startActivity(intent);
                             finish();
+                        break;
+
+                    case R.id.menuBottomNavigation_Item_Watchlist :
+                        Intent intentW = new Intent(context, Activity_WatchlistContainer.class) ;
+                        startActivity(intentW);
+                        finish();
                         break;
 
                     case R.id.menuBottomNavigation_Item_News :

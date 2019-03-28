@@ -1,9 +1,8 @@
 package apps.yoo.com.blockholdings.ui.transaction;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +15,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import apps.yoo.com.blockholdings.R;
-import apps.yoo.com.blockholdings.data.Objects.Object_Coin;
-import apps.yoo.com.blockholdings.data.Objects.Object_Exchange;
-import apps.yoo.com.blockholdings.data.Objects.Object_Transaction;
-import apps.yoo.com.blockholdings.util.Constants;
+import apps.yoo.com.blockholdings.data.models.Object_Exchange;
 import apps.yoo.com.blockholdings.util.MyListener;
 
 
@@ -53,9 +49,7 @@ public class RVAdapter_Exchanges extends RecyclerView.Adapter<RVAdapter_Exchange
         holder.relativeLayout_Container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Helper_Transaction.getTransactionObject().setExchangeId(currentItem.getId());
-                Helper_Transaction.getTransactionObject().setExchangeName(currentItem.getName());
-                listener.closeDialog();
+                listener.onSelectingExchange(currentItem);
             }
         });
     }

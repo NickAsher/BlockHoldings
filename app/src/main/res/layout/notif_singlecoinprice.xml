@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="64dp">
+
+    <ImageView
+        android:id="@+id/notificationCoinPrice_ImageView_CoinImage"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_telegram"
+        android:scaleType="fitXY"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="24dp"
+        android:layout_centerVertical="true"
+        />
+
+    <TextView
+        android:id="@+id/notificationCoinPrice_TV_CoinName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ethereum"
+        android:textSize="18sp"
+        android:layout_toEndOf="@+id/notificationCoinPrice_ImageView_CoinImage"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="8dp"
+
+        />
+
+
+    <TextView
+        android:id="@+id/notificationCoinPrice_TV_CoinPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$315"
+        android:textSize="18sp"
+        android:layout_toEndOf="@+id/notificationCoinPrice_TV_CoinName"
+        android:layout_centerVertical="true"
+
+        />
+
+
+    <TextView
+        android:id="@+id/notificationCoinPrice_TV_CloseNotification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="X"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_alignParentEnd="true"
+        android:padding="16dp"
+        android:layout_centerVertical="true"
+        />
+
+    <TextView
+        android:id="@+id/notificationCoinPrice_TV_RefreshNotification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Refresh"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:padding="16dp"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@+id/notificationCoinPrice_TV_CloseNotification"
+        />
+
+</RelativeLayout>

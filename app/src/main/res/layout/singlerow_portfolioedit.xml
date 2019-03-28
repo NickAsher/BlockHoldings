@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/singleRowPortfolioNames_RelLt_Container"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
+    >
+
+    <ImageView
+        android:id="@+id/singleRowPortfolioEdit_ImgBtn_DeletePortfolio"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_remove_circle_black_24dp"
+        android:layout_alignParentLeft="true"
+        android:padding="8dp"
+
+        />
+
+    <TextView
+        android:id="@+id/singleRowPortfolioEdit_TextView_PortfolioName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Main Portfolio"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_toRightOf="@+id/singleRowPortfolioEdit_ImgBtn_DeletePortfolio"
+        />
+
+    <EditText
+        android:id="@+id/singleRowPortfolioEdit_EditText_PortfolioName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="New Portfolio Name"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_toRightOf="@+id/singleRowPortfolioEdit_ImgBtn_DeletePortfolio"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/singleRowPortfolioEdit_TextView_PortfolioBalance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="52357.564"
+        android:textColor="?android:attr/textColorTertiary"
+        android:textSize="14sp"
+        android:layout_below="@+id/singleRowPortfolioEdit_TextView_PortfolioName"
+        android:layout_toRightOf="@+id/singleRowPortfolioEdit_ImgBtn_DeletePortfolio"
+        android:layout_alignParentBottom="true"
+
+        />
+
+    <ImageView
+        android:id="@+id/singleRowPortfolioEdit_ImgBtn_EditPortfolio"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_edit_black_24dp"
+        android:background="#00000000"
+        android:padding="8dp"
+        />
+
+</RelativeLayout>

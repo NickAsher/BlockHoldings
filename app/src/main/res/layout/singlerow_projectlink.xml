@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:id="@+id/singleRowProjectLink_Lt_Parent"
+    android:background="#fff"
+
+    >
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id = "@+id/singleRowProjectLink_ImageView_Link"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_home"
+            android:padding="2dp"
+            android:layout_gravity="center"
+            android:background="#fff"
+
+            />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/singleRowProjectLink_TextView_Link"
+            android:background="#ffffff"
+            android:text="Fitness"
+            android:textSize="10sp"
+            android:textColor="#333"
+            android:gravity="center"
+            android:paddingTop="4dp"
+            android:singleLine="true"
+            />
+
+
+
+
+
+
+
+
+
+</LinearLayout>

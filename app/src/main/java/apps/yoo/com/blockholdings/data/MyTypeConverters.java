@@ -1,6 +1,6 @@
 package apps.yoo.com.blockholdings.data;
 
-import android.arch.persistence.room.TypeConverter;
+import androidx.room.TypeConverter;
 
 import java.util.Date;
 
@@ -13,4 +13,6 @@ public class MyTypeConverters {
     public static Long dateToTimestamp(Date date) {
         return date == null ? null : date.getTime();
     }
+
+
 }

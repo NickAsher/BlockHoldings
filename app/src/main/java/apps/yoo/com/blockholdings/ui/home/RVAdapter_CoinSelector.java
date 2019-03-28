@@ -3,7 +3,7 @@ package apps.yoo.com.blockholdings.ui.home;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +16,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import apps.yoo.com.blockholdings.R;
-import apps.yoo.com.blockholdings.data.Objects.Object_Coin;
-import apps.yoo.com.blockholdings.ui.transaction.Activity_Transaction;
+import apps.yoo.com.blockholdings.data.models.Object_Coin;
 import apps.yoo.com.blockholdings.util.Constants;
 
 
@@ -48,11 +47,10 @@ public class RVAdapter_CoinSelector extends RecyclerView.Adapter<RVAdapter_CoinS
         holder.relativeLayout_Container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, Activity_Transaction.class) ;
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK) ;
-                intent.putExtra("coin", currentItem.toJson().toString()) ;
-                context.startActivity(intent);
-                ((Activity)context).finish() ;
+                Intent returnIntent = new Intent() ;
+                returnIntent.putExtra("coinId", currentItem.getId()) ;
+                ((Activity) context).setResult(Activity.RESULT_OK, returnIntent);
+                ((Activity) context).finish();
             }
         });
 

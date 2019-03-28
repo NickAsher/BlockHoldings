@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.detail.Fragment_DetailPrice">
+
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/frgDetailChart_NSV_Main"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="32dp"
+            >
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="32dp"
+            >
+
+            <Button
+                android:id="@+id/frgDetailChart_Btn_ChartView1Day"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="1D"
+                />
+
+            <Button
+                android:id="@+id/frgDetailChart_Btn_ChartView3Day"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="3D"
+                />
+
+            <Button
+                android:id="@+id/frgDetailChart_Btn_ChartViewWeek"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="1W"
+                />
+
+            <Button
+                android:id="@+id/frgDetailChart_Btn_ChartViewMonth"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="1M"
+                />
+
+            <Button
+                android:id="@+id/frgDetailChart_Btn_ChartView6Month"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="6M"
+                />
+
+            <Button
+                android:id="@+id/frgDetailChart_Btn_ChartViewYear"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="1Y"
+                />
+
+            <Button
+                android:id="@+id/frgDetailChart_Btn_ChartViewMax"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="MAX"
+                />
+
+
+
+
+        </LinearLayout>
+
+
+
+
+
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/frgDetailPrice_LineChart_Main"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginBottom="32dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GLOBAL DATA"
+                android:layout_marginLeft="16dp"
+                android:textSize="16sp"
+                android:textColor="?android:attr/textColorSecondary"
+                />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                card_view:cardCornerRadius="6dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                card_view:cardPreventCornerOverlap="false"
+                card_view:cardUseCompatPadding="true"
+                >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="8dp"
+
+                    >
+
+                    <TextView
+                        android:id="@+id/frgDetailChart_TXTV_DescMarketCap"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Market Cap"
+                        style="@style/TextView_DataDesc"
+                        android:layout_alignParentLeft="true"
+                        />
+
+                    <TextView
+                        android:id="@+id/frgDetailChart_TXTV_ValMarketCap"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$568512"
+                        style="@style/TextView_DataVal"
+                        android:layout_alignParentLeft="true"
+                        android:layout_below="@+id/frgDetailChart_TXTV_DescMarketCap"
+                        />
+
+
+                    <TextView
+                        android:id="@+id/frgDetailChart_TXTV_DescVolume24H"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Total Volume"
+                        style="@style/TextView_DataDesc"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignBaseline="@+id/frgDetailChart_TXTV_DescMarketCap"
+                        android:layout_marginRight="16dp"
+                        />
+
+
+                    <TextView
+                        android:id="@+id/frgDetailChart_TXTV_ValVolume24H"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$24485"
+                        style="@style/TextView_DataVal"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignBaseline="@+id/frgDetailChart_TXTV_ValMarketCap"
+                        android:layout_marginRight="16dp"
+
+                        />
+
+                    <TextView
+                        android:id="@+id/frgDetailChart_TXTV_DescPercentageChange"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Percentage Change"
+                        style="@style/TextView_DataDesc"
+                        android:layout_alignParentLeft="true"
+                        android:layout_below="@+id/frgDetailChart_TXTV_ValMarketCap"
+
+                        />
+
+                    <TextView
+                        android:id="@+id/frgDetailChart_TXTV_ValPercentageChange"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1H  5%     24H  4.2%     7D 4$"
+                        style="@style/TextView_DataVal"
+                        android:layout_alignParentLeft="true"
+                        android:layout_below="@+id/frgDetailChart_TXTV_DescPercentageChange"
+
+                        />
+
+
+                    <TextView
+                        android:id="@+id/frgDetailChart_TXTV_DescRank"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rank"
+                        style="@style/TextView_DataDesc"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignBaseline="@+id/frgDetailChart_TXTV_DescPercentageChange"
+                        android:layout_marginRight="16dp"
+
+
+
+                        />
+
+
+                    <TextView
+                        android:id="@+id/frgDetailChart_TXTV_ValRank"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="3"
+                        style="@style/TextView_DataVal"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignBaseline="@+id/frgDetailChart_TXTV_ValPercentageChange"
+                        android:layout_marginRight="16dp"
+
+                        />
+
+
+
+
+
+                    <TextView
+                        android:id="@+id/frgDetailChart_TXTV_DescHigh24H"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="High(24H)"
+                        style="@style/TextView_DataDesc"
+                        android:layout_alignParentLeft="true"
+                        android:layout_below="@+id/frgDetailChart_TXTV_ValRank"
+
+                        />
+
+
+                    <TextView
+                        android:id="@+id/frgDetailChart_TXTV_ValHigh24H"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$785"
+                        style="@style/TextView_DataVal"
+                        android:layout_alignParentLeft="true"
+                        android:layout_below="@+id/frgDetailChart_TXTV_DescHigh24H"
+
+                        />
+
+
+                    <TextView
+                        android:id="@+id/frgDetailChart_TXTV_DescLow24H"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="LOW(24H)"
+                        style="@style/TextView_DataDesc"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignBaseline="@+id/frgDetailChart_TXTV_DescHigh24H"
+                        android:layout_marginRight="16dp"
+
+                        />
+
+
+                    <TextView
+                        android:id="@+id/frgDetailChart_TXTV_ValLow24H"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$454"
+                        style="@style/TextView_DataVal"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignBaseline="@+id/frgDetailChart_TXTV_ValHigh24H"
+                        android:layout_marginRight="16dp"
+
+                        />
+
+
+                    <TextView
+                        android:id="@+id/frgDetailChart_TXTV_DescTotalSupply"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Total Supply"
+                        style="@style/TextView_DataDesc"
+                        android:layout_alignParentLeft="true"
+                        android:layout_below="@+id/frgDetailChart_TXTV_ValHigh24H"
+
+                        />
+
+
+                    <TextView
+                        android:id="@+id/frgDetailChart_TXTV_ValTotalSupply"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="5478512"
+                        style="@style/TextView_DataVal"
+                        android:layout_alignParentLeft="true"
+                        android:layout_below="@+id/frgDetailChart_TXTV_DescTotalSupply"
+
+                        />
+
+
+                    <TextView
+                        android:id="@+id/frgDetailChart_TXTV_DescCirculatingSupply"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Circulating Supply"
+                        style="@style/TextView_DataDesc"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignBaseline="@+id/frgDetailChart_TXTV_DescTotalSupply"
+                        android:layout_marginRight="16dp"
+
+                        />
+
+
+                    <TextView
+                        android:id="@+id/frgDetailChart_TXTV_ValCirculatingSupply"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="458754"
+                        style="@style/TextView_DataVal"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignBaseline="@+id/frgDetailChart_TXTV_ValTotalSupply"
+                        android:layout_marginRight="16dp"
+
+                        />
+
+
+
+
+                </RelativeLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                card_view:cardCornerRadius="6dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                card_view:cardPreventCornerOverlap="false"
+                card_view:cardUseCompatPadding="true"
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:orientation="vertical"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Description"
+                        android:layout_alignParentRight="true"
+                        style="@style/TextView_DataDesc"
+                        />
+
+
+                    <com.ms.square.android.expandabletextview.ExpandableTextView
+                        xmlns:android="http://schemas.android.com/apk/res/android"
+                        xmlns:expandableTextView="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/frgDetailChart_ExpandableTextView_CoinDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        expandableTextView:maxCollapsedLines="8"
+                        android:layout_below="@+id/frgDetailChart_TextView_DescTotalPriceOriginal"
+                        expandableTextView:animDuration="200">
+                        <TextView
+                            android:id="@id/expandable_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:textSize="16sp"
+                            android:textColor="#666666" />
+                        <ImageButton
+                            android:id="@id/expand_collapse"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="24dp"
+                            android:paddingRight="24dp"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="8dp"
+                            android:layout_gravity="center_horizontal|bottom"
+                            android:background="@android:color/transparent"
+                            />
+                    </com.ms.square.android.expandabletextview.ExpandableTextView>
+
+
+
+
+
+
+
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                card_view:cardCornerRadius="6dp"
+                android:layout_marginBottom="40dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                card_view:cardPreventCornerOverlap="false"
+                card_view:cardUseCompatPadding="true"
+
+                >
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/frgDetailChart_RV_ProjectLinks"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+
+
+
+
+
+    </androidx.core.widget.NestedScrollView>
+
+</FrameLayout>

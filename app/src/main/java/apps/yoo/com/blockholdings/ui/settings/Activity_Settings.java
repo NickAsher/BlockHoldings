@@ -2,39 +2,38 @@ package apps.yoo.com.blockholdings.ui.settings;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import androidx.fragment.app.FragmentManager;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import java.util.ArrayList;
-
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 import apps.yoo.com.blockholdings.R;
 import apps.yoo.com.blockholdings.data.AppDatabase;
 import apps.yoo.com.blockholdings.data.MySharedPreferences;
-import apps.yoo.com.blockholdings.data.Objects.Object_Exchange;
-import apps.yoo.com.blockholdings.data.Objects.Object_Coin;
+import apps.yoo.com.blockholdings.data.models.Object_Currency;
+import apps.yoo.com.blockholdings.ui.background.Worker_UpdatePreviousPricesLog;
+import apps.yoo.com.blockholdings.ui.general.BackgroundDataUpdater;
 import apps.yoo.com.blockholdings.ui.home.Activity_Portfolio;
+import apps.yoo.com.blockholdings.ui.background.Worker_CurrencyUpdater_SingleCoinPriceOriginal;
 import apps.yoo.com.blockholdings.ui.news.Activity_News;
-import apps.yoo.com.blockholdings.util.Constants;
-import apps.yoo.com.blockholdings.util.Message;
+import apps.yoo.com.blockholdings.ui.watchlist.Activity_WatchlistContainer;
+import apps.yoo.com.blockholdings.util.MyListener;
 
 
-public class Activity_Settings extends AppCompatActivity {
+public class Activity_Settings extends AppCompatActivity implements MyListener.DialogFragmentCurrency_to_ActivitySettings {
     Context context ;
     private static final String LOG_TAG = "Activity_settings -->" ;
     AppDatabase db ;
@@ -43,41 +42,41 @@ public class Activity_Settings extends AppCompatActivity {
 
     BottomNavigationView btmNavigationView ;
     Switch switch_ThemeChanger ;
-    TextView textView_ThemeValue ;
+    TextView textView_ThemeValue, textView_currencyValue ;
     Button btn_RefreshAllCoins ;
+    RelativeLayout relLt_ContainerCurrency ;
+    FragmentManager fragmentManager ;
 
+    RelativeLayout layout_MainContainer ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        theme = MySharedPreferences.getAppThemeFromPreference(getApplicationContext()) ;
-        if(theme == MySharedPreferences.PREFS_VALUE_THEME_DARK){
-            setTheme(R.style.AppTheme_Dark);
-        } else {
-            setTheme(R.style.AppTheme_Light);
-        }
 
         setContentView(R.layout.activity_settings);
         context = this;
 
         db = AppDatabase.getInstance(getApplicationContext()) ;
         requestQueue = Volley.newRequestQueue(context) ;
+        fragmentManager = getSupportFragmentManager() ;
 
         getReferences();
         setupBottomNavigationView();
         setupThemeChangingSwitchButton();
         setupRefreshDataButton() ;
+        setupCurrencyButton();
+
+        layout_MainContainer.setBackground(MySharedPreferences.getAppThemeGradientDrawableOnPreference(getApplicationContext()));
     }
 
     private void getReferences(){
         btmNavigationView = (BottomNavigationView)findViewById(R.id.activitySettings_BottomNavigationView_Main) ;
         switch_ThemeChanger = (Switch)findViewById(R.id.activitySetting_Switch_ThemeChanger) ;
         textView_ThemeValue = (TextView)findViewById(R.id.activitySetting_TextView_ValueTheme) ;
+        textView_currencyValue = findViewById(R.id.activitySetting_TextView_ValueCurrency) ;
         btn_RefreshAllCoins = (Button)findViewById(R.id.activitySettings_Button_RefreshData) ;
+        relLt_ContainerCurrency = findViewById(R.id.activitySettings_RelLt_ContainerCurrency) ;
 
-
-
-
+        layout_MainContainer = findViewById(R.id.activitySettings_RelLt_MainContainer) ;
     }
     private void setupBottomNavigationView(){
 
@@ -91,6 +90,12 @@ public class Activity_Settings extends AppCompatActivity {
                             Intent intent = new Intent(context, Activity_Portfolio.class) ;
                             startActivity(intent);
                             finish();
+                        break;
+
+                    case R.id.menuBottomNavigation_Item_Watchlist :
+                        Intent intentW = new Intent(context, Activity_WatchlistContainer.class) ;
+                        startActivity(intentW);
+                        finish();
                         break;
 
                     case R.id.menuBottomNavigation_Item_News :
@@ -144,68 +149,59 @@ public class Activity_Settings extends AppCompatActivity {
 
     }
 
-    private void setupRefreshDataButton(){
-        btn_RefreshAllCoins.setOnClickListener(new View.OnClickListener() {
+    private void setupCurrencyButton(){
+        Object_Currency newCurrency = MySharedPreferences.getCurrencyObj_FromPreference(context) ;
+        textView_currencyValue.setText(newCurrency.getCurrencyName() + " (" + newCurrency.getCurrencySymbol() + ")");
+
+        relLt_ContainerCurrency.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                StringRequest stringRequest = new StringRequest(Request.Method.GET, Constants.URL_APICALL_ALLCOINS,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-//                                Log.e(LOG_TAG, "Response from server is " + response) ;
-                                ArrayList<Object_Coin> listOfCoins = Helper_Settings.getListOfCoins_FromApi(response) ;
-//                                Log.e(LOG_TAG, listOfCoins.toString()) ;
-                                db.coinDao().deleteWholeTable() ;
-                                db.coinDao().insertManyCoins(listOfCoins);
-                                Message.display(context, "Resresh of All Coins is complete");
-
-
-//                        processResponse(response);
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Message.display(context, "Error in making volley request");
-                        Log.e(LOG_TAG, error.toString() ) ;
-                    }
-                }) ;
-
-
-                requestQueue.add(stringRequest) ;
-
-
-                StringRequest stringRequest2 = new StringRequest(Request.Method.GET, Constants.URL_APICALL_EXCHANGES,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-//                                Log.e(LOG_TAG, "Response from server is " + response) ;
-                                ArrayList<Object_Exchange> listOfExchanges = Helper_Settings.getListOfExchanges_FromApi(response) ;
-//                                Log.e(LOG_TAG, listOfCoins.toString()) ;
-                                db.exchangeDao().deleteWholeTable() ;
-                                db.exchangeDao().insertManyExchanges(listOfExchanges);
-                                Message.display(context, "Resresh of All Exchanges is complete");
-
-
-//                        processResponse(response);
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Message.display(context, "Error in making volley request");
-                        Log.e(LOG_TAG, error.toString() ) ;
-                    }
-                }) ;
-
-                requestQueue.add(stringRequest2) ;
-
+                DialogFragment_Currency dfCurrency = new DialogFragment_Currency() ;
+                dfCurrency.show(fragmentManager, "dfCurrency");
             }
-
         });
 
     }
 
+    @Override
+    public void onCurrencySelected(Object_Currency currencyObj) {
+        MySharedPreferences.setCurrency_InPreferences((context.getApplicationContext()), currencyObj);
+        textView_currencyValue.setText(currencyObj.getCurrencyName() + " (" + currencyObj.getCurrencySymbol() + ")");
+
+
+        OneTimeWorkRequest workRequest1 = new OneTimeWorkRequest.Builder(BackgroundDataUpdater.class)
+                .addTag("BackgroundDataUpdater")
+                .build() ;
+
+
+        OneTimeWorkRequest workRequest2 = new OneTimeWorkRequest.Builder(Worker_CurrencyUpdater_SingleCoinPriceOriginal.class)
+                .addTag("Worker_CurrencyUpdater_SingleCoinPriceOriginal") // used just like findFragmentByTag
+                .build() ;
+
+        OneTimeWorkRequest workRequest3 = new OneTimeWorkRequest.Builder(Worker_UpdatePreviousPricesLog.class)
+                .addTag("Worker_UpdatePreviousPricesLog") // used just like findFragmentByTag
+                .build() ;
+
+
+
+
+        WorkManager.getInstance().enqueue(workRequest1) ;
+        WorkManager.getInstance().enqueue(workRequest2) ;
+        WorkManager.getInstance().enqueue(workRequest3) ;
+
+
+    }
+
+    private void setupRefreshDataButton(){
+
+    }
+
+
+
+
     private void changeAppTheme(){
 
     }
+
 
 }

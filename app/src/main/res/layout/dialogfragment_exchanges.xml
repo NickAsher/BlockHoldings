@@ -17,7 +17,7 @@
         android:layout_gravity="center"
         />
 
-    <android.support.v7.widget.SearchView
+    <androidx.appcompat.widget.SearchView
         android:id="@+id/dialogFragmentExchanges_SearchView_Main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,7 +27,44 @@
 
         />
 
-    <android.support.v7.widget.RecyclerView
+    <RelativeLayout
+        android:id="@+id/dialogFragmentExchanges_RelLt_GlobalAverageContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="16dp"
+        android:paddingTop="8dp"
+        >
+
+        <ImageView
+            android:id="@+id/dialogFragmentExchanges_ReltLt_GlobalAverageImage"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginRight="24dp"
+            />
+
+        <TextView
+            android:id="@+id/dialogFragmentExchanges_TV_GlobalAverageName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Global Average"
+            android:textColor="#333"
+            android:textSize="16sp"
+            android:maxLines="2"
+            android:layout_marginBottom="4dp"
+            android:layout_toRightOf="@id/singleRowExchanges_ImageView_CoinImage"
+            android:layout_alignParentTop="true"
+            />
+
+
+
+
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/dialogFragmentExchanges_RecyclerView_CoinList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

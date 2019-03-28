@@ -5,6 +5,7 @@
     <dimen name="activitySplash_TextView_MainLogoText_TextSize">100sp</dimen>
 
 
+    <dimen name="global_NearbyTwoItems_MarginBetween">8dp</dimen>
 
     <!-- ******************* Activity  Home ****************** -->
     <dimen name="activity_TextView_HeadingBig_TextSize">36sp</dimen>
@@ -17,7 +18,7 @@
     <dimen name="activityHome_ImageButton_BottomButtons_Height">40dp</dimen>
 
 
-
+    <dimen name="singleRowWatchlist_LineChart_main_width">100dp</dimen>
 
 
     <!-- ******************* Dialog Call ****************** -->
@@ -29,8 +30,6 @@
     <dimen name="dialogCall_TextView_ContactnPhoneHeading_TextSize">16sp</dimen>
     <dimen name="dialogCall_LinearLayout_DialnSaveButton_Height">40dp</dimen>
     <dimen name="dialogCall_TextView_DialnSaveButton_TextSize">12sp</dimen>
-
-
 
 
     <!-- ******************* Activity  Content ****************** -->
@@ -73,13 +72,11 @@
     <dimen name="activityContent_TextView_BottomFirstBtn_MarginBottom">24dp</dimen>
     <dimen name="activityContent_TextView_BottomContactBtn_MarginBottom">40dp</dimen>
 
-
-
-
-
-
-
-
+    <!--
+Refer to App Widget Documentation for margin information
+http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
+    -->
+    <dimen name="widget_margin">8dp</dimen>
 
 
 </resources>

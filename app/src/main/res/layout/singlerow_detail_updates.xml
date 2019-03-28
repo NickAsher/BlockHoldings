@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/frgDetailUpdates_Lt_Parent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="8dp"
+    android:paddingTop="8dp"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:id="@+id/frgDetailUpdates_TV_ValueCoinPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$250 "
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="12sp"
+        android:layout_marginBottom="16dp"
+        android:layout_alignParentLeft="true"
+        />
+
+    <TextView
+        android:id="@+id/frgDetailUpdates_TV_ValueUpdater"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Updater"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="12sp"
+        android:layout_marginBottom="16dp"
+        android:layout_centerHorizontal="true"
+        />
+
+
+
+
+    <TextView
+        android:id="@+id/frgDetailUpdates_TV_ValueUpdateTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="27-jan 12:12"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="12sp"
+        android:layout_marginBottom="16dp"
+        android:layout_alignParentRight="true"
+        />
+
+
+</RelativeLayout>

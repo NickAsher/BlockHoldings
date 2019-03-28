@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/singleRowPortfolioNames_RelLt_Container"
+    android:padding="16dp"
+    >
+
+    <TextView
+        android:id="@+id/singleRowPortfolioNames_TextView_PortfolioName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Main Portfolio"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="18sp"
+        android:textStyle="bold"
+
+        android:layout_alignParentLeft="true"
+        />
+
+    <TextView
+        android:id="@+id/singleRowPortfolioNames_TextView_PortfolioBalance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="52357.564"
+        android:textColor="?android:attr/textColorTertiary"
+        android:textSize="14sp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/singleRowPortfolioNames_TextView_PortfolioName"
+
+        />
+
+    <RadioButton
+        android:id="@+id/singleRowPortfolioNames_RadioButton_IsCurrentPortfolio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        android:layout_alignParentRight="true"
+        android:clickable="false"
+        />
+
+</RelativeLayout>

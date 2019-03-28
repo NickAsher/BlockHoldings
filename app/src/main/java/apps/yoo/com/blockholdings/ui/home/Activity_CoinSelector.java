@@ -1,18 +1,21 @@
 package apps.yoo.com.blockholdings.ui.home;
 
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.SearchView;
 import android.util.Log;
 
+import com.google.common.collect.Collections2;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import apps.yoo.com.blockholdings.R;
 import apps.yoo.com.blockholdings.data.AppDatabase;
-import apps.yoo.com.blockholdings.data.Objects.Object_Coin;
+import apps.yoo.com.blockholdings.data.models.Object_Coin;
 
 public class Activity_CoinSelector extends AppCompatActivity {
     Context context ;
@@ -31,7 +34,13 @@ public class Activity_CoinSelector extends AppCompatActivity {
 
         context = this ;
         db = AppDatabase.getInstance(getApplicationContext()) ;
-        listOfSelectedCoins = db.coinDao().getListOfAllCoins() ;
+        if(getIntent().hasExtra("exclude_watchlist")){
+            listOfSelectedCoins = db.coinDao().getListOfAllCoins_ExcludeWatchlist() ;
+        } else if(getIntent().hasExtra("exclude_widget")){
+            listOfSelectedCoins = db.coinDao().getListOfAllCoins_ExcludeWidgetCoins() ;
+        } else {
+            listOfSelectedCoins = db.coinDao().getListOfAllCoins() ;
+        }
         getReferences() ;
         setupSearchView() ;
         setupRecyclerView();
@@ -55,11 +64,12 @@ public class Activity_CoinSelector extends AppCompatActivity {
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
-                List<Object_Coin> listOfSelectedCoins = db.coinDao().getListOfCoins_WhoseNameStartWithAlphabet(newText) ;
-                Log.e(LOG_TAG, listOfSelectedCoins.toString()) ;
-                adapter.refreshData(listOfSelectedCoins);
-                return true;
+            public boolean onQueryTextChange(final String newText) {
+                if (!newText.isEmpty()){
+                    Log.v(LOG_TAG, "Filtering with predicate") ;
+                    adapter.refreshData(new ArrayList<Object_Coin>(Collections2.filter(listOfSelectedCoins, Object_Coin.getPredicateFilter_NameSymbol_startsWithAlphabet(newText))));
+                }
+                 return true;
             }
         });
     }

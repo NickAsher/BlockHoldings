@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.detail.Fragment_DetailTransactions">
+
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fragmentDetailTransactions_RV_Main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+    <ImageView
+        android:id="@+id/frgDetailTransactions_ImageView_AddTransactionBtn"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_add_circle_white"
+        android:layout_centerInParent="true"
+        android:background="@null"
+        android:scaleType="fitXY"
+        android:tint="?android:attr/textColorPrimary"
+        android:visibility="gone"
+        />
+    <TextView
+
+        android:id="@+id/frgDetailTransactions_TV_AddTransactionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textColor="?android:attr/textColorPrimary"
+        android:text="Add a transaction"
+        android:textSize="16sp"
+        android:layout_above="@+id/frgDetailTransactions_ImageView_AddTransactionBtn"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone"
+
+        />
+
+</RelativeLayout>
