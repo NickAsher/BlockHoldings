@@ -38,7 +38,7 @@ public class PagerAdapter_Detail extends FragmentPagerAdapter {
          */
         switch (position){
             case 0 :
-                Fragment_DetailPrice fragment = new Fragment_DetailPrice();
+                Fragment_DetailPriceChart fragment = new Fragment_DetailPriceChart();
                 Bundle args = new Bundle();
                 args.putString("coinId", coinId);
                 fragment.setArguments(args);
@@ -66,7 +66,7 @@ public class PagerAdapter_Detail extends FragmentPagerAdapter {
 
 
             default:
-                Fragment_DetailPrice fragmentD = new Fragment_DetailPrice();
+                Fragment_DetailPriceChart fragmentD = new Fragment_DetailPriceChart();
                 Bundle argsD = new Bundle();
                 argsD.putString("CoinId", coinId);
                 fragmentD.setArguments(argsD);

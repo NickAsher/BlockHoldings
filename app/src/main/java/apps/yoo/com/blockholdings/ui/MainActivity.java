@@ -31,7 +31,7 @@ import apps.yoo.com.blockholdings.data.models.Object_NewsSite;
 import apps.yoo.com.blockholdings.data.models.Object_Portfolio;
 import apps.yoo.com.blockholdings.data.models.Object_VsSimpleCurrency;
 import apps.yoo.com.blockholdings.ui.general.BackgroundDataUpdater;
-import apps.yoo.com.blockholdings.ui.home.Activity_Portfolio;
+import apps.yoo.com.blockholdings.ui.home.Activity_Home;
 import apps.yoo.com.blockholdings.ui.settings.Helper_Settings;
 import apps.yoo.com.blockholdings.util.Constants;
 import apps.yoo.com.blockholdings.util.MyGlobals;
@@ -84,9 +84,9 @@ public class MainActivity extends AppCompatActivity {
     private void startActivityPortfolio(){
 //        if(checkerNo == 5){
 
-            Intent intent = new Intent(this, Activity_Portfolio.class) ;
-            startActivity(intent);
-            finish();
+        Intent intent = new Intent(this, Activity_Home.class) ;
+        startActivity(intent);
+        finish();
 
 
 //        }

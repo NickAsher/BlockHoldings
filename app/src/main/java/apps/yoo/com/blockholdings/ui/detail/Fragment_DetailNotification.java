@@ -43,7 +43,7 @@ import apps.yoo.com.blockholdings.util.Message;
 
 public class Fragment_DetailNotification extends Fragment {
     Context context ;
-    String LOG_TAG = "Fragment_DetailPrice --> " ;
+    String LOG_TAG = "Fragment_DetailPriceChart --> " ;
     AppDatabase db;
     NotificationManager notificationManager ;
     AppWidgetManager appWidgetManager  ;

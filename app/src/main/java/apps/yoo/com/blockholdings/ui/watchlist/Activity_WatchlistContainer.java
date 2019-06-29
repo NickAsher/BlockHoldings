@@ -13,7 +13,7 @@ import android.view.MenuItem;
 
 import apps.yoo.com.blockholdings.R;
 import apps.yoo.com.blockholdings.data.AppDatabase;
-import apps.yoo.com.blockholdings.ui.home.Activity_Portfolio;
+import apps.yoo.com.blockholdings.ui.home.Activity_Home;
 import apps.yoo.com.blockholdings.ui.news.Activity_News;
 import apps.yoo.com.blockholdings.ui.settings.Activity_Settings;
 
@@ -62,7 +62,7 @@ public class Activity_WatchlistContainer extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.menuBottomNavigation_Item_Home :
-                        Intent intent = new Intent(context, Activity_Portfolio.class) ;
+                        Intent intent = new Intent(context, Activity_Home.class) ;
                         startActivity(intent);
                         finish();
                         break;
@@ -82,7 +82,7 @@ public class Activity_WatchlistContainer extends AppCompatActivity {
                         finish();
                         break;
                     default:
-                        Intent intent4 = new Intent(context, Activity_Portfolio.class) ;
+                        Intent intent4 = new Intent(context, Activity_Home.class) ;
                         startActivity(intent4);
                         finish();
                         break;

@@ -12,4 +12,10 @@ public class ApiManager {
         return "https://api.coingecko.com/api/v3/coins/markets?vs_currency=" + currencyId + "&order=market_cap_desc&per_page=" + noOfItems + "&page=" + paginationNo + "&sparkline=true&price_change_percentage=1h%2C24h%2C7d" ;
 
     }
+
+
+    public static String getUrl_TickersOfCoin(int paginationNo, String coinId){
+        // https://api.coingecko.com/api/v3/coins/bitcoin/tickers?page=1
+        return "https://api.coingecko.com/api/v3/coins/" + coinId + "/tickers?page=" + paginationNo ;
+    }
 }

@@ -44,7 +44,7 @@ import  apps.yoo.com.blockholdings.util.Constants;
 
 public class Fragment_WatchlistSelected extends Fragment {
     Context context ;
-    String LOG_TAG = "Fragment_DetailPrice --> " ;
+    String LOG_TAG = "Fragment_DetailPriceChart --> " ;
     AppDatabase db;
     RequestQueue requestQueue ;
 

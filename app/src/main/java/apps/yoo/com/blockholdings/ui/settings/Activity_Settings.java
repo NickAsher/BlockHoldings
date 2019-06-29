@@ -26,7 +26,7 @@ import apps.yoo.com.blockholdings.data.MySharedPreferences;
 import apps.yoo.com.blockholdings.data.models.Object_Currency;
 import apps.yoo.com.blockholdings.ui.background.Worker_UpdatePreviousPricesLog;
 import apps.yoo.com.blockholdings.ui.general.BackgroundDataUpdater;
-import apps.yoo.com.blockholdings.ui.home.Activity_Portfolio;
+import apps.yoo.com.blockholdings.ui.home.Activity_Home;
 import apps.yoo.com.blockholdings.ui.background.Worker_CurrencyUpdater_SingleCoinPriceOriginal;
 import apps.yoo.com.blockholdings.ui.news.Activity_News;
 import apps.yoo.com.blockholdings.ui.watchlist.Activity_WatchlistContainer;
@@ -87,7 +87,7 @@ public class Activity_Settings extends AppCompatActivity implements MyListener.D
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.menuBottomNavigation_Item_Home :
-                            Intent intent = new Intent(context, Activity_Portfolio.class) ;
+                            Intent intent = new Intent(context, Activity_Home.class) ;
                             startActivity(intent);
                             finish();
                         break;
@@ -109,7 +109,7 @@ public class Activity_Settings extends AppCompatActivity implements MyListener.D
                         break;
 
                     default:
-                            Intent intent4 = new Intent(context, Activity_Portfolio.class) ;
+                            Intent intent4 = new Intent(context, Activity_Home.class) ;
                             startActivity(intent4);
                             finish();
 

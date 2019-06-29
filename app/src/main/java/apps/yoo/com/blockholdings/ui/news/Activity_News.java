@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 import apps.yoo.com.blockholdings.R;
 import apps.yoo.com.blockholdings.data.MySharedPreferences;
-import apps.yoo.com.blockholdings.ui.home.Activity_Portfolio;
+import apps.yoo.com.blockholdings.ui.home.Activity_Home;
 import apps.yoo.com.blockholdings.ui.settings.Activity_Settings;
 import apps.yoo.com.blockholdings.ui.watchlist.Activity_WatchlistContainer;
 import apps.yoo.com.blockholdings.util.Constants;
@@ -99,7 +99,7 @@ public class Activity_News extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.menuBottomNavigation_Item_Home :
-                            Intent intent = new Intent(context, Activity_Portfolio.class) ;
+                            Intent intent = new Intent(context, Activity_Home.class) ;
                             startActivity(intent);
                             finish();
                         break;
@@ -119,7 +119,7 @@ public class Activity_News extends AppCompatActivity {
                             finish();
                         break;
                     default:
-                            Intent intent4 = new Intent(context, Activity_Portfolio.class) ;
+                            Intent intent4 = new Intent(context, Activity_Home.class) ;
                             startActivity(intent4);
                             finish();
                         break;

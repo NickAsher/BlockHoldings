@@ -28,7 +28,7 @@ import apps.yoo.com.blockholdings.ui.transaction.Activity_Transaction;
 
 public class Fragment_DetailTransactions extends Fragment {
     Context context ;
-    String LOG_TAG = "Fragment_DetailPrice --> " ;
+    String LOG_TAG = "Fragment_DetailPriceChart --> " ;
     AppDatabase db;
 
     RecyclerView rv ;

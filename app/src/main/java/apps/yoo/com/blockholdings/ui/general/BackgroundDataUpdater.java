@@ -48,7 +48,7 @@ import apps.yoo.com.blockholdings.data.models.Object_NotificationCoinId;
 import apps.yoo.com.blockholdings.data.models.Object_Transaction;
 import apps.yoo.com.blockholdings.data.models.Object_WidgetCoinPrice;
 import apps.yoo.com.blockholdings.ui.detail.Activity_Detail;
-import apps.yoo.com.blockholdings.ui.home.portfolio.Helper_Portfolio;
+import apps.yoo.com.blockholdings.ui.portfolio.Helper_Portfolio;
 import apps.yoo.com.blockholdings.util.Constants;
 import apps.yoo.com.blockholdings.util.Message;
 

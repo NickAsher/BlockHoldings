@@ -36,7 +36,7 @@ import apps.yoo.com.blockholdings.util.Message;
 
 public class Worker_UpdatePricesLog_1Coin extends Worker {
     Context context ;
-    private static final String LOG_TAG = "Worker_CurrencyUpdater_SingleCoinPriceOriginal --> " ;
+    private static final String LOG_TAG = "Worker_UpdatePricesLog_1Coin --> " ;
     AppDatabase db ;
     RequestQueue requestQueue ;
 
@@ -54,7 +54,7 @@ public class Worker_UpdatePricesLog_1Coin extends Worker {
     public Worker_UpdatePricesLog_1Coin(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
         this.context = context ;
-        Log.e(LOG_TAG, "Worker_CurrencyUpdater_SingleCoinPriceOriginal is being constructed") ;
+        Log.v(LOG_TAG, "Worker_UpdatePricesLog_1Coin is being constructed") ;
     }
 
     @NonNull
@@ -107,7 +107,7 @@ public class Worker_UpdatePricesLog_1Coin extends Worker {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.e(LOG_TAG, "Url is " + url1 + "\n Response is " + response) ;
+                        Log.d(LOG_TAG, "Url is " + url1 + "\n Response is " + response) ;
                         try{
                             JSONObject responseObj = new JSONObject(response) ;
                             JSONArray priceArray = responseObj.getJSONArray("prices") ;

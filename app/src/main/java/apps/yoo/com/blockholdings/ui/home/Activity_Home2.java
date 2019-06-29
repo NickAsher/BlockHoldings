@@ -1,23 +1,12 @@
 package apps.yoo.com.blockholdings.ui.home;
 
 import android.app.Activity;
-import androidx.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.fragment.app.FragmentManager;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -27,6 +16,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.collect.Collections2;
 
 import org.json.JSONException;
@@ -41,6 +32,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import apps.yoo.com.blockholdings.R;
 import apps.yoo.com.blockholdings.data.AppDatabase;
 import apps.yoo.com.blockholdings.data.MySharedPreferences;
@@ -48,22 +47,20 @@ import apps.yoo.com.blockholdings.data.models.Object_Coin;
 import apps.yoo.com.blockholdings.data.models.Object_Currency;
 import apps.yoo.com.blockholdings.data.models.Object_Portfolio;
 import apps.yoo.com.blockholdings.data.models.Object_TransactionFullData;
-import apps.yoo.com.blockholdings.ui.home.portfolio.DialogFragment_Portfolio;
-import apps.yoo.com.blockholdings.ui.home.portfolio.DialogFragment_UpdateLog;
-import apps.yoo.com.blockholdings.ui.settings.Activity_Settings;
 import apps.yoo.com.blockholdings.ui.news.Activity_News;
-import apps.yoo.com.blockholdings.ui.transaction.Activity_Transaction2;
+import apps.yoo.com.blockholdings.ui.portfolio.Fragment_PortfolioBrief;
+import apps.yoo.com.blockholdings.ui.settings.Activity_Settings;
+import apps.yoo.com.blockholdings.ui.transaction.Activity_Transaction3;
 import apps.yoo.com.blockholdings.ui.watchlist.Activity_WatchlistContainer;
 import apps.yoo.com.blockholdings.util.Constants;
 import apps.yoo.com.blockholdings.util.Message;
 import apps.yoo.com.blockholdings.util.MyGlobals;
-import apps.yoo.com.blockholdings.util.MyListener;
 import apps.yoo.com.blockholdings.util.Utils;
 
 
-public class Activity_Portfolio extends AppCompatActivity implements MyListener.DialogFragmentPortfolios_to_ActivityPortfolio{
+public class Activity_Home2 extends AppCompatActivity{
     Context context ;
-    String LOG_TAG = "Activity_Portfolio --> " ;
+    String LOG_TAG = "Activity_Home --> " ;
     AppDatabase db;
     FragmentManager fragmentManager ;
 
@@ -71,9 +68,9 @@ public class Activity_Portfolio extends AppCompatActivity implements MyListener.
     BottomNavigationView btmNavigationView ;
     RecyclerView rv ;
     TextView textView_NameSort, textView_PercentageSort, textView_HoldingsSort, textView_SingleCoinPriceSort,
-            textView_Holding24HSort, textView_Holding7DSort, textView_HoldingMaxSort, textView_PortfolioName, textView_PortfolioBalance ;
+            textView_Holding24HSort, textView_Holding7DSort, textView_HoldingMaxSort ;
     RelativeLayout layout_MainContainer ;
-    Button btn_PortfolioChange ;
+    Fragment_PortfolioBrief fragment_portfolioBrief ;
 
     Map<String, BigDecimal> holdingsChangeValueSet ;
 
@@ -113,6 +110,7 @@ public class Activity_Portfolio extends AppCompatActivity implements MyListener.
         fragmentManager = getSupportFragmentManager() ;
 
         currentCurrency = MySharedPreferences.getCurrencyObj_FromPreference(getApplicationContext()) ;
+        currentPortfolioObj = db.portfolioDao().getPortfolioById(MySharedPreferences.getPortfolioId_FromPreference(context.getApplicationContext())) ;
         listOfPortfolios = db.portfolioDao().getListOfAllPortfolios() ;
         listOfTransactions = new ArrayList<>() ;
 
@@ -130,8 +128,6 @@ public class Activity_Portfolio extends AppCompatActivity implements MyListener.
         setupBasicUI() ;
 //        setupSortingTextViews() ;
 //        getFreshDataFromServer() ;
-        setupPortfolioDialogFragment();
-        setPortfolioUpdateLog() ;
 
     }
 
@@ -139,8 +135,7 @@ public class Activity_Portfolio extends AppCompatActivity implements MyListener.
         btmNavigationView = (BottomNavigationView)findViewById(R.id.activityHome_BottomNavigationView_Main) ;
         rv = findViewById(R.id.activityPortfolio_RecyclerView_transactions) ;
         layout_MainContainer= findViewById(R.id.activityPortfolio_RelLt_MainContainer) ;
-        textView_PortfolioName = findViewById(R.id.activityPortfolio_TextView_PortfolioName) ;
-        textView_PortfolioBalance= findViewById(R.id.activityPortfolio_TextView_PortfolioBalance) ;
+        fragment_portfolioBrief = (Fragment_PortfolioBrief) fragmentManager.findFragmentById(R.id.activityPortfolio_Fragment_PortfolioBriefInfo) ;
 
         textView_NameSort = findViewById(R.id.activityPortfolio_TextView_SortName) ;
         textView_SingleCoinPriceSort = findViewById(R.id.activityPortfolio_TextView_SortSingleCoinPrice) ;
@@ -151,7 +146,6 @@ public class Activity_Portfolio extends AppCompatActivity implements MyListener.
         textView_Holding7DSort = findViewById(R.id.activityPortfolio_TextView_SortChange7D) ;
         textView_HoldingMaxSort = findViewById(R.id.activityPortfolio_TextView_SortChangeAll) ;
 
-        btn_PortfolioChange = findViewById(R.id.activityPortfolio_Btn_PortfolioChange) ;
     }
 
     private void setupBottomNavigationView(){
@@ -184,7 +178,7 @@ public class Activity_Portfolio extends AppCompatActivity implements MyListener.
                         break;
 
                     default:
-                        Intent intent = new Intent(context, Activity_Portfolio.class) ;
+                        Intent intent = new Intent(context, Activity_Home2.class) ;
                         startActivity(intent);
                         finish();
                         break;
@@ -196,7 +190,6 @@ public class Activity_Portfolio extends AppCompatActivity implements MyListener.
 
 
     private void setupBasicUI(){
-        setupPortfolioTextViews();
         FloatingActionButton fab_AddCoin = findViewById(R.id.activityHome_FAB_AddCoin) ;
         fab_AddCoin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -207,11 +200,6 @@ public class Activity_Portfolio extends AppCompatActivity implements MyListener.
         });
     }
 
-    private void setupPortfolioTextViews(){
-        textView_PortfolioName.setText(MyGlobals.getCurrentPortfolioObj().getPortfolioName());
-        textView_PortfolioBalance.setText(Utils.showHumanDecimals(MyGlobals.getCurrentPortfolioObj().getPortfolioValue()));
-
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -220,8 +208,13 @@ public class Activity_Portfolio extends AppCompatActivity implements MyListener.
             if(resultCode == Activity.RESULT_OK){
                 String coinId=data.getStringExtra("coinId");
 
-                Intent intent = new Intent(context, Activity_Transaction2.class) ;
-                intent.putExtra("coin", db.coinDao().getCoinById(coinId).toJson().toString()) ;
+
+//                Intent intent = new Intent(context, Activity_Transaction2.class) ;
+//                intent.putExtra("coin", db.coinDao().getCoinById(coinId).toJson().toString()) ;
+                Intent intent = new Intent(context, Activity_Transaction3.class) ;
+
+                intent.putExtra("coinId", coinId) ;
+
                 context.startActivity(intent);
             }
 
@@ -583,63 +576,19 @@ public class Activity_Portfolio extends AppCompatActivity implements MyListener.
             }
 
             MyGlobals.refreshPortfolioValue(db);
-            setupPortfolioTextViews() ;
+            // the following line basically refreshes the Fragment_PortfolioBrief.
+            // SO rather than making a new method to refresh the damn thing, i just call it
+            fragment_portfolioBrief.refreshPortfolio();
 //            adapter.refreshData(listOfTransactions);
         }catch (JSONException e){
             Log.e(LOG_TAG, e.toString()) ;
         }
     }
 
-    private void setupPortfolioDialogFragment(){
-        btn_PortfolioChange.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment_Portfolio dfPortfolio = new DialogFragment_Portfolio() ;
-                dfPortfolio.show(fragmentManager, "dfPortfolio ");
-            }
-        });
-    }
-
-    @Override
-    public void onChangingPortfolio() {
-        // TODO do something about the portfolio change
-        Message.display(context, "Portfolio has been changed to" + MyGlobals.getCurrentPortfolioObj().getPortfolioName());
-        textView_PortfolioName.setText(MyGlobals.getCurrentPortfolioObj().getPortfolioName());
-        textView_PortfolioBalance.setText(Utils.showHumanDecimals(MyGlobals.getCurrentPortfolioObj().getPortfolioValue()));
-        listOfPortfolioTransactions_Unsummed = new ArrayList<Object_TransactionFullData>(Collections2.filter(listOfAllTransaction_Unsummed, Object_TransactionFullData.getPredicateFilter_PortfolioId(MyGlobals.getCurrentPortfolioObj().getPortfolioId()))) ;
-        listOfPortfolioTransactions_Summed = Helper_Home.getSummedTransactions(listOfPortfolioTransactions_Unsummed) ;
-        adapter.refreshData(listOfPortfolioTransactions_Summed);
-        getFreshDataFromServer();
 
 
 
-        //        db.transactionDao().getListOfAllTransaction_FullData_Summed(MyGlobals.getCurrentPortfolioObj().getPortfolioId()).observe(this, new Observer<List<Object_TransactionFullData>>() {
-//            @Override
-//            public void onChanged(@Nullable List<Object_TransactionFullData> list) {
-//                Log.e(LOG_TAG, "Live data Changed for  transaction data inside onChangingPortfolio()") ;
-//                listOfTransactions = db.transactionDao().getListOfAllTransaction_FullData_Summed(MyGlobals.getCurrentPortfolioObj().getPortfolioId()) ;
-//                setupPreferenceSorting_OfList() ;
-//                adapter.refreshData(listOfTransactions);
-//                getFreshDataFromServer();
-//            }
-//        }) ;
 
-    }
-
-
-    private void setPortfolioUpdateLog(){
-        Button btn = findViewById(R.id.activityPortfolio_Btn_PortfolioUpdates) ;
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment_UpdateLog dfPortfolioUpdate = new DialogFragment_UpdateLog() ;
-                Bundle bundle = new Bundle() ;
-                bundle.putInt("portfolioId", MySharedPreferences.getPortfolioId_FromPreference(context.getApplicationContext()));
-                dfPortfolioUpdate.setArguments(bundle);
-                dfPortfolioUpdate.show(fragmentManager, "dfPortfolioUpdate ");
-            }
-        });
-    }
 
 
 

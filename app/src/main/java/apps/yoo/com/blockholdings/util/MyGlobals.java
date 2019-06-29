@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 import apps.yoo.com.blockholdings.data.AppDatabase;
 import apps.yoo.com.blockholdings.data.models.Object_Portfolio;
-import apps.yoo.com.blockholdings.ui.home.portfolio.Helper_Portfolio;
+import apps.yoo.com.blockholdings.ui.portfolio.Helper_Portfolio;
 
 public class MyGlobals {
     private static Object_Portfolio currentPortfolioObj ;

@@ -1,4 +1,4 @@
-package apps.yoo.com.blockholdings.ui.home.portfolio;
+package apps.yoo.com.blockholdings.ui.portfolio;
 
 
 import android.content.Context;
@@ -14,29 +14,31 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.util.List;
+
 import apps.yoo.com.blockholdings.R;
 import apps.yoo.com.blockholdings.data.AppDatabase;
 import apps.yoo.com.blockholdings.data.models.Object_Portfolio;
 import apps.yoo.com.blockholdings.util.MyListener;
 
 
-public class DialogFragment_EditPortfolioName extends DialogFragment  {
+public class DialogFragment_AddNewPortfolio extends DialogFragment  {
     Context context ;
-    String LOG_TAG = "DialogFragment_Portfolio -->" ;
+    String LOG_TAG = "DialogFragment_AddNewPortfolio -->" ;
     AppDatabase db ;
     FragmentManager fragmentManager ;
 
     EditText editText_NewPortfolioName ;
     Button btn_Save, btn_Cancel ;
 
+    List<Object_Portfolio> listOfPortfolios ;
+    MyListener.dlgFrg_AddNewPortfolio_to_DlgFrg_Portfolio listener ;
 
-    MyListener.dlgFrg_EditPortfolioName_to_DlgFrg_Portfolio listener ;
-    Object_Portfolio selectedPortfolio ;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dlgfrg_editportfolioname, null) ;
+        return inflater.inflate(R.layout.dlgfrg_addnewportfolio, null) ;
     }
 
     @Override
@@ -60,9 +62,8 @@ public class DialogFragment_EditPortfolioName extends DialogFragment  {
 
         context = getActivity() ;
         fragmentManager = getActivity().getSupportFragmentManager() ;
-        listener = (DialogFragment_Portfolio)getTargetFragment() ; // this method gets the calling parent fragment
+        listener = (MyListener.dlgFrg_AddNewPortfolio_to_DlgFrg_Portfolio)getActivity() ; // this method gets the calling parent fragment
         db = AppDatabase.getInstance(getActivity().getApplicationContext()) ;
-        selectedPortfolio = db.portfolioDao().getPortfolioById(getArguments().getInt("portfolioId")) ;
 
 
         getReferences(view);
@@ -76,16 +77,15 @@ public class DialogFragment_EditPortfolioName extends DialogFragment  {
 
 
     private void getReferences(View view){
-        editText_NewPortfolioName = view.findViewById(R.id.dlgfrgEditPortfolioName_EditText_NewName) ;
-        btn_Cancel  =  view.findViewById(R.id.dlgfrgEditPortfolioName_Btn_Cancel) ;
-        btn_Save =  view.findViewById(R.id.dlgfrgEditPortfolioName_Btn_Save) ;
+        editText_NewPortfolioName = view.findViewById(R.id.dlgfrgAddNewPortfolio_EditText_NewName) ;
+        btn_Cancel  =  view.findViewById(R.id.dlgfrgAddNewPortfolio_Btn_Cancel) ;
+        btn_Save =  view.findViewById(R.id.dlgfrgAddNewPortfolio_Btn_Save) ;
     }
 
 
 
 
     private void setupBasicUI(){
-        editText_NewPortfolioName.setText(selectedPortfolio.getPortfolioName());
 
         btn_Cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,14 +98,19 @@ public class DialogFragment_EditPortfolioName extends DialogFragment  {
             @Override
             public void onClick(View v) {
                 String newName = editText_NewPortfolioName.getText().toString() ;
-                selectedPortfolio.setPortfolioName(newName);
-                db.portfolioDao().updatePortfolio(selectedPortfolio);
+                db.portfolioDao().insertPortfolio(new Object_Portfolio(newName, "0"));
                 dismiss();
-                listener.onEditingPortfolioName();
+                listener.onAddingNewPortfolio();
             }
         });
 
     }
+
+
+
+
+
+
 
 
 

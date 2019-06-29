@@ -8,15 +8,19 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import android.util.Log;
 
+import com.github.mikephil.charting.data.Entry;
 import com.google.common.base.Predicate;
 
+import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -123,7 +127,11 @@ public class Object_Coin {
     public static final int PRICE_1Y = 4 ;
     public static final int PRICE_MAX = 5 ;
 
-
+    public static final int TIMEFRAME_1DAY = 1 ;
+    public static final int TIMEFRAME_1WEEK = 2 ;
+    public static final int TIMEFRAME_1MONTH = 3 ;
+    public static final int TIMEFRAME_1YEAR = 4 ;
+    public static final int TIMEFRAME_MAX = 5 ;
 
     public Object_Coin(String id, String symbol, String name) {
         this.id = id;
@@ -796,6 +804,77 @@ public class Object_Coin {
         return null ;
     }
 
+    public static String getPriceOfCoin_FromPriceLog_TimeAgo(Object_Transaction transactionObj, Object_Coin coinObj, int timeFrame){
+        Long transactionBuyTime = transactionObj.getTransactionDateTime().getTime() ;
+        DateTime currentDateTime = new DateTime(Calendar.getInstance().getTimeInMillis()) ;
+        long startingDateTime ;
+        switch (timeFrame){
+            case TIMEFRAME_1DAY :
+                startingDateTime = currentDateTime.minusDays(1).getMillis() ;
+                break;
+            case TIMEFRAME_1WEEK :
+                startingDateTime = currentDateTime.minusWeeks(1).getMillis() ;
+                break;
+            case TIMEFRAME_1MONTH :
+                startingDateTime = currentDateTime.minusMonths(1).getMillis() ;
+                break;
+            case TIMEFRAME_1YEAR :
+                startingDateTime = currentDateTime.minusYears(1).getMillis() ;
+                break;
+            case TIMEFRAME_MAX :
+                startingDateTime = 0 ;
+                break;
+            default:
+                startingDateTime = 0 ;
+                break;
+        }
+
+        // The following code is for the case when the date of our transaction is less than our startingDateTime
+        // Ex:  Let's say that we bought coins of September 5 . So our transactionBuyTime = September_5
+        // Let's say we want price of coin from date January 1 :  So our startingDateTime = January_1
+        // Now In this case we want the price only from September 5. So in Milliseconds September_5 is greater than January_1
+        // In that case we simply return the price from transaction entry, we don't have to look up the log table
+        if(transactionBuyTime > startingDateTime){
+            return transactionObj.getSingleCoinPrice_CurrencyOriginal() ;
+        }
+
+
+
+
+        // Now that we have the startingDateTime : i.e. the date value for which we want the price
+        // what we do is loop through the update log of the coin price data from the beginning
+        // And the first date value that is larger than our startingDateTime
+        // we return the price for that value
+        // Example : Let's say we are looking for price of January_7
+        // In our update log we have the data starting from January 1
+        // SO we start the data searching and looping from January 1
+        // And search  January 2, January 3, January 4, January 5, January 6, January 7, January 8
+        // Here see that January 8 is greater than January 7
+        // so we will return the price of January 8
+
+        // NOTE : we wanted data of January 7 but we got data of January 8
+        // It depends if the millisecond long value of the date
+        // we might be able to get the january 7 also , if the millisecond value of it in the update log is > than startingDateTime
+        try{
+            JSONArray priceArray = new JSONArray(coinObj.getPriceData()) ;
+            for(int i = 0 ; i< priceArray.length() ; i++){
+                JSONArray insideArray = priceArray.getJSONArray(i) ;
+                String price = insideArray.getString(0) ;
+                String date = insideArray.getString(1) ;
+                if (Float.valueOf(date) > startingDateTime){
+                    return price ;
+                }
+            }
+            Log.e(LOG_TAG, "No price value found for the coin" + coinObj.getName() + " for the required date") ;
+            return "0" ;
+        }catch (JSONException e){
+            Log.e(LOG_TAG, e.toString()) ;
+            return "0" ;
+        }
+
+
+
+    }
 
     public static String  getPriceOfCoin_FromPriceLog_MaxAgo(Object_Transaction transactionObj){
 

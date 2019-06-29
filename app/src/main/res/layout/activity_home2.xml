@@ -91,13 +91,11 @@
                     android:id="@+id/activityPortfolio_TextView_SortPercentage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Change  "
+                    android:text="change  "
                     android:textStyle="bold"
                     android:textSize="14sp"
-                    android:gravity="center_horizontal|top"
-
+                    android:gravity="center"
                     android:onClick="setupSortingTextViewsNew"
-
 
                     />
 
@@ -114,7 +112,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textSize="10sp"
+                        android:textSize="8sp"
                         android:text="1D"
                         android:onClick="setupSortingTextViewsNew"
 
@@ -125,7 +123,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textSize="10sp"
+                        android:textSize="8sp"
                         android:text="7D"
                         android:onClick="setupSortingTextViewsNew"
 
@@ -137,7 +135,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textSize="10sp"
+                        android:textSize="8sp"
                         android:text="All"
                         android:onClick="setupSortingTextViewsNew"
                         android:checked="true"
@@ -145,6 +143,57 @@
 
                 </RadioGroup>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+
+
+                    <TextView
+                        android:id="@+id/activityPortfolio_TextView_SortChange24H"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="1D"
+                        android:textStyle="bold"
+                        android:textSize="10sp"
+                        android:gravity="center"
+                        android:onClick="setupSortingTextViewsNew"
+
+
+                        />
+
+                    <TextView
+                        android:id="@+id/activityPortfolio_TextView_SortChange7D"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="7D"
+                        android:textStyle="bold"
+                        android:textSize="10sp"
+                        android:gravity="center"
+                        android:onClick="setupSortingTextViewsNew"
+
+
+                        />
+
+                    <TextView
+                        android:id="@+id/activityPortfolio_TextView_SortChangeAll"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="All"
+                        android:textStyle="bold"
+                        android:textSize="10sp"
+                        android:gravity="center"
+                        android:onClick="setupSortingTextViewsNew"
+
+
+                        />
+
+
+                </LinearLayout>
 
             </LinearLayout>
 

@@ -1,4 +1,4 @@
-package apps.yoo.com.blockholdings.ui.home.portfolio;
+package apps.yoo.com.blockholdings.ui.portfolio;
 
 import android.content.Context;
 import android.os.Bundle;

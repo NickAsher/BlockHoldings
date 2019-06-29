@@ -48,9 +48,9 @@ import apps.yoo.com.blockholdings.util.Message;
 import apps.yoo.com.blockholdings.util.Utils;
 
 
-public class Fragment_DetailPrice extends Fragment {
+public class Fragment_DetailPriceChart extends Fragment {
     Context context ;
-    String LOG_TAG = "Fragment_DetailPrice --> " ;
+    String LOG_TAG = "Fragment_DetailPriceChart --> " ;
     AppDatabase db;
 
     LineChart chart;
@@ -70,7 +70,7 @@ public class Fragment_DetailPrice extends Fragment {
     List<Object_ProjectLink> listOfProjectLinks ;
 
 
-    public Fragment_DetailPrice() {
+    public Fragment_DetailPriceChart() {
         // Required empty public constructor
     }
 
@@ -290,6 +290,7 @@ public class Fragment_DetailPrice extends Fragment {
     }
 
     private void setupChart(List<Entry> entries, int xAxis_ValueFormatterType){
+        Log.e(LOG_TAG, entries.toString()) ;
 
 
         LineDataSet dataSet = new LineDataSet(entries, "Label"); // add entries to dataset
@@ -354,6 +355,8 @@ public class Fragment_DetailPrice extends Fragment {
                     case MotionEvent.ACTION_CANCEL:
                     case MotionEvent.ACTION_UP: {
                         nsv_Main.requestDisallowInterceptTouchEvent(false);
+
+                        chart.highlightValue(null);
 
                         break;
                     }

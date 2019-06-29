@@ -12,9 +12,9 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.paging.DataSource;
 import androidx.paging.PageKeyedDataSource;
 import apps.yoo.com.blockholdings.data.models.Object_Coin;
-import apps.yoo.com.blockholdings.network.MyNetworkManager;
+import apps.yoo.com.blockholdings.network.NetworkRepository;
 import apps.yoo.com.blockholdings.network.NetworkDataParser;
-import apps.yoo.com.blockholdings.network.NetworkResponse;
+import apps.yoo.com.blockholdings.network.MyNetworkResponse;
 import apps.yoo.com.blockholdings.util.Message;
 
 public class DataSource_AllCoins extends PageKeyedDataSource<Integer, Object_Coin> {
@@ -22,17 +22,17 @@ public class DataSource_AllCoins extends PageKeyedDataSource<Integer, Object_Coi
     Context context ;
     public static final int NO_OF_COINS_PER_PAGE = 20 ;
     final Integer FIRST_PAGE = 1 ;
-    MyNetworkManager networkManager ;
+    NetworkRepository networkManager ;
 
 
     void init(Context context){
         this.context = context ;
-        networkManager = MyNetworkManager.getInstance(context) ;
+        networkManager = NetworkRepository.getInstance(context) ;
     }
 
     @Override
     public void loadInitial(@NonNull LoadInitialParams<Integer> params, @NonNull final LoadInitialCallback<Integer, Object_Coin> callback) {
-        networkManager.getFullListOfCoins_withMarketSparklineData(FIRST_PAGE, "usd", new NetworkResponse() {
+        networkManager.getFullListOfCoins_withMarketSparklineData(FIRST_PAGE, "usd", new MyNetworkResponse() {
             @Override
             public void onResponse(String response) {
                 Log.e(LOG_TAG, "Response from server is " + response) ;
@@ -59,7 +59,7 @@ public class DataSource_AllCoins extends PageKeyedDataSource<Integer, Object_Coi
     @Override
     public void loadAfter(@NonNull final LoadParams<Integer> params, @NonNull final LoadCallback<Integer, Object_Coin> callback) {
 
-        networkManager.getFullListOfCoins_withMarketSparklineData(params.key, "usd", new NetworkResponse() {
+        networkManager.getFullListOfCoins_withMarketSparklineData(params.key, "usd", new MyNetworkResponse() {
             @Override
             public void onResponse(String response) {
                 Log.e(LOG_TAG, "Response from server is " + response) ;

@@ -43,18 +43,21 @@ import apps.yoo.com.blockholdings.data.models.Object_Currency;
 import apps.yoo.com.blockholdings.data.models.Object_Exchange;
 import apps.yoo.com.blockholdings.data.models.Object_Transaction;
 import apps.yoo.com.blockholdings.data.models.Object_TransactionFullData;
+import apps.yoo.com.blockholdings.network.MyNetworkResponse;
+import apps.yoo.com.blockholdings.network.NetworkRepository;
 import apps.yoo.com.blockholdings.ui.background.Worker_UpdatePricesLog_1Coin;
 import apps.yoo.com.blockholdings.util.Constants;
 import apps.yoo.com.blockholdings.util.Message;
 import apps.yoo.com.blockholdings.util.MyGlobals;
 import apps.yoo.com.blockholdings.util.MyListener;
 
-public class Activity_Transaction2 extends AppCompatActivity implements MyListener.DialogFragments_to_ActivityTransaction{
+public class Activity_Transaction3 extends AppCompatActivity implements MyListener.DialogFragments_to_ActivityTransaction{
     Context context ;
-    private static final String LOG_TAG = "Activity_Transaction --> " ;
+    private static final String LOG_TAG = "Activity_Transaction3 --> " ;
     AppDatabase db ;
     FragmentManager fragmentManager ;
     RequestQueue requestQueue ;
+    NetworkRepository networkRepository ;
 
     RelativeLayout relLt_Exchange, relLt_TradingPair, relLt_BtnAddTransaction ;
     TextView textView_CoinName, textView_Exchange, textView_TradingPair, textView_Date, textView_Time ;
@@ -62,6 +65,7 @@ public class Activity_Transaction2 extends AppCompatActivity implements MyListen
     RadioButton radioButton_Buy, radioButton_Sell ;
     RadioGroup radioGroup_BuySell ;
 
+    String coinId ;
     Object_Coin currentCoin ;
     Object_TransactionFullData currentTransactionFD ;
     Object_Currency currencyObj ;
@@ -72,36 +76,44 @@ public class Activity_Transaction2 extends AppCompatActivity implements MyListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_transaction2);
+        setContentView(R.layout.activity_transaction3);
         context = this ;
         fragmentManager = ((FragmentActivity)context).getSupportFragmentManager() ;
         requestQueue = Volley.newRequestQueue(context) ;
         db = AppDatabase.getInstance(getApplicationContext()) ;
+        networkRepository = NetworkRepository.getInstance(context) ;
 
-        if(getIntent().getStringExtra("coin") != null){
-            try {
-                Helper_Transaction.makeNewTransactionFullDataObejct();
-                currentCoin = new Object_Coin(new JSONObject(getIntent().getStringExtra("coin")));
-                currentTransactionFD = new Object_TransactionFullData() ;
-                currentTransactionFD.setCoinObject(currentCoin);
-                currentTransactionFD.getTransactionObject().setCoinId(currentCoin.getId());
-                currentTransactionFD.getTransactionObject().setPortFolioId(MyGlobals.getCurrentPortfolioObj().getPortfolioId());
-
-                currencyObj = MySharedPreferences.getCurrencyObj_FromPreference(getApplicationContext()) ;
-                getCoinData();
-                getReferences() ;
-                setBasicUi();
-
-
-
-
-            }catch (JSONException e){
-                Message.display(context, "Unable to get the coin");
-                Log.e(LOG_TAG, e.toString()) ;
-            }
+        if(getIntent().getStringExtra("coinId") == null) {
+            Message.display(context, "Coin Not found error");
+            finish();
         }
 
+
+        currentCoin = db.coinDao().getCoinById(getIntent().getStringExtra("coinId")) ;
+        currencyObj = MySharedPreferences.getCurrencyObj_FromPreference(getApplicationContext()) ;
+
+        initTransaction();
+
+        getCoinData();
+        getReferences() ;
+        setBasicUi();
+
+
+
+
+
     }
+
+    private void initTransaction(){
+        currentTransactionFD = new Object_TransactionFullData() ;
+        currentTransactionFD.setCoinObject(currentCoin);
+        currentTransactionFD.getTransactionObject().setCoinId(currentCoin.getId());
+        currentTransactionFD.getTransactionObject().setPortFolioId(MyGlobals.getCurrentPortfolioObj().getPortfolioId());
+
+
+    }
+
+
 
 
     private void getReferences(){
@@ -127,7 +139,27 @@ public class Activity_Transaction2 extends AppCompatActivity implements MyListen
 
     }
 
+
+
+
     private void getCoinData(){
+
+        networkRepository.getAllTickersOfCoins(coinId, new MyNetworkResponse() {
+            @Override
+            public void onResponse(String response) {
+                Log.e(LOG_TAG, "Response from server is " + response) ;
+                processData(response);
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Message.display(context, "Error in making volley request");
+                Log.e(LOG_TAG, error.toString() ) ;
+            }
+        });
+
+
+
         String url = Constants.UTL_APICALL_TRANSACTIONDATA_PREFIX + currentCoin.getId() + Constants.UTL_APICALL_TRANSACTIONDATA_SUFFIX ;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
@@ -191,9 +223,15 @@ public class Activity_Transaction2 extends AppCompatActivity implements MyListen
     }
 
     private void setupBuySellRadioButton(){
-        radioButton_Buy.setChecked(true);
-        radioButton_Sell.setChecked(false);
-        currentTransactionFD.getTransactionObject().setType(Object_Transaction.TYPE_BUY);
+        // we can't check for (getType == null) because by default int are always initialized as 0
+        // so the following code checks that if the type of transaction is not initialized then by default
+        // set it to buy transaction
+        if(currentTransactionFD.getTransactionObject().getType() == 0){
+            radioButton_Buy.setChecked(true);
+            radioButton_Sell.setChecked(false);
+            currentTransactionFD.getTransactionObject().setType(Object_Transaction.TYPE_BUY);
+
+        }
 
 
 
@@ -239,8 +277,21 @@ public class Activity_Transaction2 extends AppCompatActivity implements MyListen
         }catch (Exception e){
             Log.e(LOG_TAG, "dudeeee" + e.toString()) ;
         }
+
+        refreshAllTextViews();
+
+        initTransaction();
+        setupBuySellRadioButton();
+
         currentTransactionFD.getTransactionObject().setTransactionDateTime(new Date(timeInLong));
         Log.e(LOG_TAG, currentTransactionFD.toString()) ;
+    }
+
+    private void refreshAllTextViews(){
+        textView_Exchange.clearComposingText();
+        textView_TradingPair.clearComposingText();
+        editText_Quantity.clearComposingText();
+        editText_SingleCoinPrice.clearComposingText();
     }
 
 
@@ -353,6 +404,7 @@ public class Activity_Transaction2 extends AppCompatActivity implements MyListen
     }
 
     private void addTransaction(){
+        Log.e(LOG_TAG, "This the method add transaction is being called") ;
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
