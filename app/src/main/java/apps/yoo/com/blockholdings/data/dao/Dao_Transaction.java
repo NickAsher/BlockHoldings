@@ -30,6 +30,10 @@ public interface Dao_Transaction {
     List<Object_Transaction> getListOfTransaction_ForCoin_SortByDate(String coinId);
 
 
+    @Query("SELECT * FROM table_transaction WHERE portfolioId = :portfolioId AND transactionDateTime <= :date ORDER BY coinId ASC")
+    List<Object_Transaction> getListOfAllTransactions_OfPortfolio_BeforeADate(int portfolioId, long date);
+
+
     @Query("SELECT  * FROM table_transaction INNER JOIN table_coin ON table_transaction.coinId = table_coin.coin_Id INNER JOIN table_exchange ON table_transaction.exchangeId = table_exchange.exchange_Id  ORDER BY table_transaction.transactionNo")
     LiveData<List<Object_TransactionFullData>> getListOfAllTransaction_FullData_All() ;
 

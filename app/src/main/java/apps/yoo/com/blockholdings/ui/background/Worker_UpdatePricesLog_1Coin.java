@@ -35,119 +35,119 @@ import apps.yoo.com.blockholdings.util.Constants;
 import apps.yoo.com.blockholdings.util.Message;
 
 public class Worker_UpdatePricesLog_1Coin extends Worker {
-    Context context ;
-    private static final String LOG_TAG = "Worker_UpdatePricesLog_1Coin --> " ;
-    AppDatabase db ;
-    RequestQueue requestQueue ;
+  Context context ;
+  private static final String LOG_TAG = "Worker_CurrencyUpdater_SingleCoinPriceOriginal --> " ;
+  AppDatabase db ;
+  RequestQueue requestQueue ;
 
 
-    List<Object_Transaction> listOfTransactions  ;
-    Object_Coin currentCoin ;
-    Object_Portfolio portfolioObj ;
-    Object_Currency newCurrency ;
-    List<JSONArray> resultValues ;
-    AtomicInteger requestChecker ;
+  List<Object_Transaction> listOfTransactions  ;
+  Object_Coin currentCoin ;
+  Object_Portfolio portfolioObj ;
+  Object_Currency newCurrency ;
+  List<JSONArray> resultValues ;
+  AtomicInteger requestChecker ;
 
-    Date oldestDate ;
-
-
-    public Worker_UpdatePricesLog_1Coin(@NonNull Context context, @NonNull WorkerParameters workerParams) {
-        super(context, workerParams);
-        this.context = context ;
-        Log.v(LOG_TAG, "Worker_UpdatePricesLog_1Coin is being constructed") ;
-    }
-
-    @NonNull
-    @Override
-    public Result doWork() {
-        db = AppDatabase.getInstance(context.getApplicationContext()) ;
-        requestQueue = Volley.newRequestQueue(context) ;
-
-        newCurrency = MySharedPreferences.getCurrencyObj_FromPreference(context.getApplicationContext()) ;
-
-        String coinId = getInputData().getString("coinId") ;
-        currentCoin = db.coinDao().getCoinById(coinId) ;
-
-        listOfTransactions = db.transactionDao().getListOfTransaction_ForCoin_SortByDate(coinId) ;
+  Date oldestDate ;
 
 
-        // doesn't matter if the no of already existing transactions of the coin are more than 0
-        // because we basically just throw the old log away
-        // so just get the transaction with oldest date in here, which is basically the first item in the list
-        oldestDate = listOfTransactions.get(0).getTransactionDateTime() ;
-        resultValues = new ArrayList<>() ;
+  public Worker_UpdatePricesLog_1Coin(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+    super(context, workerParams);
+    this.context = context ;
+    Log.e(LOG_TAG, "Worker_CurrencyUpdater_SingleCoinPriceOriginal is being constructed") ;
+  }
+
+  @NonNull
+  @Override
+  public Result doWork() {
+    db = AppDatabase.getInstance(context.getApplicationContext()) ;
+    requestQueue = Volley.newRequestQueue(context) ;
+
+    newCurrency = MySharedPreferences.getCurrencyObj_FromPreference(context.getApplicationContext()) ;
+
+    String coinId = getInputData().getString("coinId") ;
+    currentCoin = db.coinDao().getCoinById(coinId) ;
+
+    listOfTransactions = db.transactionDao().getListOfTransaction_ForCoin_SortByDate(coinId) ;
 
 
-
-        Date CurrentDate = Calendar.getInstance().getTime() ;
-        long noOfDaysFromOldestDate = TimeUnit.DAYS.convert(CurrentDate.getTime()-oldestDate.getTime(), TimeUnit.MILLISECONDS);
-
-        if(noOfDaysFromOldestDate == 0){
-            // case when the day transaction was added is today
-            // in that case we really only need the data of 1 day
-            requestChecker = new AtomicInteger(1) ;
-            fetchDataChartFromServer_ForCoin(coinId, "1") ;
-        } else {
-            requestChecker=  new AtomicInteger() ;
-            fetchDataChartFromServer_ForCoin(coinId, "1") ;
-            fetchDataChartFromServer_ForCoin(coinId, "" + noOfDaysFromOldestDate) ;
-        }
+    // doesn't matter if the no of already existing transactions of the coin are more than 0
+    // because we basically just throw the old log away
+    // so just get the transaction with oldest date in here, which is basically the first item in the list
+    oldestDate = listOfTransactions.get(0).getTransactionDateTime() ;
+    resultValues = new ArrayList<>() ;
 
 
 
-        return Result.success() ;
-    }
+    Date CurrentDate = Calendar.getInstance().getTime() ;
+    long noOfDaysFromOldestDate = TimeUnit.DAYS.convert(CurrentDate.getTime()-oldestDate.getTime(), TimeUnit.MILLISECONDS);
 
-
-    private void fetchDataChartFromServer_ForCoin(final String coinId, String noOfDays){
-
-        final String url1 = Constants.getURL_APICALL_HISTORICAL_DATACHART(coinId, noOfDays, newCurrency.getCurrencyId()) ;
-
-        StringRequest stringRequest1 = new StringRequest(Request.Method.GET, url1,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d(LOG_TAG, "Url is " + url1 + "\n Response is " + response) ;
-                        try{
-                            JSONObject responseObj = new JSONObject(response) ;
-                            JSONArray priceArray = responseObj.getJSONArray("prices") ;
-                            for(int i = 0 ; i< priceArray.length() ; i++){
-                                JSONArray insideArray = priceArray.getJSONArray(i) ;
-                                JSONArray updateLogEntry = new JSONArray() ;
-                                long timeInLong = insideArray.getLong(0) ;
-                                String price = insideArray.getString(1) ;
-                                updateLogEntry.put(price).put(timeInLong).put("LogWorker") ;
-                                resultValues.add(updateLogEntry) ;
-                            }
-                            requestChecker.addAndGet(1) ;
-                            sortAndSave_UpdateLogForCoin(coinId);
-                        }catch (Exception e){
-                            Log.e(LOG_TAG, e.toString()) ;
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Message.display(context, "Error in making volley request");
-                Log.e(LOG_TAG, error.toString() ) ;
-            }
-        }) ;
-        requestQueue.add(stringRequest1) ;
+    if(noOfDaysFromOldestDate == 0){
+      // case when the day transaction was added is today
+      // in that case we really only need the data of 1 day
+      requestChecker = new AtomicInteger(1) ;
+      fetchDataChartFromServer_ForCoin(coinId, "1") ;
+    } else {
+      requestChecker=  new AtomicInteger() ;
+      fetchDataChartFromServer_ForCoin(coinId, "1") ;
+      fetchDataChartFromServer_ForCoin(coinId, "" + noOfDaysFromOldestDate) ;
     }
 
 
 
-    private void sortAndSave_UpdateLogForCoin(final String coinId){
-        if(requestChecker.get() == 2){
-            resultValues.sort(Object_Coin.updateLogDateComparator);
-            AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                @Override
-                public void run() {
-                    db.coinDao().updateCoin_PriceData(coinId, new JSONArray(resultValues).toString());
+    return Result.success() ;
+  }
+
+
+  private void fetchDataChartFromServer_ForCoin(final String coinId, String noOfDays){
+
+    final String url1 = Constants.getURL_APICALL_HISTORICAL_DATACHART(coinId, noOfDays, newCurrency.getCurrencyId()) ;
+
+    StringRequest stringRequest1 = new StringRequest(Request.Method.GET, url1,
+            new Response.Listener<String>() {
+              @Override
+              public void onResponse(String response) {
+                Log.e(LOG_TAG, "Url is " + url1 + "\n Response is " + response) ;
+                try{
+                  JSONObject responseObj = new JSONObject(response) ;
+                  JSONArray priceArray = responseObj.getJSONArray("prices") ;
+                  for(int i = 0 ; i< priceArray.length() ; i++){
+                    JSONArray insideArray = priceArray.getJSONArray(i) ;
+                    JSONArray updateLogEntry = new JSONArray() ;
+                    long timeInLong = insideArray.getLong(0) ;
+                    String price = insideArray.getString(1) ;
+                    updateLogEntry.put(price).put(timeInLong).put("LogWorker") ;
+                    resultValues.add(updateLogEntry) ;
+                  }
+                  requestChecker.addAndGet(1) ;
+                  sortAndSave_UpdateLogForCoin(coinId);
+                }catch (Exception e){
+                  Log.e(LOG_TAG, e.toString()) ;
                 }
-            });
+              }
+            }, new Response.ErrorListener() {
+      @Override
+      public void onErrorResponse(VolleyError error) {
+        Message.display(context, "Error in making volley request");
+        Log.e(LOG_TAG, error.toString() ) ;
+      }
+    }) ;
+    requestQueue.add(stringRequest1) ;
+  }
+
+
+
+  private void sortAndSave_UpdateLogForCoin(final String coinId){
+    if(requestChecker.get() == 2){
+      resultValues.sort(Object_Coin.updateLogDateComparator);
+      AppExecutors.getInstance().diskIO().execute(new Runnable() {
+        @Override
+        public void run() {
+          db.coinDao().updateCoin_PriceData(coinId, new JSONArray(resultValues).toString());
         }
+      });
     }
+  }
 
 
 

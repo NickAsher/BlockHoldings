@@ -20,44 +20,44 @@ import apps.yoo.com.blockholdings.util.MyGlobals;
 
 public class ChartMarkerView extends MarkerView {
 
-    private TextView tvContent;
-    SimpleDateFormat sdf ;
-    String currencySymbol ;
+	private TextView tvContent;
+	SimpleDateFormat sdf ;
+	String currencySymbol ;
 
-    public ChartMarkerView(Context context, int layoutResource) {
-        super(context, layoutResource);
+	public ChartMarkerView(Context context, int layoutResource) {
+		super(context, layoutResource);
 
-        // find your layout components
-        tvContent = (TextView) findViewById(R.id.marketChartView_TextView_value);
-        sdf = new SimpleDateFormat("MMM-dd-yyyy hh:mm a");
-        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Calcutta"));
-        currencySymbol = MySharedPreferences.getCurrencyObj_FromPreference(context.getApplicationContext()).getCurrencySymbol() ;
-    }
+		// find your layout components
+		tvContent = (TextView) findViewById(R.id.marketChartView_TextView_value);
+		sdf = new SimpleDateFormat("MMM-dd-yyyy hh:mm a");
+		sdf.setTimeZone(TimeZone.getTimeZone("Asia/Calcutta"));
+		currencySymbol = MySharedPreferences.getCurrencyObj_FromPreference(context.getApplicationContext()).getCurrencySymbol() ;
+	}
 
-    // callbacks everytime the MarkerView is redrawn, can be used to update the
-    // content (user-interface)
-    @Override
-    public void refreshContent(Entry e, Highlight highlight) {
+	// callbacks everytime the MarkerView is redrawn, can be used to update the
+	// content (user-interface)
+	@Override
+	public void refreshContent(Entry e, Highlight highlight) {
 
 
-        String dateString = sdf.format(new Date((long)e.getX())) ;
+		String dateString = sdf.format(new Date((long)e.getX())) ;
 
-        tvContent.setText("Date: " + dateString +  "\n Price: " + currencySymbol + e.getY());
+		tvContent.setText("Date: " + dateString +  "\n Price: " + currencySymbol + e.getY());
 
-        // this will perform necessary layouting
-        super.refreshContent(e, highlight);
-    }
+		// this will perform necessary layouting
+		super.refreshContent(e, highlight);
+	}
 
-    private MPPointF mOffset;
+	private MPPointF mOffset;
 
-    @Override
-    public MPPointF getOffset() {
+	@Override
+	public MPPointF getOffset() {
 
-        if(mOffset == null) {
-           // center the marker horizontally and vertically
-           mOffset = new MPPointF(-(getWidth() / 2), -getHeight());
-        }
+		if(mOffset == null) {
+			// center the marker horizontally and vertically
+			mOffset = new MPPointF(-(getWidth() / 2), -getHeight());
+		}
 
-        return mOffset;
-    }
+		return mOffset;
+	}
 }

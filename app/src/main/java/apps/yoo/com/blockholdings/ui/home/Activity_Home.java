@@ -27,6 +27,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.Table;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -73,6 +74,7 @@ public class Activity_Home extends AppCompatActivity{
   Fragment_PortfolioBrief fragment_portfolioBrief ;
 
   Map<String, BigDecimal> holdingsChangeValueSet_TotalDollarDifference;
+  Table<String, Integer, BigDecimal> table_PriceChange_TotalDollarDifference ;
 
   Object_Portfolio currentPortfolioObj ;
   RVAdapter_Transactions adapter ;
@@ -439,86 +441,18 @@ public class Activity_Home extends AppCompatActivity{
     for(Object_TransactionFullData transactionObjFD : listOfPortfolioTransactions_Summed){
       holdingsChangeValueSet_TotalDollarDifference.put(transactionObjFD.getCoinObject().getId(), new BigDecimal(0)) ;
     }
-    Long currentTimeinLong = Calendar.getInstance().getTimeInMillis() ;
-    List<String> listOfPricesTimeAgo = new ArrayList<>() ;
-
-    switch (caseTimeAgo){
-      case Object_Coin.TIMEFRAME_1DAY :
-
-        for(Object_TransactionFullData transactionFullData : listOfPortfolioTransactions_Unsummed){
-//                    String priceTimeAgo = Object_Coin.getPriceOfCoin_FromPriceLog_1DAgo(transactionFullData.getTransactionObject(), transactionFullData.getCoinObject(), currentTimeinLong) ;
-          String priceTimeAgo = Object_Coin.getPriceOfCoin_FromPriceLog_TimeAgo(transactionFullData.getTransactionObject(), transactionFullData.getCoinObject(), Object_Coin.TIMEFRAME_1DAY) ;
-
-          BigDecimal priceChange = new BigDecimal(transactionFullData.getTransactionObject().getSingleCoinPrice_CurrencyCurrent()).subtract(new BigDecimal(priceTimeAgo)) ;
-          BigDecimal totalPriceChange = priceChange.multiply(new BigDecimal(transactionFullData.getTransactionObject().getNoOfCoins())) ;
-
-//                    BigDecimal OriginalValueOfHoldingChange = holdingsChangeValueSet_TotalDollarDifference.get(transactionFullData.getCoinObject().getId()) ;
-//                    BigDecimal newValue = OriginalValueOfHoldingChange.add(totalPriceChange) ;
-//                    holdingsChangeValueSet_TotalDollarDifference.replace(transactionFullData.getCoinObject().getId(), newValue) ;
-          holdingsChangeValueSet_TotalDollarDifference.replace(transactionFullData.getCoinObject().getId(), totalPriceChange) ;
-
-        }
-        break;
 
 
+    for(Object_TransactionFullData transactionFullData : listOfPortfolioTransactions_Unsummed){
+      String priceTimeAgo = Object_Coin.getPriceOfCoin_FromPriceLog_TimeAgo(transactionFullData.getTransactionObject(), transactionFullData.getCoinObject(), caseTimeAgo) ;
+      BigDecimal priceChange = new BigDecimal(transactionFullData.getTransactionObject().getSingleCoinPrice_CurrencyCurrent()).subtract(new BigDecimal(priceTimeAgo)) ;
+      BigDecimal totalPriceChange = priceChange.multiply(new BigDecimal(transactionFullData.getTransactionObject().getNoOfCoins())) ;
+      holdingsChangeValueSet_TotalDollarDifference.replace(transactionFullData.getCoinObject().getId(), totalPriceChange) ;
 
-      case Object_Coin.TIMEFRAME_1WEEK :
-        for(Object_TransactionFullData transactionFullData : listOfPortfolioTransactions_Unsummed){
-//                    String priceTimeAgo = Object_Coin.getPriceOfCoin_FromPriceLog_1WAgo(transactionFullData.getTransactionObject(), transactionFullData.getCoinObject(), currentTimeinLong) ;
-          String priceTimeAgo = Object_Coin.getPriceOfCoin_FromPriceLog_TimeAgo(transactionFullData.getTransactionObject(), transactionFullData.getCoinObject(), Object_Coin.TIMEFRAME_1WEEK) ;
+      Log.d(LOG_TAG, "Coin Name : " + transactionFullData.getCoinObject().getName() + " - PriceTimaAgo : " + priceTimeAgo
+              + " - CurrentPrice : " + transactionFullData.getTransactionObject().getSingleCoinPrice_CurrencyCurrent()
+              + " - PriceChange : " + priceChange + " - TotalPriceChange : " + totalPriceChange) ;
 
-          BigDecimal priceChange = new BigDecimal(transactionFullData.getTransactionObject().getSingleCoinPrice_CurrencyCurrent()).subtract(new BigDecimal(priceTimeAgo)) ;
-          BigDecimal totalPriceChange = priceChange.multiply(new BigDecimal(transactionFullData.getTransactionObject().getNoOfCoins())) ;
-
-//                    BigDecimal OriginalValueOfHoldingChange = holdingsChangeValueSet_TotalDollarDifference.get(transactionFullData.getCoinObject().getId()) ;
-//                    BigDecimal newValue = OriginalValueOfHoldingChange.add(totalPriceChange) ;
-//                    holdingsChangeValueSet_TotalDollarDifference.replace(transactionFullData.getCoinObject().getId(), newValue) ;
-          holdingsChangeValueSet_TotalDollarDifference.replace(transactionFullData.getCoinObject().getId(), totalPriceChange) ;
-
-        }
-        break;
-
-
-
-      case Object_Coin.TIMEFRAME_MAX :
-        Log.e(LOG_TAG, "Max is being called") ;
-
-        for(Object_TransactionFullData transactionFullData : listOfPortfolioTransactions_Unsummed){
-//                    String priceTimeAgo = Object_Coin.getPriceOfCoin_FromPriceLog_MaxAgo(transactionFullData.getTransactionObject()) ;
-          String priceTimeAgo = Object_Coin.getPriceOfCoin_FromPriceLog_TimeAgo(transactionFullData.getTransactionObject(), transactionFullData.getCoinObject(), Object_Coin.TIMEFRAME_MAX) ;
-          Log.e(LOG_TAG, "Price time ago is " + priceTimeAgo) ;
-
-          BigDecimal priceChange = new BigDecimal(transactionFullData.getTransactionObject().getSingleCoinPrice_CurrencyCurrent()).subtract(new BigDecimal(priceTimeAgo)) ;
-          Log.e(LOG_TAG, "Price Change per coin is " + priceChange) ;
-
-          BigDecimal totalPriceChange = priceChange.multiply(new BigDecimal(transactionFullData.getTransactionObject().getNoOfCoins())) ;
-          Log.e(LOG_TAG, "Price Change Total is " + totalPriceChange) ;
-
-//                    BigDecimal OriginalValueOfHoldingChange = holdingsChangeValueSet_TotalDollarDifference.get(transactionFullData.getCoinObject().getId()) ;
-//                    BigDecimal newValue = OriginalValueOfHoldingChange.add(totalPriceChange) ;
-//                    holdingsChangeValueSet_TotalDollarDifference.replace(transactionFullData.getCoinObject().getId(), newValue) ;
-          holdingsChangeValueSet_TotalDollarDifference.replace(transactionFullData.getCoinObject().getId(), totalPriceChange) ;
-
-        }
-        break;
-
-
-
-      default:
-        Log.e(LOG_TAG, "Default is being called") ;
-        for(Object_TransactionFullData transactionFullData : listOfPortfolioTransactions_Unsummed){
-//                    String priceTimeAgo = Object_Coin.getPriceOfCoin_FromPriceLog_MaxAgo(transactionFullData.getTransactionObject()) ;
-          String priceTimeAgo = Object_Coin.getPriceOfCoin_FromPriceLog_TimeAgo(transactionFullData.getTransactionObject(), transactionFullData.getCoinObject(), Object_Coin.TIMEFRAME_MAX) ;
-          BigDecimal priceChange = new BigDecimal(transactionFullData.getTransactionObject().getSingleCoinPrice_CurrencyCurrent()).subtract(new BigDecimal(priceTimeAgo)) ;
-          BigDecimal totalPriceChange = priceChange.multiply(new BigDecimal(transactionFullData.getTransactionObject().getNoOfCoins())) ;
-
-//                    BigDecimal OriginalValueOfHoldingChange = holdingsChangeValueSet_TotalDollarDifference.get(transactionFullData.getCoinObject().getId()) ;
-//                    BigDecimal newValue = OriginalValueOfHoldingChange.add(totalPriceChange) ;
-//                    holdingsChangeValueSet_TotalDollarDifference.replace(transactionFullData.getCoinObject().getId(), newValue) ;
-          holdingsChangeValueSet_TotalDollarDifference.replace(transactionFullData.getCoinObject().getId(), totalPriceChange) ;
-
-        }
-        break;
     }
 
     Log.e(LOG_TAG, "value set is "  + holdingsChangeValueSet_TotalDollarDifference.toString()) ;
