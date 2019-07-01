@@ -25,6 +25,7 @@
     <activity android:name=".ui.home.Activity_CoinSelector" />
     <activity android:name=".ui.transaction.Activity_Transaction" />
     <activity android:name=".ui.transaction.Activity_Transaction2" />
+    <activity android:name=".ui.transaction.Activity_Transaction3" />
     <activity android:name=".ui.detail.Activity_Detail" />
     <activity android:name=".ui.transaction.Activity_DetailTransactionEdit" />
     <activity android:name=".ui.watchlist.Activity_WatchlistContainer" />

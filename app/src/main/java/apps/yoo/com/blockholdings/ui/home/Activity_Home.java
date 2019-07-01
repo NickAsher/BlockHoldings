@@ -421,17 +421,16 @@ public class Activity_Home extends AppCompatActivity{
     }
     currentSortMode = sortMethod ;
 
-//        adapter.notifyDataSetChanged();
     adapter.refreshHoldingsChange(listOfPortfolioTransactions_Summed, holdingsChangeValueSet_TotalDollarDifference);
 
-    // save the sort method in shared preferences
+    //TODO save the sort method in shared preferences
   }
 
   private void refreshAllSortingTextViews(){
     textView_NameSort.setText("Name");
     textView_SingleCoinPriceSort.setText("CoinPrice");
     textView_HoldingsSort.setText("Holdings");
-    textView_PercentageSort.setText("change");
+    textView_PercentageSort.setText("Change");
   }
 
 

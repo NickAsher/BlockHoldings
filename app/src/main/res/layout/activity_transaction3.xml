@@ -149,7 +149,7 @@
                 android:id="@+id/activityTransaction_RelLt_ContainerTradingPair"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="8dp"
 
                 >
 
@@ -186,19 +186,23 @@
                     android:text=">"
                     android:textSize="18sp" />
 
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/activityTransaction_TextView_ValueTradingPair"
+                    android:layout_marginTop="12dp"
+                    android:background="#666" />
+
             </RelativeLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="8dp"
-                android:background="#666" />
+
 
             <RelativeLayout
                 android:id="@+id/activityTransaction_RelLt_ContainerSingleCoinPrice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="8dp"
 
                 >
 
@@ -208,11 +212,13 @@
                     android:layout_height="wrap_content"
                     android:text="Price per Coin"
                     android:textColor="#777"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:layout_marginBottom="4dp"
+                    />
 
                 <EditText
                     android:id="@+id/activityTransaction_EditText_ValueSingleCoinPrice"
-                    android:layout_width="50dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_below="@id/activityTransaction_TextView_DescriptionSingleCoinPrice"
@@ -226,11 +232,13 @@
                     />
 
 
+
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginBottom="8dp"
                 android:background="#666" />
 
@@ -248,11 +256,13 @@
                     android:layout_height="wrap_content"
                     android:text="Quantity"
                     android:textColor="#777"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:layout_marginBottom="4dp"
+                    />
 
                 <EditText
                     android:id="@+id/activityTransaction_EditText_ValueQuantity"
-                    android:layout_width="50dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_below="@id/activityTransaction_TextView_DescriptionQuantity"
@@ -329,20 +339,42 @@
 
     </androidx.core.widget.NestedScrollView>
 
+    <TextView
+        android:id="@+id/activityTransaction_TextView_TotalTransactionValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="64dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:text="The total value of this transaction is "
+        android:visibility="gone"
+        />
+
     <RelativeLayout
         android:id="@+id/activityTransaction_relLt_BtnAddTransaction"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_gravity="bottom"
         android:background="@color/green"
-        android:focusableInTouchMode="true"
         >
 
         <TextView
+            android:id="@+id/activityTransaction_TextView_AddBtnText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Add Transaction"
             android:layout_centerInParent="true"
+            />
+
+        <ProgressBar
+            android:id="@+id/activityTransaction_ProgressBar_AddBtnProgress"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            android:indeterminate="true"
+            android:indeterminateTint="@android:color/white"
+
+
             />
 
 

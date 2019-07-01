@@ -2,9 +2,12 @@ package apps.yoo.com.blockholdings.ui.transaction;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -29,6 +32,7 @@ import java.util.Date;
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.work.Data;
@@ -43,7 +47,6 @@ import apps.yoo.com.blockholdings.data.models.Object_Currency;
 import apps.yoo.com.blockholdings.data.models.Object_Exchange;
 import apps.yoo.com.blockholdings.data.models.Object_Transaction;
 import apps.yoo.com.blockholdings.data.models.Object_TransactionFullData;
-import apps.yoo.com.blockholdings.network.MyNetworkResponse;
 import apps.yoo.com.blockholdings.network.NetworkRepository;
 import apps.yoo.com.blockholdings.ui.background.Worker_UpdatePricesLog_1Coin;
 import apps.yoo.com.blockholdings.util.Constants;
@@ -60,10 +63,12 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
     NetworkRepository networkRepository ;
 
     RelativeLayout relLt_Exchange, relLt_TradingPair, relLt_BtnAddTransaction ;
-    TextView textView_CoinName, textView_Exchange, textView_TradingPair, textView_Date, textView_Time ;
+    TextView textView_CoinName, textView_Exchange, textView_TradingPair, textView_Date, textView_SingleCoinPriceLabel,
+            textView_AddButtonText, textView_TransactionTotalValue ;
     EditText editText_SingleCoinPrice, editText_Quantity, editText_Note ;
     RadioButton radioButton_Buy, radioButton_Sell ;
     RadioGroup radioGroup_BuySell ;
+    ProgressBar progressBarAddBtn ;
 
     String coinId ;
     Object_Coin currentCoin ;
@@ -92,11 +97,11 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
         currentCoin = db.coinDao().getCoinById(getIntent().getStringExtra("coinId")) ;
         currencyObj = MySharedPreferences.getCurrencyObj_FromPreference(getApplicationContext()) ;
 
+        getReferences() ;
         initTransaction();
+        setBasicUi();
 
         getCoinData();
-        getReferences() ;
-        setBasicUi();
 
 
 
@@ -119,12 +124,11 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
     private void getReferences(){
         relLt_Exchange = findViewById(R.id.activityTransaction_RelLt_ExchangeContainer) ;
         relLt_TradingPair = findViewById(R.id.activityTransaction_RelLt_ContainerTradingPair) ;
-        relLt_BtnAddTransaction = findViewById(R.id.activityTransaction_relLt_BtnAddTransaction) ;
-
 
         textView_CoinName = findViewById(R.id.activityTransaction_TextView_CoinName) ;
         textView_Exchange = findViewById(R.id.activityTransaction_TextView_ValueExchange) ;
         textView_TradingPair = findViewById(R.id.activityTransaction_TextView_ValueTradingPair) ;
+        textView_SingleCoinPriceLabel = findViewById(R.id.activityTransaction_TextView_DescriptionSingleCoinPrice) ;
         textView_Date = findViewById(R.id.activityTransaction_TextView_ValueDate) ;
 
         editText_SingleCoinPrice = findViewById(R.id.activityTransaction_EditText_ValueSingleCoinPrice) ;
@@ -135,7 +139,10 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
         radioButton_Sell = findViewById(R.id.activityTransaction_RadioButton_Sell) ;
         radioGroup_BuySell = findViewById(R.id.activityTransaction_RadioGroup_BuySell) ;
 
-
+        textView_TransactionTotalValue = findViewById(R.id.activityTransaction_TextView_TotalTransactionValue) ;
+        relLt_BtnAddTransaction = findViewById(R.id.activityTransaction_relLt_BtnAddTransaction) ;
+        textView_AddButtonText = findViewById(R.id.activityTransaction_TextView_AddBtnText) ;
+        progressBarAddBtn = findViewById(R.id.activityTransaction_ProgressBar_AddBtnProgress) ;
 
     }
 
@@ -144,19 +151,19 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
 
     private void getCoinData(){
 
-        networkRepository.getAllTickersOfCoins(coinId, new MyNetworkResponse() {
-            @Override
-            public void onResponse(String response) {
-                Log.e(LOG_TAG, "Response from server is " + response) ;
-                processData(response);
-            }
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Message.display(context, "Error in making volley request");
-                Log.e(LOG_TAG, error.toString() ) ;
-            }
-        });
+//        networkRepository.getAllTickersOfCoins(coinId, new MyNetworkResponse() {
+////            @Override
+////            public void onResponse(String response) {
+////                Log.e(LOG_TAG, "Response from server is " + response) ;
+////                processData(response);
+////            }
+////
+////            @Override
+////            public void onErrorResponse(VolleyError error) {
+////                Message.display(context, "Error in making volley request");
+////                Log.e(LOG_TAG, error.toString() ) ;
+////            }
+////        });
 
 
 
@@ -214,6 +221,7 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
         textView_CoinName.setText(currentCoin.getName());
         setupBuySellRadioButton();
         setupTransactionDateTime();
+        setupEditTextQuantity_TextChangeListener() ;
 
 
 
@@ -240,11 +248,11 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId){
                     case R.id.activityTransaction_RadioButton_Buy :
-                        Log.e(LOG_TAG, "Transaction type is selected to Buy" );
+                        Log.d(LOG_TAG, "Transaction type is selected to Buy" );
                         currentTransactionFD.getTransactionObject().setType(Object_Transaction.TYPE_BUY);
                         break;
                     case R.id.activityTransaction_RadioButton_Sell :
-                        Log.e(LOG_TAG, "Transaction type is selected to Sell" );
+                        Log.d(LOG_TAG, "Transaction type is selected to Sell" );
                         currentTransactionFD.getTransactionObject().setType(Object_Transaction.TYPE_SELL);
                         break;
                     default:
@@ -277,22 +285,40 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
         }catch (Exception e){
             Log.e(LOG_TAG, "dudeeee" + e.toString()) ;
         }
-
-        refreshAllTextViews();
-
-        initTransaction();
-        setupBuySellRadioButton();
-
         currentTransactionFD.getTransactionObject().setTransactionDateTime(new Date(timeInLong));
-        Log.e(LOG_TAG, currentTransactionFD.toString()) ;
+        Log.d(LOG_TAG, currentTransactionFD.toString()) ;
     }
 
-    private void refreshAllTextViews(){
-        textView_Exchange.clearComposingText();
-        textView_TradingPair.clearComposingText();
-        editText_Quantity.clearComposingText();
-        editText_SingleCoinPrice.clearComposingText();
+    private void setupEditTextQuantity_TextChangeListener(){
+        editText_Quantity.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                Log.d(LOG_TAG, "Before text change is called") ;
+                textView_TransactionTotalValue.setVisibility(View.VISIBLE);
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                BigDecimal quantity = new BigDecimal(s.toString()) ;
+                BigDecimal totalTransactionValue = new BigDecimal(editText_SingleCoinPrice.getText().toString()).multiply(quantity) ;
+
+                if(relLt_TradingPair.getVisibility() != View.GONE){
+                    textView_TransactionTotalValue.setText("Total Value Of this Transaction is " +
+                            totalTransactionValue + " "  +currentTransactionFD.getTransactionObject().getTradingPair());
+                } else {
+                    textView_TransactionTotalValue.setText("Total Value Of this Transaction is  " +
+                            currencyObj.getCurrencySymbol() + totalTransactionValue );
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
+
 
 
     private void setupExhangeDialogFragment(){
@@ -334,10 +360,11 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
         currentTransactionFD.getTransactionObject().setPrice24hChange("");
 
         textView_Exchange.setText(selectedExchange.getName());
-        relLt_TradingPair.setClickable(false);
-        textView_TradingPair.setText("N/A");
+        relLt_TradingPair.setVisibility(View.GONE);
+//        textView_TradingPair.setText("N/A");
 
-        editText_SingleCoinPrice.setText(currencyObj.getCurrencySymbol() + price);
+        textView_SingleCoinPriceLabel.append(" (in " + currencyObj.getCurrencySymbol() + ")");
+        editText_SingleCoinPrice.setText(price);
         setupAddTransaction_WithoutExchange();
 
     }
@@ -364,7 +391,7 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
         currentTransactionFD.getTransactionObject().setTradingPair(tradingPairSymbol);
         Message.display(context, "Trading Pair is now selected + ");
         textView_TradingPair.setText(currentTransactionFD.getCoinObject().getSymbol() + "/" + tradingPairSymbol);
-        setupCoinPrice();
+        setupCoinPrice_AfterSettingExchangeNTradingPair();
         setupAddTransactionButton();
     }
 
@@ -372,9 +399,10 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
 
 
 
-    private void setupCoinPrice(){
+    private void setupCoinPrice_AfterSettingExchangeNTradingPair(){
         String singleCoinPrice = table_ExchangePairData.get(currentTransactionFD.getTransactionObject().getExchangeId(), currentTransactionFD.getTransactionObject().getTradingPair()) ;
         editText_SingleCoinPrice.setText(singleCoinPrice);
+        textView_SingleCoinPriceLabel.append(" (in " + currentTransactionFD.getTransactionObject().getTradingPair() + ")");
     }
 
 
@@ -387,6 +415,7 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
                 currentTransactionFD.getTransactionObject().setNote(editText_Note.getText().toString());
                 currentTransactionFD.getTransactionObject().setNoOfCoins(editText_Quantity.getText().toString());
 
+                singleCoinPrice_Currency = editText_SingleCoinPrice.getText().toString() ;
                 currentTransactionFD.getTransactionObject().setSingleCoinPrice_CurrencyOriginal(singleCoinPrice_Currency);
                 currentTransactionFD.getTransactionObject().setSingleCoinPrice_CurrencyCurrent(singleCoinPrice_Currency);
 
@@ -404,7 +433,7 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
     }
 
     private void addTransaction(){
-        Log.e(LOG_TAG, "This the method add transaction is being called") ;
+        Log.d(LOG_TAG, "This the method add transaction is being called") ;
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
@@ -431,6 +460,9 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
             @Override
             public void onClick(View v) {
                 relLt_BtnAddTransaction.setClickable(false);
+                textView_AddButtonText.setVisibility(View.INVISIBLE);
+                progressBarAddBtn.setVisibility(View.VISIBLE);
+
 
                 if(currentTransactionFD.getTransactionObject().getTradingPair() == null){
                     // this means that global average is selected .
@@ -521,7 +553,6 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
 
 
 
-//        currentTransactionFD.getTransactionObject().setPrice24hChange(p24hChange);
         currentTransactionFD.getTransactionObject().setSingleCoinPrice_CurrencyOriginal(singleCoinPrice_Currency);
         currentTransactionFD.getTransactionObject().setSingleCoinPrice_CurrencyCurrent(singleCoinPrice_Currency);
 
