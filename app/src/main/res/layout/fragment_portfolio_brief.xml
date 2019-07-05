@@ -67,104 +67,94 @@
       android:layout_marginStart="8dp"
       android:textSize="16sp" />
 
-  <RadioGroup
-      android:id="@+id/activityPortfolio_RadioGroup_ChartDateValues"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_below="@+id/activityPortfolio_TextView_PortfolioPriceChange"
-      android:layout_centerHorizontal="true"
-      android:orientation="horizontal"
-      android:padding="16dp"
-      >
-
-    <RadioButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/activityPortfolio_RadioBtn_Chart1Day"
-        android:text="24H"/>
-
-    <RadioButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/activityPortfolio_RadioBtn_Chart1Week"
-        android:text="1D"/>
-
-    <RadioButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/activityPortfolio_RadioBtn_Chart1Month"
-        android:text="1M"/>
-
-    <RadioButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/activityPortfolio_RadioBtn_Chart1Year"
-        android:text="1Y"/>
-
-    <RadioButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/activityPortfolio_RadioBtn_ChartMax"
-        android:text="Max"/>
-
-  </RadioGroup>
 
   <co.ceryle.radiorealbutton.RadioRealButtonGroup
       android:id="@+id/radioRealButtonGroup_1"
-      android:layout_width="wrap_content"
+      android:layout_width="240dp"
       android:layout_height="wrap_content"
-      android:layout_below="@+id/activityPortfolio_RadioGroup_ChartDateValues"
-      android:elevation="2dp"
+      android:layout_below="@+id/activityPortfolio_TextView_PortfolioPriceChange"
+      android:elevation="1dp"
       app:rrbg_animateTexts_enter="overshoot"
-      app:rrbg_animateTexts_enterDuration="500"
-      app:rrbg_backgroundColor="@color/white"
-      app:rrbg_bottomLineColor="@color/grey_600"
-      app:rrbg_bottomLineSize="2dp"
-      app:rrbg_checkedPosition="2"
+      app:rrbg_animateTexts_enterDuration="50"
+      app:rrbg_backgroundColor="@color/transparent"
+
       app:rrbg_dividerColor="@color/grey_500"
       app:rrbg_dividerPadding="10dp"
       app:rrbg_dividerRadius="0dp"
       app:rrbg_dividerSize="1dp"
+
       app:rrbg_enableDeselection="false"
-      app:rrbg_radius="0dp"
-      app:rrbg_selectorAboveOfBottomLine="true"
-      app:rrbg_selectorColor="@color/grey_400"
+
+      app:rrbg_selectorColor="@color/blue_500"
       app:rrbg_selectorFullSize="true"
-      app:rrbg_selectorSize="4dp">
+      app:rrbg_selectorSize="4dp"
+      app:rrbg_animateSelector_duration="300"
+
+      android:layout_centerHorizontal="true"
+      android:layout_marginBottom="16dp"
+      >
 
     <co.ceryle.radiorealbutton.RadioRealButton
+        android:id="@+id/activityPortfolio_RadioBtn_Chart1Day"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:rrb_drawableHeight="48dp"
-        app:rrb_drawableWidth="48dp"
-        app:rrb_text="Button 1"
-        app:rrb_textStyle="italic"
-        app:rrb_textTypeface="serif"/>
+        app:rrb_text="24H"
+        app:rrb_textColor="@color/white"
+        app:rrb_textSize="10sp"
+        />
 
     <co.ceryle.radiorealbutton.RadioRealButton
+        android:id="@+id/activityPortfolio_RadioBtn_Chart1Week"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:rrb_drawableHeight="36dp"
-        app:rrb_drawableWidth="36dp"
-        app:rrb_text="Button 2"
-        app:rrb_textStyle="italic"
-        app:rrb_textTypeface="serif"/>
+        app:rrb_text="1W"
+        app:rrb_textColor="@color/white"
+        app:rrb_textSize="10sp"
+
+        />
 
     <co.ceryle.radiorealbutton.RadioRealButton
+        android:id="@+id/activityPortfolio_RadioBtn_Chart1Month"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:rrb_drawableHeight="24dp"
-        app:rrb_drawableWidth="24dp"
-        app:rrb_text="Button 3"
-        app:rrb_textStyle="italic"
-        app:rrb_textTypeface="serif"/>
+        app:rrb_text="1M"
+        app:rrb_textColor="@color/white"
+        app:rrb_textSize="10sp"
+
+        />
+
+      <co.ceryle.radiorealbutton.RadioRealButton
+          android:id="@+id/activityPortfolio_RadioBtn_Chart1Year"
+
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          app:rrb_text="1Y"
+          app:rrb_textColor="@color/white"
+          app:rrb_textSize="10sp"
+
+          />
+
+      <co.ceryle.radiorealbutton.RadioRealButton
+          android:id="@+id/activityPortfolio_RadioBtn_ChartMax"
+
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          app:rrb_text="MAX"
+          app:rrb_textColor="@color/white"
+          app:rrb_textSize="10sp"
+
+
+          />
   </co.ceryle.radiorealbutton.RadioRealButtonGroup>
 
   <com.github.mikephil.charting.charts.LineChart
       android:id="@+id/activityPortfolio_LineChart_Main"
       android:layout_width="match_parent"
       android:layout_height="200dp"
-      android:layout_below="@+id/activityPortfolio_RadioGroup_ChartDateValues"
+      android:layout_below="@+id/radioRealButtonGroup_1"
 
       />
 </RelativeLayout>

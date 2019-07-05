@@ -38,6 +38,8 @@ import apps.yoo.com.blockholdings.data.models.Object_Currency;
 import apps.yoo.com.blockholdings.data.models.Object_Portfolio;
 import apps.yoo.com.blockholdings.ui.detail.ChartMarkerView;
 import apps.yoo.com.blockholdings.ui.home.Activity_Home;
+import co.ceryle.radiorealbutton.RadioRealButton;
+import co.ceryle.radiorealbutton.RadioRealButtonGroup;
 
 
 public class Fragment_PortfolioBrief extends Fragment {
@@ -48,7 +50,9 @@ public class Fragment_PortfolioBrief extends Fragment {
 
     TextView textView_PortfolioName, textView_PortfolioValue, textView_PortfolioPriceChange ;
     LineChart chart_Portfolio ;
-    RadioGroup radioGroup_PortfolioDateValue ;
+//    RadioGroup radioGroup_PortfolioDateValue ;
+    RadioRealButtonGroup radioGroup_PortfolioDateValue ;
+
     ImageView imageView_BackBtn ;
 
     Object_Portfolio currentPortfolioObj ;
@@ -103,7 +107,7 @@ public class Fragment_PortfolioBrief extends Fragment {
         textView_PortfolioValue = v.findViewById(R.id.activityPortfolio_TextView_PortfolioBalance) ;
         textView_PortfolioPriceChange =v.findViewById(R.id.activityPortfolio_TextView_PortfolioPriceChange) ;
         chart_Portfolio = v.findViewById(R.id.activityPortfolio_LineChart_Main) ;
-        radioGroup_PortfolioDateValue = v.findViewById(R.id.activityPortfolio_RadioGroup_ChartDateValues) ;
+        radioGroup_PortfolioDateValue = v.findViewById(R.id.radioRealButtonGroup_1) ; //activityPortfolio_RadioGroup_ChartDateValues
         imageView_BackBtn = v.findViewById(R.id.fragmentPortfolioBrief_ImageView_BackButton) ;
     }
 
@@ -174,12 +178,10 @@ public class Fragment_PortfolioBrief extends Fragment {
 
     private void setupChartRadioGroup(){
 
-
-        radioGroup_PortfolioDateValue.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        radioGroup_PortfolioDateValue.setOnPositionChangedListener(new RadioRealButtonGroup.OnPositionChangedListener() {
             @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-
-                switch (checkedId){
+            public void onPositionChanged(RadioRealButton button, int currentPosition, int lastPosition) {
+                switch (button.getId()){
                     case R.id.activityPortfolio_RadioBtn_Chart1Day :
                         listOfPortfolioUpdateLogValues = Helper_Portfolio.getFormattedChartValues_from_UpdateLogOfPortfolio(
                                 currentPortfolioObj.getPortfolioUpdateLog(), Helper_Portfolio.TIMEFRAME_1DAY) ;
@@ -223,9 +225,12 @@ public class Fragment_PortfolioBrief extends Fragment {
                                 currentPortfolioObj.getPortfolioUpdateLog(), Helper_Portfolio.TIMEFRAME_MAX) );
                 }
                 setupGraph();
+
             }
         });
-        radioGroup_PortfolioDateValue.check(R.id.activityPortfolio_RadioBtn_ChartMax);
+
+//
+        radioGroup_PortfolioDateValue.setPosition(4);
 
     }
 
@@ -256,7 +261,9 @@ public class Fragment_PortfolioBrief extends Fragment {
         mv.setChartView(chart_Portfolio);
         chart_Portfolio.setMarker(mv);
 
+        chart_Portfolio.highlightValue(null); // THis is done to make sure that once chart refreshes, no marker is shown
         chart_Portfolio.invalidate();
+
 
 
         chart_Portfolio.setOnTouchListener(new View.OnTouchListener() {
@@ -268,6 +275,8 @@ public class Fragment_PortfolioBrief extends Fragment {
                         chart_Portfolio.highlightValue(null);
                         break;
                     }
+
+
                 }
                 return false;
             }
@@ -293,7 +302,7 @@ public class Fragment_PortfolioBrief extends Fragment {
     public void onSelectingNewPortfolio(int newPortfolioId){
         currentPortfolioObj = db.portfolioDao().getPortfolioById(newPortfolioId) ;
         setPortfolioTextValues();
-        radioGroup_PortfolioDateValue.clearCheck();
+        radioGroup_PortfolioDateValue.deselect(); //TODO clearCheck();
         setupChartRadioGroup();
     }
 

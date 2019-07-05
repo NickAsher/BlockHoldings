@@ -24,74 +24,112 @@
 
 
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="32dp"
-            >
-
-            <Button
-                android:id="@+id/frgDetailChart_Btn_ChartView1Day"
-                android:layout_width="0dp"
+            <co.ceryle.radiorealbutton.RadioRealButtonGroup
+                android:id="@+id/frgDetailChart_RadioGroup_ChartInterval"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="1D"
-                />
+                app:rrbg_animateTexts_enter="overshoot"
+                app:rrbg_animateTexts_enterDuration="50"
+                app:rrbg_backgroundColor="@color/transparent"
 
-            <Button
-                android:id="@+id/frgDetailChart_Btn_ChartView3Day"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="3D"
-                />
+                app:rrbg_dividerColor="@color/grey_500"
+                app:rrbg_dividerPadding="10dp"
+                app:rrbg_dividerRadius="0dp"
+                app:rrbg_dividerSize="1dp"
 
-            <Button
-                android:id="@+id/frgDetailChart_Btn_ChartViewWeek"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="1W"
-                />
+                app:rrbg_enableDeselection="false"
 
-            <Button
-                android:id="@+id/frgDetailChart_Btn_ChartViewMonth"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="1M"
-                />
+                app:rrbg_selectorColor="@color/blue_500"
+                app:rrbg_selectorFullSize="true"
+                app:rrbg_selectorSize="4dp"
+                app:rrbg_animateSelector_duration="300"
 
-            <Button
-                android:id="@+id/frgDetailChart_Btn_ChartView6Month"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="6M"
-                />
-
-            <Button
-                android:id="@+id/frgDetailChart_Btn_ChartViewYear"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="1Y"
-                />
-
-            <Button
-                android:id="@+id/frgDetailChart_Btn_ChartViewMax"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="MAX"
-                />
+                android:layout_centerHorizontal="true"
+                android:layout_margin="16dp"
+                android:layout_marginBottom="16dp"
 
 
 
+                >
 
-        </LinearLayout>
+                <co.ceryle.radiorealbutton.RadioRealButton
+                    android:id="@+id/frgDetailChart_RadioBtn_Interval1Day"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:rrb_text="24H"
+                    app:rrb_textSize="12sp"
+                    app:rrb_textStyle="bold"
+                    />
+
+                <co.ceryle.radiorealbutton.RadioRealButton
+                    android:id="@+id/frgDetailChart_RadioBtn_Interval3Day"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:rrb_text="3D"
+                    app:rrb_textSize="12sp"
+                    app:rrb_textStyle="bold"
+                    />
+
+                <co.ceryle.radiorealbutton.RadioRealButton
+                    android:id="@+id/frgDetailChart_RadioBtn_Interval1Week"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:rrb_text="1W"
+                    app:rrb_textSize="12sp"
+                    app:rrb_textStyle="bold"
+
+                    />
+
+                <co.ceryle.radiorealbutton.RadioRealButton
+                    android:id="@+id/frgDetailChart_RadioBtn_Interval1Month"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:rrb_text="1M"
+                    app:rrb_textSize="12sp"
+                    app:rrb_textStyle="bold"
+
+                    />
+
+                <co.ceryle.radiorealbutton.RadioRealButton
+                    android:id="@+id/frgDetailChart_RadioBtn_Interval6Month"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:rrb_text="6M"
+                    app:rrb_textSize="12sp"
+                    app:rrb_textStyle="bold"
+
+                    />
+
+                <co.ceryle.radiorealbutton.RadioRealButton
+                    android:id="@+id/frgDetailChart_RadioBtn_Interval1Year"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:rrb_text="1Y"
+                    app:rrb_textSize="12sp"
+                    app:rrb_textStyle="bold"
+
+                    />
+
+                <co.ceryle.radiorealbutton.RadioRealButton
+                    android:id="@+id/frgDetailChart_RadioBtn_IntervalMax"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:rrb_text="MAX"
+                    app:rrb_textSize="12sp"
+                    app:rrb_textStyle="bold"
+
+
+                    />
+            </co.ceryle.radiorealbutton.RadioRealButtonGroup>
+
+
 
 
 

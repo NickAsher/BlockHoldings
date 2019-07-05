@@ -27,7 +27,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.common.collect.Collections2;
-import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 
 import org.json.JSONException;
@@ -58,11 +57,9 @@ import apps.yoo.com.blockholdings.util.Constants;
 import apps.yoo.com.blockholdings.util.Message;
 import apps.yoo.com.blockholdings.util.MyGlobals;
 import apps.yoo.com.blockholdings.util.Utils;
-import co.ceryle.radiorealbutton.RadioRealButton;
-import co.ceryle.radiorealbutton.RadioRealButtonGroup;
 
 
-public class Activity_Home extends AppCompatActivity{
+public class Activity_Home2 extends AppCompatActivity{
     Context context ;
     String LOG_TAG = "Activity_Home --> " ;
     AppDatabase db;
@@ -75,7 +72,7 @@ public class Activity_Home extends AppCompatActivity{
             textView_Holding24HSort, textView_Holding7DSort, textView_HoldingMaxSort ;
     RelativeLayout layout_MainContainer ;
     Fragment_PortfolioBrief fragment_portfolioBrief ;
-    RadioRealButtonGroup radioGrp_PriceChange ;
+
     Map<String, BigDecimal> holdingsChangeValueSet_TotalDollarDifference;
     Table<String, Integer, BigDecimal> table_PriceChange_TotalDollarDifference ;
 
@@ -118,8 +115,6 @@ public class Activity_Home extends AppCompatActivity{
         listOfPortfolioTransactions_Summed = new ArrayList<>() ;
 
         holdingsChangeValueSet_TotalDollarDifference = new HashMap<>() ;
-        table_PriceChange_TotalDollarDifference = HashBasedTable.create() ;
-
         getReferences();
         layout_MainContainer.setBackground(MySharedPreferences.getAppThemeGradientDrawableOnPreference(getApplicationContext()));
 
@@ -127,9 +122,8 @@ public class Activity_Home extends AppCompatActivity{
         setupListOfTransactions();
         setupRecyclerView();
         setupBasicUI() ;
-        setupRadioBtn_PriceDifference_ChangeListener() ;
-
-        textView_NameSort.performClick() ; // this will sort the items by name
+//        setupSortingTextViews() ;
+//        getFreshDataFromServer() ;
 
     }
 
@@ -144,7 +138,6 @@ public class Activity_Home extends AppCompatActivity{
         textView_PercentageSort = findViewById(R.id.activityPortfolio_TextView_SortPercentage) ;
         textView_HoldingsSort = findViewById(R.id.activityPortfolio_TextView_SortTotalHoldings) ;
 
-        radioGrp_PriceChange = findViewById(R.id.activityHome_RadioGroup_PriceChange) ;
         textView_Holding24HSort = findViewById(R.id.activityPortfolio_TextView_SortChange24H) ;
         textView_Holding7DSort = findViewById(R.id.activityPortfolio_TextView_SortChange7D) ;
         textView_HoldingMaxSort = findViewById(R.id.activityPortfolio_TextView_SortChangeAll) ;
@@ -420,61 +413,26 @@ public class Activity_Home extends AppCompatActivity{
     }
 
 
-    public void setupRadioBtn_PriceDifference_ChangeListener(){
-        radioGrp_PriceChange.setOnPositionChangedListener(new RadioRealButtonGroup.OnPositionChangedListener() {
-            @Override
-            public void onPositionChanged(RadioRealButton button, int currentPosition, int lastPosition) {
-                switch (button.getId()){
-                    case R.id.activityHome_RadioBtn_1DayChange :
-                        adapter.refreshHoldingsChange(listOfPortfolioTransactions_Summed, getListOfPrices_TimeAgo(Object_Coin.TIMEFRAME_1DAY));
-                        break;
+    public void setupRadioBtn_PriceDifference_ChangeListener(View v){
+        switch (v.getId()){
+            case R.id.activityHome_RadioBtn_1DayChange :
+                adapter.refreshHoldingsChange(listOfPortfolioTransactions_Summed, getListOfPrices_TimeAgo(Object_Coin.TIMEFRAME_1DAY));
 
-                    case R.id.activityHome_RadioBtn_1WeekChange :
-                        adapter.refreshHoldingsChange(listOfPortfolioTransactions_Summed, getListOfPrices_TimeAgo(Object_Coin.TIMEFRAME_1WEEK));
-                        break;
+                break;
+            case R.id.activityHome_RadioBtn_7DayChange :
+                adapter.refreshHoldingsChange(listOfPortfolioTransactions_Summed, getListOfPrices_TimeAgo(Object_Coin.TIMEFRAME_1WEEK));
 
-                    case R.id.activityHome_RadioBtn_1MonthChange :
-                        adapter.refreshHoldingsChange(listOfPortfolioTransactions_Summed, getListOfPrices_TimeAgo(Object_Coin.TIMEFRAME_1MONTH));
-                        break;
+                break;
+            case R.id.activityHome_RadioBtn_MaxChange :
+                adapter.refreshHoldingsChange(listOfPortfolioTransactions_Summed, getListOfPrices_TimeAgo(Object_Coin.TIMEFRAME_MAX));
 
-                    case R.id.activityHome_RadioBtn_MaxChange :
-                        adapter.refreshHoldingsChange(listOfPortfolioTransactions_Summed, getListOfPrices_TimeAgo(Object_Coin.TIMEFRAME_MAX));
-                        break;
-                }
-            }
-        });
-
+                break;
+        }
 
     }
 
 
 
-    private Table<String, Integer, BigDecimal> getTable_PriceChange_DollarDifference(int caseTimeAgo){
-        // This method does one thing, it initialises the table with price change
-        // This method is called many times
-        // It is called by the adapter when the activity is created, so this method is called when activity is started
-        // this method is also called any time when the radioButton for PriceChange is clicked
-
-        for(Object_TransactionFullData transactionObjFD : listOfPortfolioTransactions_Unsummed){
-            table_PriceChange_TotalDollarDifference.put(transactionObjFD.getCoinObject().getId(),
-                    transactionObjFD.getTransactionObject().getTransactionNo(), new BigDecimal(0)) ;
-        }
-
-
-        for(Object_TransactionFullData transactionFullData : listOfPortfolioTransactions_Unsummed){
-            String priceTimeAgo = Object_Coin.getPriceOfCoin_FromPriceLog_TimeAgo(transactionFullData.getTransactionObject(), transactionFullData.getCoinObject(), caseTimeAgo) ;
-            BigDecimal priceChange = new BigDecimal(transactionFullData.getTransactionObject().getSingleCoinPrice_CurrencyCurrent()).subtract(new BigDecimal(priceTimeAgo)) ;
-            BigDecimal totalPriceChange = priceChange.multiply(new BigDecimal(transactionFullData.getTransactionObject().getNoOfCoins())) ;
-
-
-            table_PriceChange_TotalDollarDifference.put(transactionFullData.getCoinObject().getId(), transactionFullData.getTransactionObject().getTransactionNo(), totalPriceChange) ;
-
-
-        }
-        Log.d(LOG_TAG, "table priceDollarDifference is " + table_PriceChange_TotalDollarDifference.toString()) ;
-
-        return table_PriceChange_TotalDollarDifference ;
-    }
 
 
 
@@ -498,16 +456,6 @@ public class Activity_Home extends AppCompatActivity{
         }
 
         Log.e(LOG_TAG, "value set is "  + holdingsChangeValueSet_TotalDollarDifference.toString()) ;
-
-        for(Object_TransactionFullData transactionObjFD : listOfPortfolioTransactions_Unsummed){
-            table_PriceChange_TotalDollarDifference.put(transactionObjFD.getCoinObject().getId(),
-                    transactionObjFD.getTransactionObject().getTransactionNo(), new BigDecimal(0)) ;
-        }
-
-        /**************************************************** */
-
-
-        /************************************************ */
 
         return holdingsChangeValueSet_TotalDollarDifference;
     }

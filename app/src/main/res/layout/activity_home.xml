@@ -101,49 +101,133 @@
 
                     />
 
-                <RadioGroup
+
+                <co.ceryle.radiorealbutton.RadioRealButtonGroup
                     android:id="@+id/activityHome_RadioGroup_PriceChange"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:weightSum="3"
-                    android:orientation="horizontal"
+
+                    app:rrbg_backgroundColor="@color/transparent"
+
+                    app:rrbg_dividerColor="@color/grey_500"
+                    app:rrbg_dividerPadding="10dp"
+                    app:rrbg_dividerRadius="0dp"
+                    app:rrbg_dividerSize="1dp"
+
+                    app:rrbg_enableDeselection="false"
+
+                    app:rrbg_selectorColor="@color/blue_500"
+                    app:rrbg_selectorFullSize="true"
+                    app:rrbg_selectorSize="4dp"
+                    app:rrbg_animateSelector_duration="300"
+
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="16dp"
+
                     >
 
-                    <RadioButton
+                    <co.ceryle.radiorealbutton.RadioRealButton
                         android:id="@+id/activityHome_RadioBtn_1DayChange"
-                        android:layout_width="0dp"
+
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="10sp"
-                        android:text="1D"
-                        android:onClick="setupSortingTextViewsNew"
+                        app:rrb_text="24H"
+                        app:rrb_textColor="@color/white"
+                        app:rrb_textSize="10sp"
 
                         />
 
-                    <RadioButton
-                        android:id="@+id/activityHome_RadioBtn_7DayChange"
-                        android:layout_width="0dp"
+                    <co.ceryle.radiorealbutton.RadioRealButton
+                        android:id="@+id/activityHome_RadioBtn_1WeekChange"
+
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="10sp"
-                        android:text="7D"
-                        android:onClick="setupSortingTextViewsNew"
+                        app:rrb_text="1W"
+                        app:rrb_textColor="@color/white"
+                        app:rrb_textSize="8sp"
+
+                        />
+
+                    <co.ceryle.radiorealbutton.RadioRealButton
+                        android:id="@+id/activityHome_RadioBtn_1MonthChange"
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:rrb_text="1M"
+                        app:rrb_textColor="@color/white"
+                        app:rrb_textSize="8sp"
 
                         />
 
 
-                    <RadioButton
+
+                    <co.ceryle.radiorealbutton.RadioRealButton
                         android:id="@+id/activityHome_RadioBtn_MaxChange"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="10sp"
-                        android:text="All"
-                        android:onClick="setupSortingTextViewsNew"
-                        android:checked="true"
-                        />
 
-                </RadioGroup>
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:rrb_text="MAX"
+                        app:rrb_textColor="@color/white"
+                        app:rrb_textSize="8sp"
+                        app:rrb_checked="true"
+
+
+                        />
+                </co.ceryle.radiorealbutton.RadioRealButtonGroup>
+
+                <!--<RadioGroup-->
+                    <!--android:id="@+id/activityHome_RadioGroup_PriceChange"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:weightSum="4"-->
+                    <!--android:orientation="horizontal"-->
+                    <!--&gt;-->
+
+                    <!--<RadioButton-->
+                        <!--android:id="@+id/activityHome_RadioBtn_1DayChange"-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:textSize="10sp"-->
+                        <!--android:text="1D"-->
+                        <!--android:onClick="setupRadioBtn_PriceDifference_ChangeListener"-->
+
+                        <!--/>-->
+
+                    <!--<RadioButton-->
+                        <!--android:id="@+id/activityHome_RadioBtn_7DayChange"-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:textSize="10sp"-->
+                        <!--android:text="7D"-->
+                        <!--android:onClick="setupRadioBtn_PriceDifference_ChangeListener"-->
+
+                        <!--/>-->
+
+                    <!--<RadioButton-->
+                        <!--android:id="@+id/activityHome_RadioBtn_1MonthChange"-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:textSize="10sp"-->
+                        <!--android:text="1M"-->
+                        <!--android:onClick="setupRadioBtn_PriceDifference_ChangeListener"-->
+
+                        <!--/>-->
+
+                    <!--<RadioButton-->
+                        <!--android:id="@+id/activityHome_RadioBtn_MaxChange"-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:textSize="10sp"-->
+                        <!--android:text="All"-->
+                        <!--android:onClick="setupRadioBtn_PriceDifference_ChangeListener"-->
+                        <!--android:checked="true"-->
+                        <!--/>-->
+
+                <!--</RadioGroup>-->
 
 
             </LinearLayout>

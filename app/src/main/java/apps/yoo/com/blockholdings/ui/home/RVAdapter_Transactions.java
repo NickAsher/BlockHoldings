@@ -149,6 +149,8 @@ public class RVAdapter_Transactions extends RecyclerView.Adapter<RVAdapter_Trans
         notifyDataSetChanged();
     }
 
+
+
     public void refreshHoldingsChange(List<Object_TransactionFullData> newListOfItems, Map<String, BigDecimal> listOf_PriceTimeAgo){
         this.listOfitems = newListOfItems ;
         this.listOf_PriceTimeAgo = listOf_PriceTimeAgo ;

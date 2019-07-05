@@ -46,6 +46,8 @@ import apps.yoo.com.blockholdings.data.models.Object_Currency;
 import apps.yoo.com.blockholdings.util.Constants;
 import apps.yoo.com.blockholdings.util.Message;
 import apps.yoo.com.blockholdings.util.Utils;
+import co.ceryle.radiorealbutton.RadioRealButton;
+import co.ceryle.radiorealbutton.RadioRealButtonGroup;
 
 
 public class Fragment_DetailPriceChart extends Fragment {
@@ -54,7 +56,7 @@ public class Fragment_DetailPriceChart extends Fragment {
     AppDatabase db;
 
     LineChart chart;
-    Button btn_Chart1day, btn_Chart3Day, btn_ChartWeek, btn_ChartMonth, btn_Chart6Month, btn_ChartYear, btn_ChartMax ;
+    RadioRealButtonGroup radioGroup_ChartInterval ;
     RecyclerView rv_ProjectLinks ;
     TextView tv_CoinDescription, tv_CoinRank, tv_CoinMarketCap, tv_CoinTotalVolume, tv_High24H, tv_Low424H,
             tv_totalSupply, tv_CurrentSupply, tv_ChangePercentage ;
@@ -105,7 +107,7 @@ public class Fragment_DetailPriceChart extends Fragment {
         currentCurrency = MySharedPreferences.getCurrencyObj_FromPreference(context.getApplicationContext()) ;
         getCoinData() ;
 //        setupBasicUI() ;
-        setChartButtons();
+        setRadioGroup_ChartInterval_ChangedListener();
         setupRecyclerView_ProjectLinks();
 
 
@@ -114,13 +116,7 @@ public class Fragment_DetailPriceChart extends Fragment {
     private void getReferences(View itemView){
         nsv_Main = itemView.findViewById(R.id.frgDetailChart_NSV_Main) ;
         chart = (LineChart)itemView.findViewById(R.id.frgDetailPrice_LineChart_Main);
-        btn_Chart1day = itemView.findViewById(R.id.frgDetailChart_Btn_ChartView1Day);
-        btn_Chart3Day = itemView.findViewById(R.id.frgDetailChart_Btn_ChartView3Day);
-        btn_ChartWeek = itemView.findViewById(R.id.frgDetailChart_Btn_ChartViewWeek);
-        btn_ChartMonth = itemView.findViewById(R.id.frgDetailChart_Btn_ChartViewMonth);
-        btn_Chart6Month = itemView.findViewById(R.id.frgDetailChart_Btn_ChartView6Month);
-        btn_ChartYear = itemView.findViewById(R.id.frgDetailChart_Btn_ChartViewYear);
-        btn_ChartMax = itemView.findViewById(R.id.frgDetailChart_Btn_ChartViewMax);
+        radioGroup_ChartInterval = itemView.findViewById(R.id.frgDetailChart_RadioGroup_ChartInterval) ;
         viewPagerContainer_from_ParentActivity = getActivity().findViewById(R.id.activityDetail_ViewPager_Main) ;
 
         expandableTextView_CoinDescription = itemView.findViewById(R.id.frgDetailChart_ExpandableTextView_CoinDescription) ;
@@ -215,56 +211,38 @@ public class Fragment_DetailPriceChart extends Fragment {
 
     }
 
-    private void setChartButtons(){
+    private void setRadioGroup_ChartInterval_ChangedListener(){
 
-        btn_Chart1day.setOnClickListener(new View.OnClickListener() {
+        radioGroup_ChartInterval.setOnPositionChangedListener(new RadioRealButtonGroup.OnPositionChangedListener() {
             @Override
-            public void onClick(View v) {
-                getDataFromServer_ForChart("1", ChartValueFormatter_XAxis.TYPE_1DAY);
+            public void onPositionChanged(RadioRealButton button, int currentPosition, int lastPosition) {
+                switch (button.getId()){
+                    case R.id.frgDetailChart_RadioBtn_Interval1Day :
+                        getDataFromServer_ForChart("1", ChartValueFormatter_XAxis.TYPE_1DAY);
+                        break;
+                    case R.id.frgDetailChart_RadioBtn_Interval3Day :
+                        getDataFromServer_ForChart("3", ChartValueFormatter_XAxis.TYPE_3DAY);
+                        break;
+                    case R.id.frgDetailChart_RadioBtn_Interval1Week :
+                        getDataFromServer_ForChart("7", ChartValueFormatter_XAxis.TYPE_WEEK);
+                        break;
+                    case R.id.frgDetailChart_RadioBtn_Interval1Month :
+                        getDataFromServer_ForChart("31", ChartValueFormatter_XAxis.TYPE_MONTH);
+                        break;
+                    case R.id.frgDetailChart_RadioBtn_Interval6Month :
+                        getDataFromServer_ForChart("183", ChartValueFormatter_XAxis.TYPE_6MONTH);
+                        break;
+                    case R.id.frgDetailChart_RadioBtn_Interval1Year :
+                        getDataFromServer_ForChart("365", ChartValueFormatter_XAxis.TYPE_YEAR);
+                        break;
+                    case R.id.frgDetailChart_RadioBtn_IntervalMax :
+                        getDataFromServer_ForChart("max", ChartValueFormatter_XAxis.TYPE_MAX);
+                        break;
+                }
             }
         });
 
-        btn_Chart3Day.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getDataFromServer_ForChart("3", ChartValueFormatter_XAxis.TYPE_3DAY);
-            }
-        });
-
-        btn_ChartWeek.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getDataFromServer_ForChart("7", ChartValueFormatter_XAxis.TYPE_WEEK);
-            }
-        });
-
-        btn_ChartMonth.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getDataFromServer_ForChart("31", ChartValueFormatter_XAxis.TYPE_MONTH);
-            }
-        });
-
-        btn_Chart6Month.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getDataFromServer_ForChart("183", ChartValueFormatter_XAxis.TYPE_6MONTH);
-            }
-        });
-
-        btn_ChartYear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getDataFromServer_ForChart("365", ChartValueFormatter_XAxis.TYPE_YEAR);
-            }
-        });
-
-        btn_ChartMax.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getDataFromServer_ForChart("max", ChartValueFormatter_XAxis.TYPE_MAX);
-            }
-        });
+        radioGroup_ChartInterval.setPosition(6);
 
         getDataFromServer_ForChart("max", ChartValueFormatter_XAxis.TYPE_MAX);
 
@@ -368,7 +346,7 @@ public class Fragment_DetailPriceChart extends Fragment {
             }
         });
 
-
+        chart.highlightValue(null);
         chart.invalidate();
     }
 
