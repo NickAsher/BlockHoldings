@@ -3,7 +3,6 @@ package apps.yoo.com.blockholdings.ui.portfolio;
 import android.util.Log;
 
 import com.github.mikephil.charting.data.Entry;
-import com.google.common.base.Predicate;
 
 import org.joda.time.DateTime;
 import org.json.JSONArray;
@@ -29,10 +28,11 @@ public class Helper_Portfolio {
 
     public static BigDecimal recomputePortfolioValue(AppDatabase db, int portfolioId){
         BigDecimal totalCost = new BigDecimal(0) ;
-        List<Object_TransactionFullData> listOfTransactions = db.transactionDao().getListOfAllTransaction_FullData(portfolioId) ;
+        List<Object_TransactionFullData> listOfTransactions = db.transactionDao().getListOfAllTransactionFD_OfPortfolio(portfolioId) ;
         Object_Portfolio portfolioObj = db.portfolioDao().getPortfolioById(portfolioId) ;
 //        Log.e(LOG_TAG, listOfTransactions.toString()) ;
         for (Object_TransactionFullData obj : listOfTransactions){
+
             if(obj.getTransactionObject().getType() == Object_Transaction.TYPE_BUY){
                 Log.v(LOG_TAG, "Total cost of portfolio is" + totalCost) ;
                 Log.v(LOG_TAG, "Adding " +obj.getCoinObject().getName()  + " quantity " + obj.getTransactionObject().getNoOfCoins() + " cost " + obj.getTransactionObject().getTotalValue_Current()) ;

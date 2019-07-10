@@ -2,6 +2,9 @@ package apps.yoo.com.blockholdings.ui.home;
 
 import android.util.Log;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,6 +13,7 @@ import java.util.Map;
 
 import apps.yoo.com.blockholdings.data.models.Object_Transaction;
 import apps.yoo.com.blockholdings.data.models.Object_TransactionFullData;
+import apps.yoo.com.blockholdings.data.models.Object_TransactionGroup;
 
 public class Helper_Home {
     private static final String LOG_TAG = "Helper_Home --> " ;
@@ -79,5 +83,42 @@ public class Helper_Home {
         }
 
         return newList ;
+    }
+
+
+
+    public static ArrayList<Object_TransactionGroup> getListOfTransactionGroups (List<Object_TransactionFullData> list){
+        // Firstly we will create a multimap with pair of <String,Object_TransactionGroup>
+        // Here the string will be used as key to group the transactions
+        // IN our case the string is coinId, since we are grouping the transaction based on the Coin
+
+        //1. Put all the transaction of the list in the multimap with each transaction mapped to the coin ID
+        //2.
+        ArrayList<Object_TransactionGroup> listOfTransactionGroups = new ArrayList<>() ;
+        Multimap<String, Object_TransactionFullData> transactionMultimap = HashMultimap.create() ;
+
+        for (Object_TransactionFullData transaction: list) {
+            transactionMultimap.put(transaction.getCoinObject().getId(), transaction) ;
+        } ;
+
+
+        for (String coinId : transactionMultimap.keySet()){
+            Object_TransactionGroup txGrp = new Object_TransactionGroup(transactionMultimap.get(coinId).iterator().next()) ;
+
+            for (Object_TransactionFullData childTransaction: transactionMultimap.get(coinId)) {
+                txGrp.addChildTransactionFD(childTransaction);
+
+                if(childTransaction.getTransactionObject().getType() == Object_Transaction.TYPE_BUY){
+                    txGrp.setNoOfCoins(txGrp.getNoOfCoins().add(new BigDecimal(childTransaction.getTransactionObject().getNoOfCoins())));
+                } else if(childTransaction.getTransactionObject().getType() == Object_Transaction.TYPE_SELL){
+                    txGrp.setNoOfCoins(txGrp.getNoOfCoins().subtract(new BigDecimal(childTransaction.getTransactionObject().getNoOfCoins())));
+                }
+            }
+
+            listOfTransactionGroups.add(txGrp) ;
+        }
+
+
+        return listOfTransactionGroups ;
     }
 }

@@ -25,6 +25,17 @@ public class Utils {
         }
     }
 
+    public static String showHumanDecimals(BigDecimal no){
+//        removeMinusSign(string_W_LotsOfDecimals) ;
+
+        // when no. is less than 0
+        if(no.compareTo(new BigDecimal(1)) < 0  ){
+            return no.setScale(5, BigDecimal.ROUND_HALF_UP).stripTrailingZeros().toPlainString() ;
+        } else {
+            return no.setScale(3, BigDecimal.ROUND_HALF_UP).stripTrailingZeros().toPlainString() ;
+        }
+    }
+
 
 
 

@@ -1,26 +1,23 @@
 package apps.yoo.com.blockholdings.ui.home;
 
 import android.app.Activity;
-
-import androidx.constraintlayout.solver.widgets.Helper;
-import androidx.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.fragment.app.FragmentManager;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -28,10 +25,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
-import com.h6ah4i.android.widget.advrecyclerview.expandable.RecyclerViewExpandableItemManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,12 +49,10 @@ import apps.yoo.com.blockholdings.data.MySharedPreferences;
 import apps.yoo.com.blockholdings.data.models.Object_Coin;
 import apps.yoo.com.blockholdings.data.models.Object_Currency;
 import apps.yoo.com.blockholdings.data.models.Object_Portfolio;
-import apps.yoo.com.blockholdings.data.models.Object_Transaction;
 import apps.yoo.com.blockholdings.data.models.Object_TransactionFullData;
-import apps.yoo.com.blockholdings.data.models.Object_TransactionGroup;
+import apps.yoo.com.blockholdings.ui.news.Activity_News;
 import apps.yoo.com.blockholdings.ui.portfolio.Fragment_PortfolioBrief;
 import apps.yoo.com.blockholdings.ui.settings.Activity_Settings;
-import apps.yoo.com.blockholdings.ui.news.Activity_News;
 import apps.yoo.com.blockholdings.ui.transaction.Activity_Transaction3;
 import apps.yoo.com.blockholdings.ui.watchlist.Activity_WatchlistContainer;
 import apps.yoo.com.blockholdings.util.Constants;
@@ -67,7 +63,7 @@ import co.ceryle.radiorealbutton.RadioRealButton;
 import co.ceryle.radiorealbutton.RadioRealButtonGroup;
 
 
-public class Activity_Home extends AppCompatActivity{
+public class Activity_Home2 extends AppCompatActivity{
     Context context ;
     String LOG_TAG = "Activity_Home --> " ;
     AppDatabase db;
@@ -76,7 +72,6 @@ public class Activity_Home extends AppCompatActivity{
 
     BottomNavigationView btmNavigationView ;
     RecyclerView rv ;
-    RVAdapter_TransactionsExpandable adapter_transactionsExpandable ;
     TextView textView_NameSort, textView_PercentageSort, textView_HoldingsSort, textView_SingleCoinPriceSort ;
     RelativeLayout layout_MainContainer ;
     Fragment_PortfolioBrief fragment_portfolioBrief ;
@@ -87,8 +82,7 @@ public class Activity_Home extends AppCompatActivity{
     Object_Portfolio currentPortfolioObj ;
     RVAdapter_Transactions adapter ;
     List<Object_TransactionFullData> listOfAllTransaction_Unsummed;
-    List<Object_TransactionFullData>  listOfPortfolioTransactions_Unsummed, listOfPortfolioTransactions_Summed, listOfPortfolioTransactions ;
-    ArrayList<Object_TransactionGroup> listOfTransactionGroups ;
+    List<Object_TransactionFullData>  listOfPortfolioTransactions_Unsummed, listOfPortfolioTransactions_Summed ;
     List<Object_Portfolio> listOfPortfolios ;
     Object_Currency currentCurrency ;
     String string_NewDataURL ;
@@ -119,8 +113,6 @@ public class Activity_Home extends AppCompatActivity{
         currentPortfolioObj = db.portfolioDao().getPortfolioById(MySharedPreferences.getPortfolioId_FromPreference(context.getApplicationContext())) ;
         listOfPortfolios = db.portfolioDao().getListOfAllPortfolios() ;
 
-        listOfPortfolioTransactions = new ArrayList<>() ;
-        listOfTransactionGroups = new ArrayList<>() ;
         listOfAllTransaction_Unsummed = new ArrayList<>() ;
         listOfPortfolioTransactions_Unsummed = new ArrayList<>() ;
         listOfPortfolioTransactions_Summed = new ArrayList<>() ;
@@ -132,12 +124,12 @@ public class Activity_Home extends AppCompatActivity{
         layout_MainContainer.setBackground(MySharedPreferences.getAppThemeGradientDrawableOnPreference(getApplicationContext()));
 
         setupBottomNavigationView();
-        setupNewListOfTransactions() ;
+        setupListOfTransactions();
         setupRecyclerView();
         setupBasicUI() ;
         setupRadioBtn_PriceDifference_ChangeListener() ;
 
-        textView_HoldingsSort.performClick() ; // this will sort the items by holdings
+        textView_NameSort.performClick() ; // this will sort the items by name
 
     }
 
@@ -151,7 +143,6 @@ public class Activity_Home extends AppCompatActivity{
         textView_SingleCoinPriceSort = findViewById(R.id.activityPortfolio_TextView_SortSingleCoinPrice) ;
         textView_PercentageSort = findViewById(R.id.activityPortfolio_TextView_SortPercentage) ;
         textView_HoldingsSort = findViewById(R.id.activityPortfolio_TextView_SortTotalHoldings) ;
-
         radioGrp_PriceChange = findViewById(R.id.activityHome_RadioGroup_PriceChange) ;
 
     }
@@ -186,7 +177,7 @@ public class Activity_Home extends AppCompatActivity{
                         break;
 
                     default:
-                        Intent intent = new Intent(context, Activity_Home.class) ;
+                        Intent intent = new Intent(context, Activity_Home2.class) ;
                         startActivity(intent);
                         finish();
                         break;
@@ -232,83 +223,67 @@ public class Activity_Home extends AppCompatActivity{
         }
     }
 
-
-    private void setupNewListOfTransactions(){
+    private void setupListOfTransactions(){
         //This method is called when the activity is created
         // And it is also called when a new transaction is added by the user
 
-        // So we get the list of transactions through live data and set a observer
-        // Now in this observer we have two cases
-        //
-
-        // When the activity is created we simply get the list of transactions through a live data
-        // and set the adapter
-
-
-        db.transactionDao().getListOfAllTransactionFD_OfPortfolio_LiveData(MyGlobals.getCurrentPortfolioObj().getPortfolioId()).observe(this, new Observer<List<Object_TransactionFullData>>() {
+        db.transactionDao().getListOfAllTransaction_FullData_All().observe(this, new Observer<List<Object_TransactionFullData>>() {
             @Override
-            public void onChanged(List<Object_TransactionFullData> newList) {
+            public void onChanged(@Nullable List<Object_TransactionFullData> list) {
+                Log.e(LOG_TAG, "Inside the live data onChangedMethod") ;
+//                Log.e(LOG_TAG, list.toString()) ;
 
-                if(initialLoad){
-                    // It means that activity is just created. So we simply setup the list
-                    // And also we get the fresh data from the server
-                    // NOTE : whenever we get the fresh data from the server, we also reload the list again
+                if(listOfAllTransaction_Unsummed.size() == list.size()){
+                    // there hasn't been any new insert
+                    // It means the data is just updated from the server
+                    // 1. Just refresh the adapter
+                    Log.e(LOG_TAG, "Inside the live data onChangedMethod Updation") ;
+//
+                    listOfAllTransaction_Unsummed = list ;
+                    listOfPortfolioTransactions_Unsummed = new ArrayList<Object_TransactionFullData>(Collections2.filter(list, Object_TransactionFullData.getPredicateFilter_PortfolioId(MyGlobals.getCurrentPortfolioObj().getPortfolioId()))) ;
+                    listOfPortfolioTransactions_Summed = Helper_Home.getSummedTransactions(listOfPortfolioTransactions_Unsummed) ;
+                    adapter.refreshHoldingsChange(listOfPortfolioTransactions_Summed, getListOfPrices_TimeAgo(Object_Coin.PRICE_MAX));
 
-                    Log.d(LOG_TAG, "Inside the setupNewListOfTransactions->InitialLoad") ;
-                    listOfPortfolioTransactions = newList ;
-                    listOfTransactionGroups = Helper_Home.getListOfTransactionGroups(listOfPortfolioTransactions) ;
-                    refreshPriceCurrencyChange(Object_Coin.TIMEFRAME_MAX);
-                    adapter_transactionsExpandable.refreshAdapter(listOfTransactionGroups);
-                    initialLoad = false ;
-                    getCurrentCoinPrices_FromServer();
-                    return;
-                }
-
-
-                // Now is the case when initial Load has been finished (Activity has been created
-                // The following code is called when either a new transaction is inserted or we are just refreshing values from adapter
-                if(listOfPortfolioTransactions.size() == newList.size()){
-                    //Case 1 : Data is just refreshed from server
-                    // Simply show the updated data in our Recycler view
-                    listOfPortfolioTransactions = newList ;
-                    listOfTransactionGroups = Helper_Home.getListOfTransactionGroups(listOfPortfolioTransactions) ;
-                    refreshPriceCurrencyChange(Object_Coin.TIMEFRAME_MAX);
-                    radioGrp_PriceChange.setPosition(4);
-                    adapter_transactionsExpandable.refreshAdapter(listOfTransactionGroups);
-                    return;
                 } else {
+                    listOfAllTransaction_Unsummed = list ;
+//                    Log.e(LOG_TAG, listOfAllTransaction_Unsummed.toString()) ;
 
-                    // Case 2 : A new Transaction is inserted
-                    // In this case, we simply refresh the data from server
-                    // This method will be called again by getCurrentCoinPrices_FromServer method
-                    // and case 1 will be triggered again which will simply show updated data in recyclerView
-                    listOfPortfolioTransactions = newList ;
-                    getCurrentCoinPrices_FromServer();
-                    return;
+                    Log.e(LOG_TAG, "Inside the live data onChangedMethod Insertion") ;
+                    if(initialLoad){
+                        Log.e(LOG_TAG, "this is just the initial Load") ;
+                        listOfPortfolioTransactions_Unsummed = new ArrayList<Object_TransactionFullData>(Collections2.filter(list, Object_TransactionFullData.getPredicateFilter_PortfolioId(MyGlobals.getCurrentPortfolioObj().getPortfolioId()))) ;
+                        listOfPortfolioTransactions_Summed = Helper_Home.getSummedTransactions(listOfPortfolioTransactions_Unsummed) ;
+//                        Log.e(LOG_TAG, listOfAllTransaction_Unsummed.toString()) ;
+
+                        adapter.refreshHoldingsChange(listOfPortfolioTransactions_Summed, getListOfPrices_TimeAgo(Object_Coin.PRICE_MAX));
+                        initialLoad = false ;
+
+                    }
+//                    else {
+                    // there has been a new insert in the database
+                    // 1. get the fresh data form server,
+                    // 2. that data will be updated here in db and this method will be triggered again
+                    getFreshDataFromServer();
+//                    }
+
+                    //
                 }
-
-
-
 
             }
-        });
+        }); ;
+//        listOfTransactions = new ArrayList<>(Collections2.filter(listOfTransactions, Object_TransactionFullData.getPredicateFilter_PortfolioId(MyGlobals.getCurrentPortfolioObj().getPortfolioId())));
+//        Helper_Home.getSummedTransactions(listOfTransactions) ;
     }
-
 
     private void setupRecyclerView(){
 
-        RecyclerViewExpandableItemManager expMgr = new RecyclerViewExpandableItemManager(null);
-        adapter_transactionsExpandable = new RVAdapter_TransactionsExpandable(context, listOfTransactionGroups, expMgr) ;
-
-
-
+//        listOfTransactions = db.transactionDao().getListOfAllTransaction_FullData_Summed(MyGlobals.getCurrentPortfolioObj().getPortfolioId()) ;
+//        setupPreferenceSorting_OfList() ;
+        adapter = new RVAdapter_Transactions(context, new ArrayList<Object_TransactionFullData>(), getListOfPrices_TimeAgo(Object_Coin.PRICE_MAX)) ;
         rv.setLayoutManager(new LinearLayoutManager(context));
-        rv.setAdapter(expMgr.createWrappedAdapter(adapter_transactionsExpandable));
-        expMgr.attachRecyclerView(rv);
-
+        rv.setAdapter(adapter);
         DividerItemDecoration plainHorizontalLines = new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL) ;
         rv.addItemDecoration(plainHorizontalLines);
-
 
 
     }
@@ -379,59 +354,63 @@ public class Activity_Home extends AppCompatActivity{
         switch (newSortMode){
             case SORT_NAME_ASC :
                 textView_NameSort.append(" \u2191");
-                listOfTransactionGroups.sort(Object_TransactionGroup.NameComparator);
+                listOfPortfolioTransactions_Summed.sort(Object_TransactionFullData.NameComparator);
 //                Collections.reverse(list);
                 break;
             case SORT_NAME_DESC :
                 textView_NameSort.append(" \u2193");
-                listOfTransactionGroups.sort(Object_TransactionGroup.NameComparator);
-                Collections.reverse(listOfTransactionGroups); // it is opposite thing for names
+                listOfPortfolioTransactions_Summed.sort(Object_TransactionFullData.NameComparator);
+                Collections.reverse(listOfPortfolioTransactions_Summed); // it is opposite thing for names
                 break;
 
 
             case SORT_COINPRICE_ASC :
                 textView_SingleCoinPriceSort.append(" \u2191");
-                listOfTransactionGroups.sort(Object_TransactionGroup.singleCoinPrice);
-                Collections.reverse(listOfTransactionGroups);
+                listOfPortfolioTransactions_Summed.sort(Object_TransactionFullData.singleCoinPrice);
+                Collections.reverse(listOfPortfolioTransactions_Summed);
                 break;
             case SORT_COINPRICE_DESC :
                 textView_SingleCoinPriceSort.append(" \u2193");
-                listOfTransactionGroups.sort(Object_TransactionGroup.singleCoinPrice);
+                listOfPortfolioTransactions_Summed.sort(Object_TransactionFullData.singleCoinPrice);
                 break;
 
             case SORT_HOLDINGS_ASC :
                 textView_HoldingsSort.append(" \u2191");
-                listOfTransactionGroups.sort(Object_TransactionGroup.HoldingComparator);
-                Collections.reverse(listOfTransactionGroups);
+                listOfPortfolioTransactions_Summed.sort(Object_TransactionFullData.HoldingComparator);
+                Collections.reverse(listOfPortfolioTransactions_Summed);
                 break;
             case SORT_HOLDINGS_DESC :
                 textView_HoldingsSort.append(" \u2193");
-                listOfTransactionGroups.sort(Object_TransactionGroup.HoldingComparator);
+                listOfPortfolioTransactions_Summed.sort(Object_TransactionFullData.HoldingComparator);
                 break;
 
             case SORT_CHANGE_ASC:
                 textView_PercentageSort.append(" \u2191");
-                Collections.sort(listOfTransactionGroups, new Comparator<Object_TransactionGroup>() {
+                Collections.sort(listOfPortfolioTransactions_Summed, new Comparator<Object_TransactionFullData>() {
                     @Override
-                    public int compare(Object_TransactionGroup o1, Object_TransactionGroup o2) {
-                        return o1.getSummedPriceChange().compareTo(o2.getSummedPriceChange()) ;
+                    public int compare(Object_TransactionFullData o1, Object_TransactionFullData o2) {
+                        return holdingsChangeValueSet_TotalDollarDifference.get(o1.getCoinObject().getId()).compareTo(holdingsChangeValueSet_TotalDollarDifference.get(o2.getCoinObject().getId())) ;
                     }
                 });
-                Collections.reverse(listOfTransactionGroups);
+                Collections.reverse(listOfPortfolioTransactions_Summed);
                 break;
             case SORT_CHANGE_DESC :
                 textView_PercentageSort.append(" \u2193");
-                Collections.sort(listOfTransactionGroups, new Comparator<Object_TransactionGroup>() {
+                Collections.sort(listOfPortfolioTransactions_Summed, new Comparator<Object_TransactionFullData>() {
                     @Override
-                    public int compare(Object_TransactionGroup o1, Object_TransactionGroup o2) {
-                        return o1.getSummedPriceChange().compareTo(o2.getSummedPriceChange()) ;
+                    public int compare(Object_TransactionFullData o1, Object_TransactionFullData o2) {
+                        return holdingsChangeValueSet_TotalDollarDifference.get(o1.getCoinObject().getId()).compareTo(holdingsChangeValueSet_TotalDollarDifference.get(o2.getCoinObject().getId())) ;
                     }
                 });
                 break;
 
         }
 
-        adapter_transactionsExpandable.refreshAdapter(listOfTransactionGroups);
+        // this is the line that does the gives the result of cchange to the adapter
+        // the reason that we are passing both the listOfTransactions and holdingsChangeSet is because
+        // ListOfTransaction is used to refresh transactions when we are sorting based on name, coiPrice, and totalHoldings
+        // TotalDollarDifference is used when we have to sort based on the PriceChangeInDollars
+        adapter.refreshHoldingsChange(listOfPortfolioTransactions_Summed, holdingsChangeValueSet_TotalDollarDifference);
 
         currentSortMode = newSortMode ;
         //TODO save the sort method in shared preferences
@@ -446,26 +425,20 @@ public class Activity_Home extends AppCompatActivity{
             public void onPositionChanged(RadioRealButton button, int currentPosition, int lastPosition) {
                 switch (button.getId()){
                     case R.id.activityHome_RadioBtn_1DayChange :
-                        refreshPriceCurrencyChange(Object_Coin.TIMEFRAME_1DAY);
-                        adapter_transactionsExpandable.refreshAdapter(listOfTransactionGroups);
+                        adapter.refreshHoldingsChange(listOfPortfolioTransactions_Summed, getListOfPrices_TimeAgo(Object_Coin.TIMEFRAME_1DAY));
                         break;
 
                     case R.id.activityHome_RadioBtn_1WeekChange :
-                        refreshPriceCurrencyChange(Object_Coin.TIMEFRAME_1WEEK);
-                        adapter_transactionsExpandable.refreshAdapter(listOfTransactionGroups);
+                        adapter.refreshHoldingsChange(listOfPortfolioTransactions_Summed, getListOfPrices_TimeAgo(Object_Coin.TIMEFRAME_1WEEK));
                         break;
 
                     case R.id.activityHome_RadioBtn_1MonthChange :
-                        refreshPriceCurrencyChange(Object_Coin.TIMEFRAME_1MONTH);
-                        adapter_transactionsExpandable.refreshAdapter(listOfTransactionGroups);
+                        adapter.refreshHoldingsChange(listOfPortfolioTransactions_Summed, getListOfPrices_TimeAgo(Object_Coin.TIMEFRAME_1MONTH));
                         break;
 
                     case R.id.activityHome_RadioBtn_MaxChange :
-                        refreshPriceCurrencyChange(Object_Coin.TIMEFRAME_MAX);
-                        adapter_transactionsExpandable.refreshAdapter(listOfTransactionGroups);
+                        adapter.refreshHoldingsChange(listOfPortfolioTransactions_Summed, getListOfPrices_TimeAgo(Object_Coin.TIMEFRAME_MAX));
                         break;
-
-
                 }
             }
         });
@@ -475,40 +448,80 @@ public class Activity_Home extends AppCompatActivity{
 
 
 
+    private Table<String, Integer, BigDecimal> getTable_PriceChange_DollarDifference(int caseTimeAgo){
+        // This method does one thing, it initialises the table with price change
+        // This method is called many times
+        // It is called by the adapter when the activity is created, so this method is called when activity is started
+        // this method is also called any time when the radioButton for PriceChange is clicked
 
-
-
-    private void refreshPriceCurrencyChange(int caseTimeAgo){
-        for(Object_TransactionGroup trxGrp : listOfTransactionGroups){
-            BigDecimal summedChange = new BigDecimal(0) ;
-
-            for(Object_TransactionFullData childTransactionFD : trxGrp.getListOfChildTransactionsFD()){
-                String priceTimeAgo = Object_Coin.getPriceOfCoin_FromPriceLog_TimeAgo(childTransactionFD.getTransactionObject(), childTransactionFD.getCoinObject(), caseTimeAgo) ;
-                BigDecimal priceChange = new BigDecimal(childTransactionFD.getTransactionObject().getSingleCoinPrice_CurrencyCurrent()).subtract(new BigDecimal(priceTimeAgo)) ;
-                BigDecimal totalPriceChange = priceChange.multiply(new BigDecimal(childTransactionFD.getTransactionObject().getNoOfCoins())) ;
-
-                trxGrp.getMapOfPriceChange().put(childTransactionFD.getTransactionObject().getTransactionNo(), totalPriceChange) ;
-                summedChange = summedChange.add(totalPriceChange) ;
-
-            }
-
-            trxGrp.setSummedPriceChange(summedChange);
-            Log.d(LOG_TAG, trxGrp.toString()) ;
+        for(Object_TransactionFullData transactionObjFD : listOfPortfolioTransactions_Unsummed){
+            table_PriceChange_TotalDollarDifference.put(transactionObjFD.getCoinObject().getId(),
+                    transactionObjFD.getTransactionObject().getTransactionNo(), new BigDecimal(0)) ;
         }
+
+
+        for(Object_TransactionFullData transactionFullData : listOfPortfolioTransactions_Unsummed){
+            String priceTimeAgo = Object_Coin.getPriceOfCoin_FromPriceLog_TimeAgo(transactionFullData.getTransactionObject(), transactionFullData.getCoinObject(), caseTimeAgo) ;
+            BigDecimal priceChange = new BigDecimal(transactionFullData.getTransactionObject().getSingleCoinPrice_CurrencyCurrent()).subtract(new BigDecimal(priceTimeAgo)) ;
+            BigDecimal totalPriceChange = priceChange.multiply(new BigDecimal(transactionFullData.getTransactionObject().getNoOfCoins())) ;
+
+
+            table_PriceChange_TotalDollarDifference.put(transactionFullData.getCoinObject().getId(), transactionFullData.getTransactionObject().getTransactionNo(), totalPriceChange) ;
+
+
+        }
+        Log.d(LOG_TAG, "table priceDollarDifference is " + table_PriceChange_TotalDollarDifference.toString()) ;
+
+        return table_PriceChange_TotalDollarDifference ;
     }
 
 
 
-    private void getCurrentCoinPrices_FromServer(){
+
+    private Map<String, BigDecimal> getListOfPrices_TimeAgo(int caseTimeAgo){
+        for(Object_TransactionFullData transactionObjFD : listOfPortfolioTransactions_Summed){
+            holdingsChangeValueSet_TotalDollarDifference.put(transactionObjFD.getCoinObject().getId(), new BigDecimal(0)) ;
+        }
+
+
+        for(Object_TransactionFullData transactionFullData : listOfPortfolioTransactions_Unsummed){
+            String priceTimeAgo = Object_Coin.getPriceOfCoin_FromPriceLog_TimeAgo(transactionFullData.getTransactionObject(), transactionFullData.getCoinObject(), caseTimeAgo) ;
+            BigDecimal priceChange = new BigDecimal(transactionFullData.getTransactionObject().getSingleCoinPrice_CurrencyCurrent()).subtract(new BigDecimal(priceTimeAgo)) ;
+            BigDecimal totalPriceChange = priceChange.multiply(new BigDecimal(transactionFullData.getTransactionObject().getNoOfCoins())) ;
+            holdingsChangeValueSet_TotalDollarDifference.replace(transactionFullData.getCoinObject().getId(), totalPriceChange) ;
+
+            Log.d(LOG_TAG, "Coin Name : " + transactionFullData.getCoinObject().getName() + " - PriceTimaAgo : " + priceTimeAgo
+                    + " - CurrentPrice : " + transactionFullData.getTransactionObject().getSingleCoinPrice_CurrencyCurrent()
+                    + " - PriceChange : " + priceChange + " - TotalPriceChange : " + totalPriceChange) ;
+
+        }
+
+        Log.e(LOG_TAG, "value set is "  + holdingsChangeValueSet_TotalDollarDifference.toString()) ;
+
+        for(Object_TransactionFullData transactionObjFD : listOfPortfolioTransactions_Unsummed){
+            table_PriceChange_TotalDollarDifference.put(transactionObjFD.getCoinObject().getId(),
+                    transactionObjFD.getTransactionObject().getTransactionNo(), new BigDecimal(0)) ;
+        }
+
+        /**************************************************** */
+
+
+        /************************************************ */
+
+        return holdingsChangeValueSet_TotalDollarDifference;
+    }
+
+
+    private void getFreshDataFromServer(){
 //        Log.e(LOG_TAG, listOfAllTransaction_Unsummed.toString()) ;  receiving the 300 noOfCoins ;
-        if (listOfPortfolioTransactions.size() == 0){
-            Log.e(LOG_TAG, "Size of listOfPortfolioTransactions = 0") ;
+        if (listOfAllTransaction_Unsummed.size() == 0){
+            Log.e(LOG_TAG, "Size of listOfAllTransaction_Unsummed = 0") ;
             return;
         }
 
         string_NewDataURL = Constants.URL_APICALL_SIMPLEPRICES ;
 
-        for (Object_TransactionFullData object_transactionFullData : listOfPortfolioTransactions){
+        for (Object_TransactionFullData object_transactionFullData : listOfAllTransaction_Unsummed){
             string_NewDataURL  = string_NewDataURL + object_transactionFullData.getCoinObject().getId() + "," ;
         }
         string_NewDataURL = string_NewDataURL.substring(0, string_NewDataURL.length() - 1); // removing the last comma

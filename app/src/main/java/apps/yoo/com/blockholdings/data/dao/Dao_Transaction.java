@@ -42,7 +42,10 @@ public interface Dao_Transaction {
 
 
     @Query("SELECT  * FROM table_transaction INNER JOIN table_coin ON table_transaction.coinId = table_coin.coin_Id INNER JOIN table_exchange ON table_transaction.exchangeId = table_exchange.exchange_Id WHERE table_transaction.portfolioId = :portfolioId ORDER BY table_coin.coinName")
-    List<Object_TransactionFullData> getListOfAllTransaction_FullData(int portfolioId) ;
+    List<Object_TransactionFullData> getListOfAllTransactionFD_OfPortfolio(int portfolioId) ;
+
+    @Query("SELECT  * FROM table_transaction INNER JOIN table_coin ON table_transaction.coinId = table_coin.coin_Id INNER JOIN table_exchange ON table_transaction.exchangeId = table_exchange.exchange_Id WHERE table_transaction.portfolioId = :portfolioId ORDER BY table_coin.coinName")
+    LiveData<List<Object_TransactionFullData>> getListOfAllTransactionFD_OfPortfolio_LiveData(int portfolioId) ;
 
     @Query("SELECT  * FROM table_transaction INNER JOIN table_coin ON table_transaction.coinId = table_coin.coin_Id INNER JOIN table_exchange ON table_transaction.exchangeId = table_exchange.exchange_Id WHERE table_transaction.portfolioId = :portfolioId AND table_transaction.transactionType = 1 ORDER BY table_coin.coinName")
     List<Object_TransactionFullData> getListOfBuyTransactionFD_OfPortfolio(int portfolioId) ;

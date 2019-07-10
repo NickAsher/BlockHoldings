@@ -300,7 +300,7 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                BigDecimal quantity = new BigDecimal(s.toString()) ;
+                BigDecimal quantity = new BigDecimal(s.toString().trim()) ;
                 BigDecimal totalTransactionValue = new BigDecimal(editText_SingleCoinPrice.getText().toString()).multiply(quantity) ;
 
                 if(relLt_TradingPair.getVisibility() != View.GONE){

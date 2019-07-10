@@ -157,6 +157,12 @@ public class Fragment_PortfolioBrief extends Fragment {
 
         List<Object_TransactionFullData> listOfBuyTransactionsFD = db.transactionDao().getListOfBuyTransactionFD_OfPortfolio(currentPortfolioObj.getPortfolioId()) ;
 
+        if(listOfBuyTransactionsFD.size() == 0){
+            //The case when there are no transactions in portfolio
+            textView_PortfolioPriceChange.setVisibility(View.GONE) ;
+            return;
+
+        }
         for(Object_TransactionFullData transactionFDObj : listOfBuyTransactionsFD){
 
             BigDecimal priceTimeAgo = new BigDecimal(Object_Coin.getPriceOfCoin_FromPriceLog_TimeAgo(transactionFDObj.getTransactionObject(), transactionFDObj.getCoinObject(), caseTimeAgo)) ;
