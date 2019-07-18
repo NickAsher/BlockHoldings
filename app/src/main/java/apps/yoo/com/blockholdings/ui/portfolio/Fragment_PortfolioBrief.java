@@ -44,6 +44,7 @@ import apps.yoo.com.blockholdings.data.models.Object_Transaction;
 import apps.yoo.com.blockholdings.data.models.Object_TransactionFullData;
 import apps.yoo.com.blockholdings.ui.detail.ChartMarkerView;
 import apps.yoo.com.blockholdings.ui.home.Activity_Home;
+import apps.yoo.com.blockholdings.util.Constants;
 import co.ceryle.radiorealbutton.RadioRealButton;
 import co.ceryle.radiorealbutton.RadioRealButtonGroup;
 
@@ -236,34 +237,34 @@ public class Fragment_PortfolioBrief extends Fragment {
                 switch (button.getId()){
                     case R.id.activityPortfolio_RadioBtn_Chart1Day :
                         listOfPortfolioUpdateLogValues = Helper_Portfolio.getFormattedChartValues_from_UpdateLogOfPortfolio(
-                                currentPortfolioObj.getPortfolioUpdateLog(), Helper_Portfolio.TIMEFRAME_1DAY) ;
+                                currentPortfolioObj.getPortfolioUpdateLog(), Constants.TIMEFRAME_1DAY) ;
 
-                        setPortfolioPriceChange2(Object_Coin.TIMEFRAME_1DAY);
+                        setPortfolioPriceChange2(Constants.TIMEFRAME_1DAY);
 //                        setPortfolioPriceChange(Helper_Portfolio.getPriceTimeAgo_from_UpdateLogOfPortfolio(
 //                                currentPortfolioObj.getPortfolioUpdateLog(), Helper_Portfolio.TIMEFRAME_1DAY) );
                         break;
                     case R.id.activityPortfolio_RadioBtn_Chart1Week :
                         listOfPortfolioUpdateLogValues = Helper_Portfolio.getFormattedChartValues_from_UpdateLogOfPortfolio(
-                                currentPortfolioObj.getPortfolioUpdateLog(), Helper_Portfolio.TIMEFRAME_1WEEK) ;
+                                currentPortfolioObj.getPortfolioUpdateLog(), Constants.TIMEFRAME_1WEEK) ;
 
-                        setPortfolioPriceChange2(Object_Coin.TIMEFRAME_1WEEK);
+                        setPortfolioPriceChange2(Constants.TIMEFRAME_1WEEK);
 
 //                        setPortfolioPriceChange(Helper_Portfolio.getPriceTimeAgo_from_UpdateLogOfPortfolio(
 //                                currentPortfolioObj.getPortfolioUpdateLog(), Helper_Portfolio.TIMEFRAME_1WEEK) );
                         break;
                     case R.id.activityPortfolio_RadioBtn_Chart1Month :
                         listOfPortfolioUpdateLogValues = Helper_Portfolio.getFormattedChartValues_from_UpdateLogOfPortfolio(
-                                currentPortfolioObj.getPortfolioUpdateLog(), Helper_Portfolio.TIMEFRAME_1MONTH) ;
+                                currentPortfolioObj.getPortfolioUpdateLog(), Constants.TIMEFRAME_1MONTH) ;
 
-                        setPortfolioPriceChange2(Object_Coin.TIMEFRAME_1MONTH);
+                        setPortfolioPriceChange2(Constants.TIMEFRAME_1MONTH);
 //                        setPortfolioPriceChange(Helper_Portfolio.getPriceTimeAgo_from_UpdateLogOfPortfolio(
 //                                currentPortfolioObj.getPortfolioUpdateLog(), Helper_Portfolio.TIMEFRAME_1MONTH) );
                         break;
                     case R.id.activityPortfolio_RadioBtn_Chart1Year :
                         listOfPortfolioUpdateLogValues = Helper_Portfolio.getFormattedChartValues_from_UpdateLogOfPortfolio(
-                                currentPortfolioObj.getPortfolioUpdateLog(), Helper_Portfolio.TIMEFRAME_1YEAR) ;
+                                currentPortfolioObj.getPortfolioUpdateLog(), Constants.TIMEFRAME_1YEAR) ;
 
-                        setPortfolioPriceChange2(Object_Coin.TIMEFRAME_1YEAR);
+                        setPortfolioPriceChange2(Constants.TIMEFRAME_1YEAR);
 //                        setPortfolioPriceChange(Helper_Portfolio.getPriceTimeAgo_from_UpdateLogOfPortfolio(
 //                                currentPortfolioObj.getPortfolioUpdateLog(), Helper_Portfolio.TIMEFRAME_1YEAR) );
                         break;
@@ -271,7 +272,7 @@ public class Fragment_PortfolioBrief extends Fragment {
                         listOfPortfolioUpdateLogValues = Helper_Portfolio.getFormattedChartValues_from_UpdateLogOfPortfolio(
                                 currentPortfolioObj.getPortfolioUpdateLog()) ;
 
-                        setPortfolioPriceChange2(Object_Coin.TIMEFRAME_MAX);
+                        setPortfolioPriceChange2(Constants.TIMEFRAME_MAX);
 //                        setPortfolioPriceChange(Helper_Portfolio.getPriceTimeAgo_from_UpdateLogOfPortfolio(
 //                                currentPortfolioObj.getPortfolioUpdateLog(), Helper_Portfolio.TIMEFRAME_MAX) );
                         break;
@@ -279,7 +280,7 @@ public class Fragment_PortfolioBrief extends Fragment {
                         listOfPortfolioUpdateLogValues = Helper_Portfolio.getFormattedChartValues_from_UpdateLogOfPortfolio(
                                 currentPortfolioObj.getPortfolioUpdateLog()) ;
 
-                        setPortfolioPriceChange2(Object_Coin.TIMEFRAME_MAX);
+                        setPortfolioPriceChange2(Constants.TIMEFRAME_MAX);
 //                        setPortfolioPriceChange(Helper_Portfolio.getPriceTimeAgo_from_UpdateLogOfPortfolio(
 //                                currentPortfolioObj.getPortfolioUpdateLog(), Helper_Portfolio.TIMEFRAME_MAX) );
                 }

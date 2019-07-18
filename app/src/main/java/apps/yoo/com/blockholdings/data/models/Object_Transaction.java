@@ -5,6 +5,7 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity(tableName = "table_transaction")
@@ -60,6 +61,9 @@ public class Object_Transaction implements Cloneable{
     @ColumnInfo(name = "totalValue_Current")
     String totalValue_Current ;
 
+    @ColumnInfo(name = "totalValue_CurrentwFees")
+    String totalValue_CurrentwFees ;
+
     @ColumnInfo(name = "note")
     String note ;
 
@@ -68,6 +72,19 @@ public class Object_Transaction implements Cloneable{
 
     @ColumnInfo(name = "updateLog")
     String updateLog ;
+
+    @ColumnInfo(name = "feeCoinId")
+    String feeCoinId ; // the coin id of fees ex : BNB
+
+    @ColumnInfo(name = "isFeeCoinFiat")
+    boolean isFeeCoinFiat ;
+
+    @ColumnInfo(name = "feeNoOfCoins")
+    String feeNoOfCoins ; // The No of coins of feeCoin ex :  0.1 here means fees is 0.1 BNB
+
+    @ColumnInfo(name = "feeInDollar")
+    String feeInDollar ; // Total value of fee in user Currency ex : convert 0.1 BNB to USD
+
 
 
 
@@ -205,6 +222,52 @@ public class Object_Transaction implements Cloneable{
 
     public void setUpdateLog(String updateLog) {
         this.updateLog = updateLog;
+    }
+
+
+    public String getTotalValue_CurrentwFees() {
+        return totalValue_CurrentwFees;
+    }
+
+    public String getFeeCoinId() {
+        return feeCoinId;
+    }
+
+    public String getFeeNoOfCoins() {
+        return feeNoOfCoins;
+    }
+
+    public String getFeeInDollar() {
+        return feeInDollar;
+    }
+
+    public void setTotalValue_CurrentwFees(String totalValue_CurrentwFees) {
+        this.totalValue_CurrentwFees = totalValue_CurrentwFees;
+    }
+
+    public void computeTotalValue_CurrentwFees() {
+        this.totalValue_CurrentwFees = new BigDecimal(totalValue_Current).add(new BigDecimal(feeInDollar)).toPlainString() ;
+    }
+
+    public void setFeeCoinId(String feeCoinId) {
+        this.feeCoinId = feeCoinId;
+    }
+
+    public void setFeeNoOfCoins(String feeNoOfCoins) {
+        this.feeNoOfCoins = feeNoOfCoins;
+    }
+
+    public void setFeeInDollar(String feeInDollar) {
+        this.feeInDollar = feeInDollar;
+    }
+
+
+    public boolean isFeeCoinFiat() {
+        return isFeeCoinFiat;
+    }
+
+    public void setIsFeeCoinFiat(boolean isFeeCoinFiat) {
+        this.isFeeCoinFiat = isFeeCoinFiat;
     }
 
     @Override

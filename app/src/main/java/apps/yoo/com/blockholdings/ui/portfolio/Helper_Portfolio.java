@@ -17,14 +17,15 @@ import apps.yoo.com.blockholdings.data.AppDatabase;
 import apps.yoo.com.blockholdings.data.models.Object_Portfolio;
 import apps.yoo.com.blockholdings.data.models.Object_Transaction;
 import apps.yoo.com.blockholdings.data.models.Object_TransactionFullData;
+import apps.yoo.com.blockholdings.util.Constants;
 
 public class Helper_Portfolio {
     private static final String LOG_TAG = "Helper_Portfolio -->" ;
-    public static final int TIMEFRAME_1DAY = 1 ;
-    public static final int TIMEFRAME_1WEEK = 2 ;
-    public static final int TIMEFRAME_1MONTH = 3 ;
-    public static final int TIMEFRAME_1YEAR = 4 ;
-    public static final int TIMEFRAME_MAX = 5 ;
+//    public static final int TIMEFRAME_1DAY = 1 ;
+////    public static final int TIMEFRAME_1WEEK = 2 ;
+////    public static final int TIMEFRAME_1MONTH = 3 ;
+////    public static final int TIMEFRAME_1YEAR = 4 ;
+////    public static final int TIMEFRAME_MAX = 5 ;
 
     public static BigDecimal recomputePortfolioValue(AppDatabase db, int portfolioId){
         BigDecimal totalCost = new BigDecimal(0) ;
@@ -89,19 +90,19 @@ public class Helper_Portfolio {
         DateTime dateTime = new DateTime(Calendar.getInstance().getTimeInMillis()) ;
         long startingDateTime ;
         switch (timeFrame){
-            case TIMEFRAME_1DAY :
+            case Constants.TIMEFRAME_1DAY :
                 startingDateTime = dateTime.minusDays(1).getMillis() ;
                 break;
-            case TIMEFRAME_1WEEK :
+            case Constants.TIMEFRAME_1WEEK :
                 startingDateTime = dateTime.minusWeeks(1).getMillis() ;
                 break;
-            case TIMEFRAME_1MONTH :
+            case Constants.TIMEFRAME_1MONTH :
                 startingDateTime = dateTime.minusMonths(1).getMillis() ;
                 break;
-            case TIMEFRAME_1YEAR :
+            case Constants.TIMEFRAME_1YEAR :
                 startingDateTime = dateTime.minusYears(1).getMillis() ;
                 break;
-            case TIMEFRAME_MAX :
+            case Constants.TIMEFRAME_MAX :
                 startingDateTime = 0 ;
                 break;
                 default:startingDateTime = 0 ;
@@ -130,19 +131,19 @@ public class Helper_Portfolio {
         DateTime dateTime = new DateTime(Calendar.getInstance().getTimeInMillis()) ;
         long startingDateTime ;
         switch (timeFrame){
-            case TIMEFRAME_1DAY :
+            case Constants.TIMEFRAME_1DAY :
                 startingDateTime = dateTime.minusDays(1).getMillis() ;
                 break;
-            case TIMEFRAME_1WEEK :
+            case Constants.TIMEFRAME_1WEEK :
                 startingDateTime = dateTime.minusWeeks(1).getMillis() ;
                 break;
-            case TIMEFRAME_1MONTH :
+            case Constants.TIMEFRAME_1MONTH :
                 startingDateTime = dateTime.minusMonths(1).getMillis() ;
                 break;
-            case TIMEFRAME_1YEAR :
+            case Constants.TIMEFRAME_1YEAR :
                 startingDateTime = dateTime.minusYears(1).getMillis() ;
                 break;
-            case TIMEFRAME_MAX :
+            case Constants.TIMEFRAME_MAX :
                 return "0" ;
             default:
                 return "0" ;

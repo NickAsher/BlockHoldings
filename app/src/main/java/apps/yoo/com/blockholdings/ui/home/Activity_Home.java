@@ -257,7 +257,7 @@ public class Activity_Home extends AppCompatActivity{
                     Log.d(LOG_TAG, "Inside the setupNewListOfTransactions->InitialLoad") ;
                     listOfPortfolioTransactions = newList ;
                     listOfTransactionGroups = Helper_Home.getListOfTransactionGroups(listOfPortfolioTransactions) ;
-                    refreshPriceCurrencyChange(Object_Coin.TIMEFRAME_MAX);
+                    refreshPriceCurrencyChange(Constants.TIMEFRAME_MAX);
                     adapter_transactionsExpandable.refreshAdapter(listOfTransactionGroups);
                     initialLoad = false ;
                     getCurrentCoinPrices_FromServer();
@@ -272,7 +272,7 @@ public class Activity_Home extends AppCompatActivity{
                     // Simply show the updated data in our Recycler view
                     listOfPortfolioTransactions = newList ;
                     listOfTransactionGroups = Helper_Home.getListOfTransactionGroups(listOfPortfolioTransactions) ;
-                    refreshPriceCurrencyChange(Object_Coin.TIMEFRAME_MAX);
+                    refreshPriceCurrencyChange(Constants.TIMEFRAME_MAX);
                     radioGrp_PriceChange.setPosition(4);
                     adapter_transactionsExpandable.refreshAdapter(listOfTransactionGroups);
                     return;
@@ -299,8 +299,6 @@ public class Activity_Home extends AppCompatActivity{
 
         RecyclerViewExpandableItemManager expMgr = new RecyclerViewExpandableItemManager(null);
         adapter_transactionsExpandable = new RVAdapter_TransactionsExpandable(context, listOfTransactionGroups, expMgr) ;
-
-
 
         rv.setLayoutManager(new LinearLayoutManager(context));
         rv.setAdapter(expMgr.createWrappedAdapter(adapter_transactionsExpandable));
@@ -446,22 +444,22 @@ public class Activity_Home extends AppCompatActivity{
             public void onPositionChanged(RadioRealButton button, int currentPosition, int lastPosition) {
                 switch (button.getId()){
                     case R.id.activityHome_RadioBtn_1DayChange :
-                        refreshPriceCurrencyChange(Object_Coin.TIMEFRAME_1DAY);
+                        refreshPriceCurrencyChange(Constants.TIMEFRAME_1DAY);
                         adapter_transactionsExpandable.refreshAdapter(listOfTransactionGroups);
                         break;
 
                     case R.id.activityHome_RadioBtn_1WeekChange :
-                        refreshPriceCurrencyChange(Object_Coin.TIMEFRAME_1WEEK);
+                        refreshPriceCurrencyChange(Constants.TIMEFRAME_1WEEK);
                         adapter_transactionsExpandable.refreshAdapter(listOfTransactionGroups);
                         break;
 
                     case R.id.activityHome_RadioBtn_1MonthChange :
-                        refreshPriceCurrencyChange(Object_Coin.TIMEFRAME_1MONTH);
+                        refreshPriceCurrencyChange(Constants.TIMEFRAME_1MONTH);
                         adapter_transactionsExpandable.refreshAdapter(listOfTransactionGroups);
                         break;
 
                     case R.id.activityHome_RadioBtn_MaxChange :
-                        refreshPriceCurrencyChange(Object_Coin.TIMEFRAME_MAX);
+                        refreshPriceCurrencyChange(Constants.TIMEFRAME_MAX);
                         adapter_transactionsExpandable.refreshAdapter(listOfTransactionGroups);
                         break;
 

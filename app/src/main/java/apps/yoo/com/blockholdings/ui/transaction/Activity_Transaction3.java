@@ -6,11 +6,14 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -25,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,7 +36,6 @@ import java.util.Date;
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.work.Data;
@@ -65,10 +68,11 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
     RelativeLayout relLt_Exchange, relLt_TradingPair, relLt_BtnAddTransaction ;
     TextView textView_CoinName, textView_Exchange, textView_TradingPair, textView_Date, textView_SingleCoinPriceLabel,
             textView_AddButtonText, textView_TransactionTotalValue ;
-    EditText editText_SingleCoinPrice, editText_Quantity, editText_Note ;
+    EditText editText_SingleCoinPrice, editText_Quantity, editText_Note, editText_Fee ;
     RadioButton radioButton_Buy, radioButton_Sell ;
     RadioGroup radioGroup_BuySell ;
     ProgressBar progressBarAddBtn ;
+    Spinner spinner_FeeType ;
 
     String coinId ;
     Object_Coin currentCoin ;
@@ -78,6 +82,15 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
     String p24hChange ;
     String singleCoinPrice_Currency ;
     String tradingPairPrice_Currency ;
+    int feeType ;
+
+    final int FEE_TYPE_FIAT_PERCENTAGE = 0 ;
+    final int FEE_TYPE_FIAT_DIRECT = 1 ;
+    final int FEE_TYPE_CRYPTO_TRANSACTIONCOIN_PERCENTAGE =2 ;
+    final int FEE_TYPE_CRYPTO_TRANSACTIONCOIN_DIRECT = 3 ;
+    final int FEE_TYPE_CRYPTO_TRADINGPAIRCOIN_DIRECT = 4 ;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,7 +114,7 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
         initTransaction();
         setBasicUi();
 
-        getCoinData();
+        getFromServer_CoinTickers();
 
 
 
@@ -133,6 +146,10 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
 
         editText_SingleCoinPrice = findViewById(R.id.activityTransaction_EditText_ValueSingleCoinPrice) ;
         editText_Quantity = findViewById(R.id.activityTransaction_EditText_ValueQuantity) ;
+
+        spinner_FeeType = findViewById(R.id.activityTransaction_Spinner_ValueFeeType) ;
+        editText_Fee= findViewById(R.id.activityTransaction_EditText_ValueFee) ;
+
         editText_Note= findViewById(R.id.activityTransaction_EditText_ValueNote) ;
 
         radioButton_Buy = findViewById(R.id.activityTransaction_RadioButton_Buy) ;
@@ -149,13 +166,13 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
 
 
 
-    private void getCoinData(){
+    private void getFromServer_CoinTickers(){
 
 //        networkRepository.getAllTickersOfCoins(coinId, new MyNetworkResponse() {
 ////            @Override
 ////            public void onResponse(String response) {
 ////                Log.e(LOG_TAG, "Response from server is " + response) ;
-////                processData(response);
+////                processServerResponse_CoinTickers(response);
 ////            }
 ////
 ////            @Override
@@ -173,7 +190,7 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
                     @Override
                     public void onResponse(String response) {
                                 Log.e(LOG_TAG, "Response from server is " + response) ;
-                                processData(response);
+                                processServerResponse_CoinTickers(response);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -187,7 +204,7 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
         requestQueue.add(stringRequest) ;
     }
 
-    private void processData(String respoonse) {
+    private void processServerResponse_CoinTickers(String respoonse) {
 
 //        Helper_Transaction.getTransactionObject().setCoinName(currentCoin.getName());
 //        Helper_Transaction.getTransactionObject().setCoinSymbol(currentCoin.getSymbol());
@@ -219,14 +236,59 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
 
     private void setBasicUi(){
         textView_CoinName.setText(currentCoin.getName());
+
         setupBuySellRadioButton();
         setupTransactionDateTime();
         setupEditTextQuantity_TextChangeListener() ;
 
+        setupFeesSpinner(true);
 
 
 
 
+
+
+    }
+
+
+    private void setupFeesSpinner(boolean isTransactionGlobalAverage){
+        if(isTransactionGlobalAverage){
+            String[] defaultfeeTypes = {"%" + currencyObj.getCurrencyId(), currencyObj.getCurrencyId()} ;
+            ArrayAdapter aa = new ArrayAdapter(context, android.R.layout.simple_spinner_item, defaultfeeTypes) ;
+            aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            spinner_FeeType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    switch (position){
+                        case 0 :
+                            Message.display(context, "Percentage is selected");
+                            break;
+                        case 1  :
+                            Message.display(context, "Direct is selected");
+                            break;
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+            spinner_FeeType.setAdapter(aa);
+        } else {
+            String[] feeNames = {"%" + currencyObj.getCurrencyId(), currencyObj.getCurrencyId(),
+                    "%" + currentCoin.getSymbol(), currentCoin.getSymbol(),
+                    currentTransactionFD.getTransactionObject().getTradingPair()
+            } ;
+
+            ArrayAdapter aa = new ArrayAdapter(context, android.R.layout.simple_spinner_item, feeNames) ;
+            aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner_FeeType.setAdapter(aa);
+
+
+        }
 
     }
 
@@ -262,6 +324,8 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
             }
         });
     }
+
+
 
     private void setupTransactionDateTime(){
         Date currentDate = Calendar.getInstance().getTime() ;
@@ -321,6 +385,9 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
 
 
 
+
+
+
     private void setupExhangeDialogFragment(){
         relLt_Exchange.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -333,19 +400,6 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
                 dfExchanges.show(fragmentManager, "dfExchanges");
             }
         });
-    }
-
-
-
-
-    @Override
-    public void onSelectingExchange(Object_Exchange exchangeObj) {
-        // TODO make the trading pair text view unselectable before and make it selectable now
-        Message.display(context, "Exchange is now selected ");
-        currentTransactionFD.setExchangeObject(exchangeObj);
-        currentTransactionFD.getTransactionObject().setExchangeId(exchangeObj.getId());
-        textView_Exchange.setText(exchangeObj.getName());
-        setupTradingPairDialogFragment() ;
     }
 
 
@@ -365,9 +419,56 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
 
         textView_SingleCoinPriceLabel.append(" (in " + currencyObj.getCurrencySymbol() + ")");
         editText_SingleCoinPrice.setText(price);
-        setupAddTransaction_WithoutExchange();
+        makeTransaction_WithoutExchange();
+
 
     }
+
+
+    private void makeTransaction_WithoutExchange(){
+        relLt_BtnAddTransaction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                relLt_BtnAddTransaction.setClickable(false);
+
+                currentTransactionFD.getTransactionObject().setNote(editText_Note.getText().toString());
+                currentTransactionFD.getTransactionObject().setNoOfCoins(editText_Quantity.getText().toString());
+
+                singleCoinPrice_Currency = editText_SingleCoinPrice.getText().toString() ;
+                currentTransactionFD.getTransactionObject().setSingleCoinPrice_CurrencyOriginal(singleCoinPrice_Currency);
+                currentTransactionFD.getTransactionObject().setSingleCoinPrice_CurrencyCurrent(singleCoinPrice_Currency);
+
+                String totalValue = new BigDecimal(singleCoinPrice_Currency).multiply(new BigDecimal(editText_Quantity.getText().toString())).toString() ;
+                currentTransactionFD.getTransactionObject().setTotalValue_Original(totalValue);
+                currentTransactionFD.getTransactionObject().setTotalValue_Current(totalValue);
+
+//                setupFeesFiat(new BigDecimal(totalValue), currencyObj.getCurrencyId());
+                computeTransactionFees(null);
+
+                addTransactionToDatabase();
+
+            }
+        });
+
+
+
+    }
+
+
+
+
+    @Override
+    public void onSelectingExchange(Object_Exchange exchangeObj) {
+        // TODO make the trading pair text view unselectable before and make it selectable now
+        Message.display(context, "Exchange is now selected ");
+        currentTransactionFD.setExchangeObject(exchangeObj);
+        currentTransactionFD.getTransactionObject().setExchangeId(exchangeObj.getId());
+        textView_Exchange.setText(exchangeObj.getName());
+        setupTradingPairDialogFragment() ;
+    }
+
+
+
 
     private void setupTradingPairDialogFragment() {
         relLt_TradingPair.setOnClickListener(new View.OnClickListener() {
@@ -391,8 +492,10 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
         currentTransactionFD.getTransactionObject().setTradingPair(tradingPairSymbol);
         Message.display(context, "Trading Pair is now selected + ");
         textView_TradingPair.setText(currentTransactionFD.getCoinObject().getSymbol() + "/" + tradingPairSymbol);
+
+        setupFeesSpinner(false);
         setupCoinPrice_AfterSettingExchangeNTradingPair();
-        setupAddTransactionButton();
+
     }
 
 
@@ -403,59 +506,116 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
         String singleCoinPrice = table_ExchangePairData.get(currentTransactionFD.getTransactionObject().getExchangeId(), currentTransactionFD.getTransactionObject().getTradingPair()) ;
         editText_SingleCoinPrice.setText(singleCoinPrice);
         textView_SingleCoinPriceLabel.append(" (in " + currentTransactionFD.getTransactionObject().getTradingPair() + ")");
-    }
-
-
-    private void setupAddTransaction_WithoutExchange(){
-        relLt_BtnAddTransaction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                relLt_BtnAddTransaction.setClickable(false);
-
-                currentTransactionFD.getTransactionObject().setNote(editText_Note.getText().toString());
-                currentTransactionFD.getTransactionObject().setNoOfCoins(editText_Quantity.getText().toString());
-
-                singleCoinPrice_Currency = editText_SingleCoinPrice.getText().toString() ;
-                currentTransactionFD.getTransactionObject().setSingleCoinPrice_CurrencyOriginal(singleCoinPrice_Currency);
-                currentTransactionFD.getTransactionObject().setSingleCoinPrice_CurrencyCurrent(singleCoinPrice_Currency);
-
-                String totalValue = new BigDecimal(singleCoinPrice_Currency).multiply(new BigDecimal(editText_Quantity.getText().toString())).toString() ;
-                currentTransactionFD.getTransactionObject().setTotalValue_Original(totalValue);
-                currentTransactionFD.getTransactionObject().setTotalValue_Current(totalValue);
-
-                addTransaction();
-
-            }
-        });
-
-
-
-    }
-
-    private void addTransaction(){
-        Log.d(LOG_TAG, "This the method add transaction is being called") ;
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                db.transactionDao().insertTransaction(currentTransactionFD.getTransactionObject());
-                MyGlobals.refreshPortfolioValue(db);
-                Log.e(LOG_TAG, "Transaction is added : " + currentTransactionFD) ;
-
-                OneTimeWorkRequest workRequest1 = new OneTimeWorkRequest.Builder(Worker_UpdatePricesLog_1Coin.class)
-                        .addTag("Worker_UpdatePricesLog_1Coin")
-                        .setInputData(new Data.Builder().putString("coinId", currentCoin.getId()).build())
-                        .build() ;
-                WorkManager.getInstance().enqueue(workRequest1) ;
-
-                finish();
-            }
-        });
-
+        setupAddTransactionButton_WitExchange();
     }
 
 
 
-    private void setupAddTransactionButton(){
+
+
+
+    private void computeTransactionFees(String tradingPairPrice_Currency){
+        feeType = spinner_FeeType.getSelectedItemPosition() ;
+
+        if(editText_Fee.getText() == null || editText_Fee.getText().toString().trim().isEmpty() ||
+                editText_Fee.getText().toString().equalsIgnoreCase("0") ||
+                (feeType == FEE_TYPE_CRYPTO_TRANSACTIONCOIN_DIRECT && tradingPairPrice_Currency == null) ){
+            currentTransactionFD.getTransactionObject().setFeeCoinId(null);
+            currentTransactionFD.getTransactionObject().setFeeInDollar(null);
+            currentTransactionFD.getTransactionObject().setFeeNoOfCoins(null);
+            currentTransactionFD.getTransactionObject().setIsFeeCoinFiat(false);
+
+            return;
+        }
+
+
+        boolean isFeeCoinFiat ;
+        String feeCoinId ;
+        BigDecimal feeNoOfCoins, feeValueInDollar  ;
+
+        String input_feeNoOfCoins = editText_Fee.getText().toString().trim() ;
+        switch (feeType){
+
+            case FEE_TYPE_FIAT_PERCENTAGE :
+                Log.d(LOG_TAG, "Case FEE_TYPE_FIAT_PERCENTAGE was selected") ;
+
+                isFeeCoinFiat = true ;
+                feeCoinId = currencyObj.getCurrencyId() ;
+
+                feeNoOfCoins = new BigDecimal(currentTransactionFD.getTransactionObject().getTotalValue_Current())
+                        .multiply(new BigDecimal(input_feeNoOfCoins))
+                        .divide(new BigDecimal(100), 10, RoundingMode.HALF_UP) ;
+
+                feeValueInDollar = feeNoOfCoins ;
+                break;
+
+            case FEE_TYPE_FIAT_DIRECT :
+                Log.d(LOG_TAG, "Case FEE_TYPE_FIAT_DIRECT was selected") ;
+                isFeeCoinFiat = true ;
+                feeCoinId = currencyObj.getCurrencyId() ;
+                feeNoOfCoins = new BigDecimal(input_feeNoOfCoins) ;
+
+                feeValueInDollar = feeNoOfCoins ;
+
+                break;
+
+            case FEE_TYPE_CRYPTO_TRANSACTIONCOIN_PERCENTAGE :
+                Log.d(LOG_TAG, "Case FEE_TYPE_CRYPTO_TRANSACTIONCOIN_PERCENTAGE was selected") ;
+                isFeeCoinFiat = false ;
+                feeCoinId = currentCoin.getSymbol() ;
+                feeNoOfCoins = new BigDecimal(currentTransactionFD.getTransactionObject().getNoOfCoins())
+                        .multiply(new BigDecimal(input_feeNoOfCoins))
+                        .divide(new BigDecimal(100), 10, RoundingMode.HALF_UP) ;
+
+                feeValueInDollar = feeNoOfCoins.multiply(
+                        new BigDecimal(currentTransactionFD.getTransactionObject().getSingleCoinPrice_CurrencyOriginal())) ;
+
+                break;
+
+            case FEE_TYPE_CRYPTO_TRANSACTIONCOIN_DIRECT :
+                Log.d(LOG_TAG, "Case FEE_TYPE_CRYPTO_TRANSACTIONCOIN_DIRECT was selected") ;
+                isFeeCoinFiat = false ;
+                feeCoinId = currentCoin.getSymbol() ;
+                feeNoOfCoins = new BigDecimal(input_feeNoOfCoins) ;
+
+                feeValueInDollar = feeNoOfCoins.multiply(new BigDecimal(tradingPairPrice_Currency)) ;
+
+                break;
+
+            case FEE_TYPE_CRYPTO_TRADINGPAIRCOIN_DIRECT :
+                Log.d(LOG_TAG, "Case FEE_TYPE_CRYPTO_TRADINGPAIRCOIN_DIRECT was selected") ;
+                isFeeCoinFiat = false ;
+                feeCoinId = currentTransactionFD.getTransactionObject().getTradingPair();
+                feeNoOfCoins = new BigDecimal(input_feeNoOfCoins) ;
+
+                feeValueInDollar = feeNoOfCoins.multiply(
+                        new BigDecimal(currentTransactionFD.getTransactionObject().getSingleCoinPrice_TradingPair())) ;
+                break;
+
+            default:
+                Log.d(LOG_TAG, "Case default was selected") ;
+                isFeeCoinFiat = true ;
+                feeCoinId = null ;
+                feeNoOfCoins = new BigDecimal(0) ;
+                feeValueInDollar = new BigDecimal(0) ;
+                break;
+
+        }
+
+
+        currentTransactionFD.getTransactionObject().setIsFeeCoinFiat(isFeeCoinFiat);
+        currentTransactionFD.getTransactionObject().setFeeCoinId(feeCoinId);
+        currentTransactionFD.getTransactionObject().setFeeNoOfCoins(feeNoOfCoins.toPlainString());
+        currentTransactionFD.getTransactionObject().setFeeInDollar(feeValueInDollar.toPlainString());
+
+
+
+
+
+    }
+
+
+    private void setupAddTransactionButton_WitExchange(){
         relLt_BtnAddTransaction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -467,7 +627,7 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
                 if(currentTransactionFD.getTransactionObject().getTradingPair() == null){
                     // this means that global average is selected .
                     // so transaction is added directly without fetching price
-                    makeTransaction_with_TradingPairPrice( null) ;
+                    makeTransaction_withExchange( null) ;
                     return;
                 }
 
@@ -476,20 +636,20 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
                     // this means that this trading pair is not a coin on the website
                     // so we do not need to make a url call for the price of this coin
 
-                    makeTransaction_with_TradingPairPrice( null) ;
+                    makeTransaction_withExchange( null) ;
                     return;
                 }
                 String tradingPairId = tradingPairCoinObject.getId() ;
                 Log.e(LOG_TAG, tradingPairId) ;
 
-                getCurrencyPriceForTradingPair(tradingPairId);
+                getFromServer_CurrencyPriceForTradingPair(tradingPairId);
             }
         });
     }
 
 
 
-    private void getCurrencyPriceForTradingPair(String tradingPairId){
+    private void getFromServer_CurrencyPriceForTradingPair(String tradingPairId){
 
         String dateString  = "";
         try {
@@ -504,8 +664,8 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        tradingPairPrice_Currency = processCurrencyPriceForTradingPair(response);
-                        makeTransaction_with_TradingPairPrice(tradingPairPrice_Currency);
+                        tradingPairPrice_Currency = processServerResponse_CurrencyPriceForTradingPair(response);
+                        makeTransaction_withExchange(tradingPairPrice_Currency);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -519,7 +679,7 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
 
     }
 
-    private String processCurrencyPriceForTradingPair(String response){
+    private String processServerResponse_CurrencyPriceForTradingPair(String response){
         try {
             JSONObject responseObject = new JSONObject(response);
             if(!responseObject.has("id")){
@@ -534,7 +694,7 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
     }
 
 
-    private void makeTransaction_with_TradingPairPrice(String tradingPairPrice_Currency){
+    private void makeTransaction_withExchange(String tradingPairPrice_Currency){
 
         if(tradingPairPrice_Currency == null){
             singleCoinPrice_Currency = singleCoinPrice_Currency ;
@@ -565,18 +725,32 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
         currentTransactionFD.getTransactionObject().setTotalValue_Original(totalValue);
         currentTransactionFD.getTransactionObject().setTotalValue_Current(totalValue);
 
+        computeTransactionFees(tradingPairPrice_Currency);
+
         Log.e(LOG_TAG, Helper_Transaction.getTransactionFullDataObject().getTransactionObject().toString()) ;
 
+        addTransactionToDatabase();
+    }
+
+
+    private void addTransactionToDatabase(){
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
                 db.transactionDao().insertTransaction(currentTransactionFD.getTransactionObject());
                 MyGlobals.refreshPortfolioValue(db);
-                Log.v(LOG_TAG, "Transaction is added : " + currentTransactionFD) ;
-                Helper_Transaction.makeNewTransactionFullDataObejct();
+                Log.d(LOG_TAG, "Transaction is added : " + currentTransactionFD) ;
+
+                OneTimeWorkRequest workRequest1 = new OneTimeWorkRequest.Builder(Worker_UpdatePricesLog_1Coin.class)
+                        .addTag("Worker_UpdatePricesLog_1Coin")
+                        .setInputData(new Data.Builder().putString("coinId", currentCoin.getId()).build())
+                        .build() ;
+                WorkManager.getInstance().enqueue(workRequest1) ;
+
                 finish();
             }
         });
+
     }
 
 

@@ -240,18 +240,28 @@
 
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/activityPortfolio_RecyclerView_transactions"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
+            android:layout_height="wrap_content">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/activityHome_FAB_AddCoin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/activityPortfolio_RecyclerView_transactions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
 
-            />
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/activityHome_FAB_AddCoin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|right"
+                android:layout_marginTop="8dp"
+
+                />
+
+        </FrameLayout>
+
+
 
 
 

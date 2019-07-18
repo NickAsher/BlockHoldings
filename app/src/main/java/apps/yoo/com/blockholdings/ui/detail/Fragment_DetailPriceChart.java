@@ -218,25 +218,25 @@ public class Fragment_DetailPriceChart extends Fragment {
             public void onPositionChanged(RadioRealButton button, int currentPosition, int lastPosition) {
                 switch (button.getId()){
                     case R.id.frgDetailChart_RadioBtn_Interval1Day :
-                        getDataFromServer_ForChart("1", ChartValueFormatter_XAxis.TYPE_1DAY);
+                        getDataFromServer_ForChart("1", Constants.TIMEFRAME_1DAY);
                         break;
                     case R.id.frgDetailChart_RadioBtn_Interval3Day :
-                        getDataFromServer_ForChart("3", ChartValueFormatter_XAxis.TYPE_3DAY);
+                        getDataFromServer_ForChart("3", Constants.TIMEFRAME_3DAY);
                         break;
                     case R.id.frgDetailChart_RadioBtn_Interval1Week :
-                        getDataFromServer_ForChart("7", ChartValueFormatter_XAxis.TYPE_WEEK);
+                        getDataFromServer_ForChart("7", Constants.TIMEFRAME_1WEEK);
                         break;
                     case R.id.frgDetailChart_RadioBtn_Interval1Month :
-                        getDataFromServer_ForChart("31", ChartValueFormatter_XAxis.TYPE_MONTH);
+                        getDataFromServer_ForChart("31", Constants.TIMEFRAME_1MONTH);
                         break;
                     case R.id.frgDetailChart_RadioBtn_Interval6Month :
-                        getDataFromServer_ForChart("183", ChartValueFormatter_XAxis.TYPE_6MONTH);
+                        getDataFromServer_ForChart("183", Constants.TIMEFRAME_6MONTH);
                         break;
                     case R.id.frgDetailChart_RadioBtn_Interval1Year :
-                        getDataFromServer_ForChart("365", ChartValueFormatter_XAxis.TYPE_YEAR);
+                        getDataFromServer_ForChart("365", Constants.TIMEFRAME_1YEAR);
                         break;
                     case R.id.frgDetailChart_RadioBtn_IntervalMax :
-                        getDataFromServer_ForChart("max", ChartValueFormatter_XAxis.TYPE_MAX);
+                        getDataFromServer_ForChart("max", Constants.TIMEFRAME_MAX);
                         break;
                 }
             }
@@ -244,7 +244,7 @@ public class Fragment_DetailPriceChart extends Fragment {
 
         radioGroup_ChartInterval.setPosition(6);
 
-        getDataFromServer_ForChart("max", ChartValueFormatter_XAxis.TYPE_MAX);
+        getDataFromServer_ForChart("max", Constants.TIMEFRAME_MAX);
 
     }
 

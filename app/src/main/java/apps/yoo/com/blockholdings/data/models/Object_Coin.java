@@ -27,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 import apps.yoo.com.blockholdings.data.AppDatabase;
 import apps.yoo.com.blockholdings.data.AppExecutors;
 import apps.yoo.com.blockholdings.ui.detail.Object_ProjectLink;
+import apps.yoo.com.blockholdings.util.Constants;
 import apps.yoo.com.blockholdings.util.Message;
 
 @Entity(tableName = "table_coin")
@@ -121,17 +122,13 @@ public class Object_Coin {
 
     public static final String LOG_TAG = "Object_Coin --> " ;
 
-    public static final int PRICE_1D = 1 ;
-    public static final int PRICE_1W = 2 ;
-    public static final int PRICE_1M = 3 ;
-    public static final int PRICE_1Y = 4 ;
-    public static final int PRICE_MAX = 5 ;
 
-    public static final int TIMEFRAME_1DAY = 1 ;
-    public static final int TIMEFRAME_1WEEK = 2 ;
-    public static final int TIMEFRAME_1MONTH = 3 ;
-    public static final int TIMEFRAME_1YEAR = 4 ;
-    public static final int TIMEFRAME_MAX = 5 ;
+
+//    public static final int TIMEFRAME_1DAY = 1 ;
+//    public static final int TIMEFRAME_1WEEK = 2 ;
+//    public static final int TIMEFRAME_1MONTH = 3 ;
+//    public static final int TIMEFRAME_1YEAR = 4 ;
+//    public static final int TIMEFRAME_MAX = 5 ;
 
     public Object_Coin(String id, String symbol, String name) {
         this.id = id;
@@ -809,19 +806,19 @@ public class Object_Coin {
         DateTime currentDateTime = new DateTime(Calendar.getInstance().getTimeInMillis()) ;
         long startingDateTime ;
         switch (timeFrame){
-            case TIMEFRAME_1DAY :
+            case Constants.TIMEFRAME_1DAY :
                 startingDateTime = currentDateTime.minusDays(1).getMillis() ;
                 break;
-            case TIMEFRAME_1WEEK :
+            case Constants.TIMEFRAME_1WEEK :
                 startingDateTime = currentDateTime.minusWeeks(1).getMillis() ;
                 break;
-            case TIMEFRAME_1MONTH :
+            case Constants.TIMEFRAME_1MONTH :
                 startingDateTime = currentDateTime.minusMonths(1).getMillis() ;
                 break;
-            case TIMEFRAME_1YEAR :
+            case Constants.TIMEFRAME_1YEAR :
                 startingDateTime = currentDateTime.minusYears(1).getMillis() ;
                 break;
-            case TIMEFRAME_MAX :
+            case Constants.TIMEFRAME_MAX :
                 startingDateTime = 0 ;
                 break;
             default:

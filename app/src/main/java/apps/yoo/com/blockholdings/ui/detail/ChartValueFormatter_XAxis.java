@@ -7,17 +7,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+import apps.yoo.com.blockholdings.util.Constants;
+
 public class ChartValueFormatter_XAxis implements IAxisValueFormatter {
 
     private SimpleDateFormat sdf;
 
-    public static final int TYPE_1DAY = 1 ;
-    public static final int TYPE_3DAY = 2 ;
-    public static final int TYPE_WEEK = 3 ;
-    public static final int TYPE_MONTH = 4 ;
-    public static final int TYPE_6MONTH = 5 ;
-    public static final int TYPE_YEAR = 6 ;
-    public static final int TYPE_MAX = 7 ;
+
 
 
 
@@ -25,22 +21,22 @@ public class ChartValueFormatter_XAxis implements IAxisValueFormatter {
 
         // format values to 1 decimal digit
         switch (type){
-            case TYPE_1DAY:
+            case Constants.TIMEFRAME_1DAY:
                 sdf = new SimpleDateFormat("hh:mm a");
                 break;
-            case TYPE_3DAY :
+            case Constants.TIMEFRAME_3DAY :
                 sdf = new SimpleDateFormat("dd-MMM hh:a");
                 break;
-            case TYPE_WEEK :
+            case Constants.TIMEFRAME_1WEEK :
                 sdf = new SimpleDateFormat("dd-MMM");
                 break;
-            case TYPE_MONTH :
+            case Constants.TIMEFRAME_1MONTH :
                 sdf = new SimpleDateFormat("dd-MMM");
                 break;
-            case TYPE_6MONTH :
+            case Constants.TIMEFRAME_6MONTH :
                 sdf = new SimpleDateFormat("MMM-yyyy");
                 break;
-            case TYPE_YEAR :
+            case Constants.TIMEFRAME_1YEAR :
                 sdf = new SimpleDateFormat("MMM-yyyy");
                 break;
             default :

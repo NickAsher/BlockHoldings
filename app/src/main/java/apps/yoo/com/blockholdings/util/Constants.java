@@ -2,7 +2,13 @@ package apps.yoo.com.blockholdings.util;
 
 public class Constants {
 
-
+    public static final int TIMEFRAME_1DAY = 1 ;
+    public static final int TIMEFRAME_3DAY = 2 ;
+    public static final int TIMEFRAME_1WEEK = 3 ;
+    public static final int TIMEFRAME_1MONTH = 4 ;
+    public static final int TIMEFRAME_6MONTH = 5 ;
+    public static final int TIMEFRAME_1YEAR = 6 ;
+    public static final int TIMEFRAME_MAX = 7 ;
 
 
     public static final String URL_IMAGELINK_COINMARKETCAPID = "https://s2.coinmarketcap.com/static/img/coins/128x128/72.png" ;
