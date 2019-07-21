@@ -326,6 +326,9 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
     }
 
 
+    private void setupComplementTransactionTextView(){
+
+    }
 
     private void setupTransactionDateTime(){
         Date currentDate = Calendar.getInstance().getTime() ;
@@ -395,6 +398,10 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
                 DialogFragment_Exchanges dfExchanges = new DialogFragment_Exchanges() ;
                 Bundle bundle = new Bundle() ;
                 bundle.putStringArrayList("exchangesList", new ArrayList<>(table_ExchangePairData.rowKeySet()));
+                String date = new SimpleDateFormat("dd-mm-yyyy")
+                        .format(currentTransactionFD.getTransactionObject().getTransactionDateTime() );
+                bundle.putString("transactionDate",  date);
+                Log.e(LOG_TAG, "Date sent to exchange is " + date) ;
                 bundle.putString("coinId", currentCoin.getId());
                 dfExchanges.setArguments(bundle);
                 dfExchanges.show(fragmentManager, "dfExchanges");
@@ -417,7 +424,7 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
         relLt_TradingPair.setVisibility(View.GONE);
 //        textView_TradingPair.setText("N/A");
 
-        textView_SingleCoinPriceLabel.append(" (in " + currencyObj.getCurrencySymbol() + ")");
+        textView_SingleCoinPriceLabel.setText("Price per Coin (in " + currencyObj.getCurrencySymbol() + ")");
         editText_SingleCoinPrice.setText(price);
         makeTransaction_WithoutExchange();
 
@@ -524,6 +531,7 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
             currentTransactionFD.getTransactionObject().setFeeInDollar(null);
             currentTransactionFD.getTransactionObject().setFeeNoOfCoins(null);
             currentTransactionFD.getTransactionObject().setIsFeeCoinFiat(false);
+            currentTransactionFD.getTransactionObject().computeTotalValue_OriginalwFees();
 
             return;
         }
@@ -607,6 +615,7 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
         currentTransactionFD.getTransactionObject().setFeeCoinId(feeCoinId);
         currentTransactionFD.getTransactionObject().setFeeNoOfCoins(feeNoOfCoins.toPlainString());
         currentTransactionFD.getTransactionObject().setFeeInDollar(feeValueInDollar.toPlainString());
+        currentTransactionFD.getTransactionObject().computeTotalValue_OriginalwFees();
 
 
 

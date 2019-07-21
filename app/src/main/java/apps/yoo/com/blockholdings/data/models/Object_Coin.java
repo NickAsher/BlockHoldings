@@ -832,6 +832,7 @@ public class Object_Coin {
         // Now In this case we want the price only from September 5. So in Milliseconds September_5 is greater than January_1
         // In that case we simply return the price from transaction entry, we don't have to look up the log table
         if(transactionBuyTime > startingDateTime){
+//            return transactionObj.getSingleCoinPrice_CurrencyOriginal() ;
             return transactionObj.getSingleCoinPrice_CurrencyOriginal() ;
         }
 

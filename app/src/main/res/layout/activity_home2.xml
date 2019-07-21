@@ -43,7 +43,7 @@
                     android:text="Name"
                     android:textStyle="bold"
                     android:textSize="14sp"
-                    android:onClick="setupSortingTextViewsNew"
+                    android:onClick="setupSortingTextViews"
                     />
 
 
@@ -55,7 +55,7 @@
                     android:textColor="#444"
                     android:textStyle="bold"
                     android:textSize="12sp"
-                    android:onClick="setupSortingTextViewsNew"
+                    android:onClick="setupSortingTextViews"
 
                     />
 
@@ -76,7 +76,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_alignBaseline="@+id/activityPortfolio_TextView_SortName"
                 android:gravity="center"
-                android:onClick="setupSortingTextViewsNew"
+                android:onClick="setupSortingTextViews"
 
                 />
 
@@ -95,7 +95,7 @@
                     android:textStyle="bold"
                     android:textSize="14sp"
                     android:gravity="center"
-                    android:onClick="setupSortingTextViewsNew"
+                    android:onClick="setupSortingTextViews"
 
                     />
 
@@ -114,7 +114,7 @@
                         android:layout_weight="1"
                         android:textSize="8sp"
                         android:text="1D"
-                        android:onClick="setupSortingTextViewsNew"
+                        android:onClick="setupSortingTextViews"
 
                         />
 
@@ -125,7 +125,7 @@
                         android:layout_weight="1"
                         android:textSize="8sp"
                         android:text="7D"
-                        android:onClick="setupSortingTextViewsNew"
+                        android:onClick="setupSortingTextViews"
 
                         />
 
@@ -137,7 +137,7 @@
                         android:layout_weight="1"
                         android:textSize="8sp"
                         android:text="All"
-                        android:onClick="setupSortingTextViewsNew"
+                        android:onClick="setupSortingTextViews"
                         android:checked="true"
                         />
 
@@ -159,7 +159,7 @@
                         android:textStyle="bold"
                         android:textSize="10sp"
                         android:gravity="center"
-                        android:onClick="setupSortingTextViewsNew"
+                        android:onClick="setupSortingTextViews"
 
 
                         />
@@ -173,7 +173,7 @@
                         android:textStyle="bold"
                         android:textSize="10sp"
                         android:gravity="center"
-                        android:onClick="setupSortingTextViewsNew"
+                        android:onClick="setupSortingTextViews"
 
 
                         />
@@ -187,7 +187,7 @@
                         android:textStyle="bold"
                         android:textSize="10sp"
                         android:gravity="center"
-                        android:onClick="setupSortingTextViewsNew"
+                        android:onClick="setupSortingTextViews"
 
 
                         />

@@ -16,12 +16,17 @@ public class Object_Transaction implements Cloneable{
 
 
 
+
+
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "transactionNo")
     int transactionNo ;
 
     @ColumnInfo(name = "coinId")
     String coinId ;
+
+    @ColumnInfo(name = "isCoinFiat")
+    boolean isCoinFiat ;
 
 
     @ColumnInfo(name = "transactionType")
@@ -61,8 +66,8 @@ public class Object_Transaction implements Cloneable{
     @ColumnInfo(name = "totalValue_Current")
     String totalValue_Current ;
 
-    @ColumnInfo(name = "totalValue_CurrentwFees")
-    String totalValue_CurrentwFees ;
+    @ColumnInfo(name = "totalValue_OriginalwFees")
+    String totalValue_OriginalwFees ;
 
     @ColumnInfo(name = "note")
     String note ;
@@ -110,6 +115,14 @@ public class Object_Transaction implements Cloneable{
 
     public void setCoinId(String coinId) {
         this.coinId = coinId;
+    }
+
+    public boolean isCoinFiat() {
+        return isCoinFiat;
+    }
+
+    public void setIsCoinFiat(boolean iscoinFiat) {
+        this.isCoinFiat = iscoinFiat;
     }
 
     public int getType() {
@@ -225,8 +238,8 @@ public class Object_Transaction implements Cloneable{
     }
 
 
-    public String getTotalValue_CurrentwFees() {
-        return totalValue_CurrentwFees;
+    public String getTotalValue_OriginalwFees() {
+        return totalValue_OriginalwFees;
     }
 
     public String getFeeCoinId() {
@@ -241,12 +254,16 @@ public class Object_Transaction implements Cloneable{
         return feeInDollar;
     }
 
-    public void setTotalValue_CurrentwFees(String totalValue_CurrentwFees) {
-        this.totalValue_CurrentwFees = totalValue_CurrentwFees;
+    public void setTotalValue_OriginalwFees(String totalValue_CurrentwFees) {
+        this.totalValue_OriginalwFees = totalValue_CurrentwFees;
     }
 
-    public void computeTotalValue_CurrentwFees() {
-        this.totalValue_CurrentwFees = new BigDecimal(totalValue_Current).add(new BigDecimal(feeInDollar)).toPlainString() ;
+    public void computeTotalValue_OriginalwFees() {
+        if(this.feeInDollar == null || feeInDollar.isEmpty()){
+            this.totalValue_OriginalwFees = this.totalValue_Current ;
+        } else {
+            this.totalValue_OriginalwFees = new BigDecimal(totalValue_Current).add(new BigDecimal(feeInDollar)).toPlainString() ;
+        }
     }
 
     public void setFeeCoinId(String feeCoinId) {

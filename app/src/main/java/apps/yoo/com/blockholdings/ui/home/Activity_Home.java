@@ -2,12 +2,11 @@ package apps.yoo.com.blockholdings.ui.home;
 
 import android.app.Activity;
 
-import androidx.constraintlayout.solver.widgets.Helper;
 import androidx.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.fragment.app.FragmentManager;
@@ -16,29 +15,21 @@ import android.os.Bundle;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.common.collect.Collections2;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.h6ah4i.android.widget.advrecyclerview.expandable.RecyclerViewExpandableItemManager;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -51,18 +42,16 @@ import apps.yoo.com.blockholdings.data.MySharedPreferences;
 import apps.yoo.com.blockholdings.data.models.Object_Coin;
 import apps.yoo.com.blockholdings.data.models.Object_Currency;
 import apps.yoo.com.blockholdings.data.models.Object_Portfolio;
-import apps.yoo.com.blockholdings.data.models.Object_Transaction;
 import apps.yoo.com.blockholdings.data.models.Object_TransactionFullData;
 import apps.yoo.com.blockholdings.data.models.Object_TransactionGroup;
+import apps.yoo.com.blockholdings.ui.background.Worker_UpdateCoinCurrentPrice;
 import apps.yoo.com.blockholdings.ui.portfolio.Fragment_PortfolioBrief;
 import apps.yoo.com.blockholdings.ui.settings.Activity_Settings;
 import apps.yoo.com.blockholdings.ui.news.Activity_News;
 import apps.yoo.com.blockholdings.ui.transaction.Activity_Transaction3;
 import apps.yoo.com.blockholdings.ui.watchlist.Activity_WatchlistContainer;
 import apps.yoo.com.blockholdings.util.Constants;
-import apps.yoo.com.blockholdings.util.Message;
 import apps.yoo.com.blockholdings.util.MyGlobals;
-import apps.yoo.com.blockholdings.util.Utils;
 import co.ceryle.radiorealbutton.RadioRealButton;
 import co.ceryle.radiorealbutton.RadioRealButtonGroup;
 
@@ -85,13 +74,10 @@ public class Activity_Home extends AppCompatActivity{
     Table<String, Integer, BigDecimal> table_PriceChange_TotalDollarDifference ;
 
     Object_Portfolio currentPortfolioObj ;
-    RVAdapter_Transactions adapter ;
-    List<Object_TransactionFullData> listOfAllTransaction_Unsummed;
-    List<Object_TransactionFullData>  listOfPortfolioTransactions_Unsummed, listOfPortfolioTransactions_Summed, listOfPortfolioTransactions ;
+    List<Object_TransactionFullData>  listOfPortfolioTransactions ;
     ArrayList<Object_TransactionGroup> listOfTransactionGroups ;
     List<Object_Portfolio> listOfPortfolios ;
     Object_Currency currentCurrency ;
-    String string_NewDataURL ;
     final int INTENT_REQUEST_CODE_ADD_COIN = 1 ;
     boolean initialLoad = true ;
     final int SORT_NAME_ASC = 1 ;
@@ -104,6 +90,8 @@ public class Activity_Home extends AppCompatActivity{
     final int SORT_CHANGE_DESC = 8 ;
 
     int currentSortMode  = 0 ;
+
+
 
 
     @Override
@@ -121,9 +109,6 @@ public class Activity_Home extends AppCompatActivity{
 
         listOfPortfolioTransactions = new ArrayList<>() ;
         listOfTransactionGroups = new ArrayList<>() ;
-        listOfAllTransaction_Unsummed = new ArrayList<>() ;
-        listOfPortfolioTransactions_Unsummed = new ArrayList<>() ;
-        listOfPortfolioTransactions_Summed = new ArrayList<>() ;
 
         holdingsChangeValueSet_TotalDollarDifference = new HashMap<>() ;
         table_PriceChange_TotalDollarDifference = HashBasedTable.create() ;
@@ -132,7 +117,7 @@ public class Activity_Home extends AppCompatActivity{
         layout_MainContainer.setBackground(MySharedPreferences.getAppThemeGradientDrawableOnPreference(getApplicationContext()));
 
         setupBottomNavigationView();
-        setupNewListOfTransactions() ;
+        setupListOfTransactions() ;
         setupRecyclerView();
         setupBasicUI() ;
         setupRadioBtn_PriceDifference_ChangeListener() ;
@@ -233,61 +218,31 @@ public class Activity_Home extends AppCompatActivity{
     }
 
 
-    private void setupNewListOfTransactions(){
-        //This method is called when the activity is created
-        // And it is also called when a new transaction is added by the user
-
-        // So we get the list of transactions through live data and set a observer
-        // Now in this observer we have two cases
-        //
-
-        // When the activity is created we simply get the list of transactions through a live data
-        // and set the adapter
-
+    private void setupListOfTransactions(){
 
         db.transactionDao().getListOfAllTransactionFD_OfPortfolio_LiveData(MyGlobals.getCurrentPortfolioObj().getPortfolioId()).observe(this, new Observer<List<Object_TransactionFullData>>() {
             @Override
             public void onChanged(List<Object_TransactionFullData> newList) {
 
-                if(initialLoad){
-                    // It means that activity is just created. So we simply setup the list
-                    // And also we get the fresh data from the server
-                    // NOTE : whenever we get the fresh data from the server, we also reload the list again
 
-                    Log.d(LOG_TAG, "Inside the setupNewListOfTransactions->InitialLoad") ;
-                    listOfPortfolioTransactions = newList ;
-                    listOfTransactionGroups = Helper_Home.getListOfTransactionGroups(listOfPortfolioTransactions) ;
-                    refreshPriceCurrencyChange(Constants.TIMEFRAME_MAX);
-                    adapter_transactionsExpandable.refreshAdapter(listOfTransactionGroups);
-                    initialLoad = false ;
-                    getCurrentCoinPrices_FromServer();
-                    return;
+                if(!initialLoad){
+                    fragment_portfolioBrief.refreshPortfolio();
+
+                    if(listOfPortfolioTransactions.size() != newList.size()){
+                        //Whenever a atransaction is added or deleted the size of the list is changed
+                        // And then we refresh the data using a background service
+                        WorkManager.getInstance().enqueue(new OneTimeWorkRequest.Builder(Worker_UpdateCoinCurrentPrice.class)
+                                .addTag("Worker_UpdateCoinCurrentPrice")
+                                .build()) ;
+                    }
                 }
 
-
-                // Now is the case when initial Load has been finished (Activity has been created
-                // The following code is called when either a new transaction is inserted or we are just refreshing values from adapter
-                if(listOfPortfolioTransactions.size() == newList.size()){
-                    //Case 1 : Data is just refreshed from server
-                    // Simply show the updated data in our Recycler view
-                    listOfPortfolioTransactions = newList ;
-                    listOfTransactionGroups = Helper_Home.getListOfTransactionGroups(listOfPortfolioTransactions) ;
-                    refreshPriceCurrencyChange(Constants.TIMEFRAME_MAX);
-                    radioGrp_PriceChange.setPosition(4);
-                    adapter_transactionsExpandable.refreshAdapter(listOfTransactionGroups);
-                    return;
-                } else {
-
-                    // Case 2 : A new Transaction is inserted
-                    // In this case, we simply refresh the data from server
-                    // This method will be called again by getCurrentCoinPrices_FromServer method
-                    // and case 1 will be triggered again which will simply show updated data in recyclerView
-                    listOfPortfolioTransactions = newList ;
-                    getCurrentCoinPrices_FromServer();
-                    return;
-                }
-
-
+                listOfPortfolioTransactions = newList ;
+                listOfTransactionGroups = Helper_Home.getListOfTransactionGroups(listOfPortfolioTransactions) ;
+                refreshPriceCurrencyChange(Constants.TIMEFRAME_MAX);
+                radioGrp_PriceChange.setPosition(3);
+                adapter_transactionsExpandable.refreshAdapter(listOfTransactionGroups);
+                initialLoad = false ;
 
 
             }
@@ -446,6 +401,7 @@ public class Activity_Home extends AppCompatActivity{
                     case R.id.activityHome_RadioBtn_1DayChange :
                         refreshPriceCurrencyChange(Constants.TIMEFRAME_1DAY);
                         adapter_transactionsExpandable.refreshAdapter(listOfTransactionGroups);
+
                         break;
 
                     case R.id.activityHome_RadioBtn_1WeekChange :
@@ -497,74 +453,6 @@ public class Activity_Home extends AppCompatActivity{
 
 
 
-    private void getCurrentCoinPrices_FromServer(){
-//        Log.e(LOG_TAG, listOfAllTransaction_Unsummed.toString()) ;  receiving the 300 noOfCoins ;
-        if (listOfPortfolioTransactions.size() == 0){
-            Log.e(LOG_TAG, "Size of listOfPortfolioTransactions = 0") ;
-            return;
-        }
-
-        string_NewDataURL = Constants.URL_APICALL_SIMPLEPRICES ;
-
-        for (Object_TransactionFullData object_transactionFullData : listOfPortfolioTransactions){
-            string_NewDataURL  = string_NewDataURL + object_transactionFullData.getCoinObject().getId() + "," ;
-        }
-        string_NewDataURL = string_NewDataURL.substring(0, string_NewDataURL.length() - 1); // removing the last comma
-        // add the &vs_currencies query to url  :    &vs_currencies=usd
-        string_NewDataURL = string_NewDataURL + "&vs_currencies=" + MySharedPreferences.getCurrencyObj_FromPreference(getApplicationContext()).getCurrencyId() ;
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, string_NewDataURL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.e(LOG_TAG, response) ;
-                        processFreshDataFromServer(response);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Message.display(context, "Error in making volley request");
-                Log.e(LOG_TAG, error.toString() ) ;
-            }
-        }) ;
-
-        RequestQueue requestQueue = Volley.newRequestQueue(context) ;
-        requestQueue.add(stringRequest) ;
-    }
-
-    private void processFreshDataFromServer(String response){
-//        Log.e(LOG_TAG, listOfAllTransaction_Unsummed.toString()) ;
-
-        try{
-            JSONObject responseObject = new JSONObject(response) ;
-
-            for (Object_TransactionFullData object_transactionFullData : listOfAllTransaction_Unsummed ){
-                int txnId = object_transactionFullData.getTransactionObject().getTransactionNo() ;
-                String coinId = object_transactionFullData.getCoinObject().getId() ;
-                String newCoinPrice_Currency = responseObject.getJSONObject(coinId).getString(currentCurrency.getCurrencyId()) ;
-                BigDecimal noOfCoins = new BigDecimal(Utils.removeMinusSign(object_transactionFullData.getTransactionObject().getNoOfCoins())) ;
-                String newTotalCost = new BigDecimal(newCoinPrice_Currency).multiply(noOfCoins).toPlainString() ;
-
-//                Log.e(LOG_TAG,  " CoinId " + coinId + " SinglePriceCurrency " + newCoinPrice_Currency + " noOfCoins " + object_transactionFullData.getTransactionObject().getNoOfCoins() + "  total cost  " + newTotalCost) ;
-                object_transactionFullData.getTransactionObject().setSingleCoinPrice_CurrencyCurrent(newCoinPrice_Currency);
-                Object_Coin.addToPriceData(db, coinId, newCoinPrice_Currency, Calendar.getInstance().getTimeInMillis() , "MainActivity");
-                object_transactionFullData.getTransactionObject().setTotalValue_Current(newTotalCost);
-                // not doing the following work in app executor thread because this is in a loop
-                // so a number of threads will be created if we do this
-                db.transactionDao().updateTransactionPriceByTxnId(txnId, newCoinPrice_Currency, newTotalCost);
-            }
-
-            MyGlobals.refreshPortfolioValue(db);
-            // the following line basically refreshes the Fragment_PortfolioBrief.
-            // SO rather than making a new method to refresh the damn thing, i just call it
-            fragment_portfolioBrief.refreshPortfolio();
-//            adapter.refreshData(listOfTransactions);
-        }catch (JSONException e){
-            Log.e(LOG_TAG, e.toString()) ;
-        }
-    }
-
-
 
 
 
@@ -575,8 +463,9 @@ public class Activity_Home extends AppCompatActivity{
     @Override
     protected void onResume() {
         super.onResume();
-//        listOfTransactions = db.transactionDao().getListOfAllTransaction_FullData_Summed(MyGlobals.getCurrentPortfolioObj().getPortfolioId()) ;
-//        setupPreferenceSorting_OfList() ;
-//        adapter.refreshData(listOfTransactions);
+
+        // THis is needed because everytime RecyclerView if refreshed, the priceChange shows the MAX change in price
+        // But the radioButton might be showing some other position, so need to reset it to max price change
+        radioGrp_PriceChange.setPosition(3);
     }
 }

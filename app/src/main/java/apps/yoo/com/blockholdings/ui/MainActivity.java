@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import apps.yoo.com.blockholdings.R;
@@ -30,6 +31,7 @@ import apps.yoo.com.blockholdings.data.models.Object_Exchange;
 import apps.yoo.com.blockholdings.data.models.Object_NewsSite;
 import apps.yoo.com.blockholdings.data.models.Object_Portfolio;
 import apps.yoo.com.blockholdings.data.models.Object_VsSimpleCurrency;
+import apps.yoo.com.blockholdings.ui.background.Worker_UpdateCoinCurrentPrice;
 import apps.yoo.com.blockholdings.ui.general.BackgroundDataUpdater;
 import apps.yoo.com.blockholdings.ui.home.Activity_Home;
 import apps.yoo.com.blockholdings.ui.settings.Helper_Settings;
@@ -75,14 +77,16 @@ public class MainActivity extends AppCompatActivity {
         addCurrencies_inDB() ;
         addPortfolio_inDB() ;
         addListOfNewSites_inDB() ;
-//        startActivityPortfolio();
+//        startActivityHome();
         startBackgroundUpdationWorker() ;
 //        startUpdatingMarketRanks() ;
 
     }
 
-    private void startActivityPortfolio(){
+    private void startActivityHome(){
 //        if(checkerNo == 5){
+
+
 
         Intent intent = new Intent(this, Activity_Home.class) ;
         startActivity(intent);
@@ -182,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
 
             requestQueue.add(stringRequest) ;
         } else {
-            startActivityPortfolio();
+            startActivityHome();
         }
 
     }
@@ -200,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
                             db.exchangeDao().insertManyExchanges(listOfExchanges);
                             Message.display(context, "Resresh of All Exchanges is complete");
                             checkerNo ++ ;
-                            startActivityPortfolio();
+                            startActivityHome();
 
                         }
                     }, new Response.ErrorListener() {
@@ -277,7 +281,7 @@ public class MainActivity extends AppCompatActivity {
         }
         checkerNo ++ ;
         Message.display_w_Log(context, LOG_TAG, "Refresh of all coins is complete");
-//        startActivityPortfolio();
+//        startActivityHome();
     }
 
 

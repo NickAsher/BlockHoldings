@@ -1,26 +1,22 @@
 package apps.yoo.com.blockholdings.ui.home;
 
 import android.app.Activity;
-
-import androidx.constraintlayout.solver.widgets.Helper;
-import androidx.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.fragment.app.FragmentManager;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -28,7 +24,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.common.collect.Collections2;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.h6ah4i.android.widget.advrecyclerview.expandable.RecyclerViewExpandableItemManager;
@@ -51,12 +48,11 @@ import apps.yoo.com.blockholdings.data.MySharedPreferences;
 import apps.yoo.com.blockholdings.data.models.Object_Coin;
 import apps.yoo.com.blockholdings.data.models.Object_Currency;
 import apps.yoo.com.blockholdings.data.models.Object_Portfolio;
-import apps.yoo.com.blockholdings.data.models.Object_Transaction;
 import apps.yoo.com.blockholdings.data.models.Object_TransactionFullData;
 import apps.yoo.com.blockholdings.data.models.Object_TransactionGroup;
+import apps.yoo.com.blockholdings.ui.news.Activity_News;
 import apps.yoo.com.blockholdings.ui.portfolio.Fragment_PortfolioBrief;
 import apps.yoo.com.blockholdings.ui.settings.Activity_Settings;
-import apps.yoo.com.blockholdings.ui.news.Activity_News;
 import apps.yoo.com.blockholdings.ui.transaction.Activity_Transaction3;
 import apps.yoo.com.blockholdings.ui.watchlist.Activity_WatchlistContainer;
 import apps.yoo.com.blockholdings.util.Constants;
@@ -67,7 +63,7 @@ import co.ceryle.radiorealbutton.RadioRealButton;
 import co.ceryle.radiorealbutton.RadioRealButtonGroup;
 
 
-public class Activity_Home extends AppCompatActivity{
+public class Activity_Home2 extends AppCompatActivity{
     Context context ;
     String LOG_TAG = "Activity_Home --> " ;
     AppDatabase db;
@@ -187,7 +183,7 @@ public class Activity_Home extends AppCompatActivity{
                         break;
 
                     default:
-                        Intent intent = new Intent(context, Activity_Home.class) ;
+                        Intent intent = new Intent(context, Activity_Home2.class) ;
                         startActivity(intent);
                         finish();
                         break;

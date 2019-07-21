@@ -153,6 +153,15 @@ public class Fragment_PortfolioBrief extends Fragment {
     }
 
     private void setPortfolioPriceChange2(int caseTimeAgo){
+        /*
+         * The price change of portfolio cannot be calculated from update log of portfolio
+         * This is because the update log of portfolio contains data about deleted transaction also
+         * Whereas the price change is needed only for the current coins
+         * So we will calculate it from the transactions of the portfolio
+         * This will be done using the same way we calculate the price change for each individual coin
+         *
+         */
+
         BigDecimal portfolioPriceChange = new BigDecimal(0) ;
         BigDecimal portfolioPriceTimeAgo = new BigDecimal(0) ;
 
@@ -197,36 +206,6 @@ public class Fragment_PortfolioBrief extends Fragment {
 
     }
 
-    private void setPortfolioPriceChange(String priceTimeAgo){
-        /*
-         * The price change of portfolio cannot be calculated from update log of portfolio
-         * This is because the update log of portfolio contains data about deleted transaction also
-         * Whereas the price change is needed only for the current coins
-         * So we will calculate it from the transactions of the portfolio
-         * This will be done using the same way we calculate the price change for each individual coin
-         *
-         */
-
-
-        BigDecimal priceChange = new BigDecimal(currentPortfolioObj.getPortfolioValue()).subtract(new BigDecimal(priceTimeAgo)) ;
-        BigDecimal percentageChange = priceChange.divide(new BigDecimal(currentPortfolioObj.getPortfolioValue()), BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)) ;
-        if(priceChange.compareTo(new BigDecimal(0)) >= 0){
-            // the price change is positive
-            String str_PriceChange = priceChange.toPlainString() ;
-            String str_percentageChange = percentageChange.toPlainString() ;
-
-            textView_PortfolioPriceChange.setText(currentCurrency.getCurrencySymbol() + str_PriceChange + " (" + str_percentageChange + "%)" );
-            textView_PortfolioPriceChange.setTextColor(ContextCompat.getColor(context, R.color.green));
-
-        } else {
-            String str_PriceChange = priceChange.toPlainString() ;
-            String str_percentageChange = percentageChange.toPlainString() ;
-
-            textView_PortfolioPriceChange.setText(currentCurrency.getCurrencySymbol() + str_PriceChange + " (" + str_percentageChange + "%)" );
-            textView_PortfolioPriceChange.setTextColor(ContextCompat.getColor(context, R.color.red));
-
-        }
-    }
 
 
     private void setupChartRadioGroup(){

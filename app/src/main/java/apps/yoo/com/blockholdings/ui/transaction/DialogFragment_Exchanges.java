@@ -30,7 +30,9 @@ import com.google.common.collect.Collections2;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import apps.yoo.com.blockholdings.R;
@@ -146,7 +148,7 @@ public class DialogFragment_Exchanges extends DialogFragment implements MyListen
         rv.setAdapter(adapter);
     }
 
-    private void setupSelectingGlobalAverage(){
+    private void setupSelectingGlobalAverage2(){
         lt_GlobalAverageContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -183,6 +185,50 @@ public class DialogFragment_Exchanges extends DialogFragment implements MyListen
         });
     }
 
+
+    private void setupSelectingGlobalAverage(){
+
+        final String transactionDate = getArguments().getString("transactionDate") ;
+
+
+
+
+        lt_GlobalAverageContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = Constants.getURL_APICALL_HISTORICAL_PRICE(coinId, transactionDate) ;
+
+                Log.e(LOG_TAG, url) ;
+                StringRequest stringRequest2 = new StringRequest(Request.Method.GET, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try{
+                                    Log.e(LOG_TAG, "Response from server : " + response) ;
+                                    JSONObject jsonObject = new JSONObject(response) ;
+                                    String price = jsonObject.getJSONObject("market_data").getJSONObject("current_price").get(currencyObj.getCurrencyId()).toString();
+                                    dismiss();
+                                    listener_ActivityTransaction.onSelectingExchange_GlobalAverage(price);
+                                }catch (JSONException e){
+                                    Log.e(LOG_TAG, e.toString()) ;
+                                    Message.display(context, "Some server error");
+                                }
+
+
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Message.display(context, "Error in making volley request");
+                        Log.e(LOG_TAG, error.toString() ) ;
+                    }
+                }) ;
+
+                RequestQueue requestQueue = Volley.newRequestQueue(context.getApplicationContext()) ;
+                requestQueue.add(stringRequest2) ;
+            }
+        });
+    }
 
 
 

@@ -169,7 +169,6 @@
                         app:rrb_text="MAX"
                         app:rrb_textColor="@color/white"
                         app:rrb_textSize="8sp"
-                        app:rrb_checked="true"
 
 
                         />
