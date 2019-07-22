@@ -25,8 +25,8 @@ public class Object_Transaction implements Cloneable{
     @ColumnInfo(name = "coinId")
     String coinId ;
 
-    @ColumnInfo(name = "isCoinFiat")
-    boolean isCoinFiat ;
+    @ColumnInfo(name = "isBaseCoinFiat")
+    boolean isBaseCoinFiat;
 
 
     @ColumnInfo(name = "transactionType")
@@ -90,6 +90,14 @@ public class Object_Transaction implements Cloneable{
     @ColumnInfo(name = "feeInDollar")
     String feeInDollar ; // Total value of fee in user Currency ex : convert 0.1 BNB to USD
 
+    @ColumnInfo(name = "deductFromQuoteCoin")
+    boolean deductFromQuoteCoin ;
+
+    @ColumnInfo(name = "complementTransactionNo")
+    int complementTransactionNo ;
+
+
+
 
 
 
@@ -117,12 +125,12 @@ public class Object_Transaction implements Cloneable{
         this.coinId = coinId;
     }
 
-    public boolean isCoinFiat() {
-        return isCoinFiat;
+    public boolean isBaseCoinFiat() {
+        return isBaseCoinFiat;
     }
 
-    public void setIsCoinFiat(boolean iscoinFiat) {
-        this.isCoinFiat = iscoinFiat;
+    public void setBaseCoinFiat(boolean baseCoinFiat) {
+        isBaseCoinFiat = baseCoinFiat;
     }
 
     public int getType() {
@@ -285,6 +293,24 @@ public class Object_Transaction implements Cloneable{
 
     public void setIsFeeCoinFiat(boolean isFeeCoinFiat) {
         this.isFeeCoinFiat = isFeeCoinFiat;
+    }
+
+
+    public boolean isDeductFromQuoteCoin() {
+        return deductFromQuoteCoin;
+    }
+
+    public void setDeductFromQuoteCoin(boolean deductFromQuoteCoin) {
+        this.deductFromQuoteCoin = deductFromQuoteCoin;
+    }
+
+
+    public int getComplementTransactionNo() {
+        return complementTransactionNo;
+    }
+
+    public void setComplementTransactionNo(int complementTransactionNo) {
+        this.complementTransactionNo = complementTransactionNo;
     }
 
     @Override

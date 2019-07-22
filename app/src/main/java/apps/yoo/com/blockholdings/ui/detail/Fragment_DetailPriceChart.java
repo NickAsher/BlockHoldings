@@ -36,6 +36,11 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import apps.yoo.com.blockholdings.R;
@@ -70,6 +75,8 @@ public class Fragment_DetailPriceChart extends Fragment {
     RVAdapter_ProjectLinks adapter_projectLinks ;
     String dataString ;
     List<Object_ProjectLink> listOfProjectLinks ;
+    JSONObject coinCachedMarketData ;
+    JSONArray hypenlinksArray ;
 
 
     public Fragment_DetailPriceChart() {
@@ -83,8 +90,6 @@ public class Fragment_DetailPriceChart extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             coinId = getArguments().getString("coinId") ;
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -105,8 +110,14 @@ public class Fragment_DetailPriceChart extends Fragment {
 
         currentCoin = db.coinDao().getCoinById(coinId) ;
         currentCurrency = MySharedPreferences.getCurrencyObj_FromPreference(context.getApplicationContext()) ;
+        listOfProjectLinks = new ArrayList<>() ;
+        try {
+            coinCachedMarketData = new JSONObject(currentCoin.getCachedData()) ;
+        }catch (JSONException e){
+            Log.e(LOG_TAG, e.toString()) ;
+        }
         getCoinData() ;
-//        setupBasicUI() ;
+        setupBasicUI();
         setRadioGroup_ChartInterval_ChangedListener();
         setupRecyclerView_ProjectLinks();
 
@@ -143,10 +154,13 @@ public class Fragment_DetailPriceChart extends Fragment {
                     @Override
                     public void onResponse(String response) {
                         Log.e(LOG_TAG, "Response from server is " + response) ;
-                        Object_Coin.insertIntoDB_FullCoinData(response, context, db, currentCurrency.getCurrencyId(), currentCoin) ;
+//                        Object_Coin.insertIntoDB_FullCoinData(response, context, db, currentCurrency.getCurrencyId(), currentCoin) ;
+                        coinCachedMarketData = Object_Coin.getMarketData(response, currentCurrency.getCurrencyId()) ;
+                        db.coinDao().updateCoin_cachedData(currentCoin.getId(), coinCachedMarketData.toString());
                         setupBasicUI();
-                        listOfProjectLinks = currentCoin.getlistOfLinks();
                         adapter_projectLinks.refreshData(listOfProjectLinks);
+
+
 // processData(response);
                     }
                 }, new Response.ErrorListener() {
@@ -163,52 +177,72 @@ public class Fragment_DetailPriceChart extends Fragment {
 
     }
 
-    private void setupBasicUI(){
+    private void setupBasicUI() {
 
-        expandableTextView_CoinDescription.setText(Html.fromHtml(currentCoin.getCoinDescription().replaceAll("\\r\\n", "<br>")));
+       try {
 
-        Animation mAnimation = new TranslateAnimation(
-                TranslateAnimation.ABSOLUTE, 0f,
-                TranslateAnimation.ABSOLUTE, 0f,
-                TranslateAnimation.RELATIVE_TO_PARENT, 0f,
-                TranslateAnimation.RELATIVE_TO_PARENT, 0.1f);
-        mAnimation.setDuration(350); //350 millisecond to complete one round of animation i.e. from up-to-down or down-to-up
-        mAnimation.setRepeatCount(Animation.INFINITE);
-        mAnimation.setRepeatMode(Animation.REVERSE);
-        mAnimation.setInterpolator(new AccelerateInterpolator());
-        expandableTextView_CoinDescription.getChildAt(1).setAnimation(mAnimation);
-
-        tv_CoinRank.setText("" + currentCoin.getRank());
-        tv_CoinMarketCap.setText(currentCurrency.getCurrencySymbol() + Utils.formatNumber_ie_MarketCap(currentCoin.getMarketCap()));
-        tv_CoinTotalVolume.setText(currentCurrency.getCurrencySymbol() + Utils.formatNumber_ie_MarketCap(currentCoin.getTotalVolume()));
-        tv_High24H.setText(currentCurrency.getCurrencySymbol() + Utils.formatNumber_ie_SingleCoinPriceCurrency(currentCoin.getHigh24H()));
-        tv_Low424H.setText(currentCurrency.getCurrencySymbol() + Utils.formatNumber_ie_SingleCoinPriceCurrency(currentCoin.getLow24H()));
-        tv_totalSupply.setText(Utils.formatNumber_ie_Commas(currentCoin.getTotalSupply()));
-        tv_CurrentSupply.setText(Utils.formatNumber_ie_Commas(currentCoin.getCirculatingSupply()));
+           listOfProjectLinks = Object_ProjectLink.getNonEmptyListOfProjectLinks(coinCachedMarketData.getJSONArray("hyperlinks"));
 
 
-        String percentageChange24H = currentCoin.getPercentageChange_24H() ;
-        String percentageChange1W = currentCoin.getPercentageChange_1W() ;
+           //TODO show a textview for currentPrice of coin somewhere
+           expandableTextView_CoinDescription.setText(Html.fromHtml(coinCachedMarketData.getString("description").replaceAll("\\r\\n", "<br>")));
 
-        StringBuffer buffer = new StringBuffer("24H ") ;
-        if(percentageChange24H.charAt(0) == '-'){
-            buffer.append("<font color = '#f44336'>" + Utils.formatNumber_ie_PercentageChange(percentageChange24H.substring(1)) + " % </font>") ;
-        } else {
-            buffer.append("<font color = '#4caf50'>" + Utils.formatNumber_ie_PercentageChange(percentageChange24H) + " % </font>") ;
+           Animation mAnimation = new TranslateAnimation(
+                   TranslateAnimation.ABSOLUTE, 0f,
+                   TranslateAnimation.ABSOLUTE, 0f,
+                   TranslateAnimation.RELATIVE_TO_PARENT, 0f,
+                   TranslateAnimation.RELATIVE_TO_PARENT, 0.1f);
+           mAnimation.setDuration(350); //350 millisecond to complete one round of animation i.e. from up-to-down or down-to-up
+           mAnimation.setRepeatCount(Animation.INFINITE);
+           mAnimation.setRepeatMode(Animation.REVERSE);
+           mAnimation.setInterpolator(new AccelerateInterpolator());
+           expandableTextView_CoinDescription.getChildAt(1).setAnimation(mAnimation);
 
-        }
-        buffer.append(" &nbsp; &nbsp; &nbsp; 7D ") ;
-        if(percentageChange1W.charAt(0) == '-'){
-            buffer.append("<font color = '#f44336'>" + Utils.formatNumber_ie_PercentageChange(percentageChange1W.substring(1)) + " % </font>") ;
-        } else {
-            buffer.append("<font color = '#4caf50'>" + Utils.formatNumber_ie_PercentageChange(percentageChange1W) + " % </font>") ;
-        }
-
-        tv_ChangePercentage.setText(Html.fromHtml(buffer.toString())) ;
+           tv_CoinRank.setText(coinCachedMarketData.getString("market_cap_rank"));
+           tv_CoinMarketCap.setText(currentCurrency.getCurrencySymbol() + Utils.formatNumber_ie_MarketCap(coinCachedMarketData.getString("market_cap")));
+           tv_CoinTotalVolume.setText(currentCurrency.getCurrencySymbol() + Utils.formatNumber_ie_MarketCap(coinCachedMarketData.getString("total_volume")));
+           tv_High24H.setText(currentCurrency.getCurrencySymbol() + Utils.formatNumber_ie_SingleCoinPriceCurrency(coinCachedMarketData.getString("high_24h")));
+           tv_Low424H.setText(currentCurrency.getCurrencySymbol() + Utils.formatNumber_ie_SingleCoinPriceCurrency(coinCachedMarketData.getString("low_24h")));
+           tv_totalSupply.setText(Utils.formatNumber_ie_Commas(coinCachedMarketData.getString("total_supply")));
+           tv_CurrentSupply.setText(Utils.formatNumber_ie_Commas(coinCachedMarketData.getString("circulating_supply")));
 
 
+           String percentageChange24H = coinCachedMarketData.getString("price_change_percentage_24h");
+           String percentageChange1W = coinCachedMarketData.getString("price_change_percentage_7d");
+
+           StringBuffer buffer = new StringBuffer("24H ");
+           if (percentageChange24H.charAt(0) == '-') {
+               buffer.append("<font color = '#f44336'>" + Utils.formatNumber_ie_PercentageChange(percentageChange24H.substring(1)) + " % </font>");
+           } else {
+               buffer.append("<font color = '#4caf50'>" + Utils.formatNumber_ie_PercentageChange(percentageChange24H) + " % </font>");
+
+           }
+           buffer.append(" &nbsp; &nbsp; &nbsp; 7D ");
+           if (percentageChange1W.charAt(0) == '-') {
+               buffer.append("<font color = '#f44336'>" + Utils.formatNumber_ie_PercentageChange(percentageChange1W.substring(1)) + " % </font>");
+           } else {
+               buffer.append("<font color = '#4caf50'>" + Utils.formatNumber_ie_PercentageChange(percentageChange1W) + " % </font>");
+           }
+
+           tv_ChangePercentage.setText(Html.fromHtml(buffer.toString()));
 
 
+       }catch (JSONException e){
+           Log.e(LOG_TAG, e.toString()) ;
+       }
+
+
+    }
+
+
+    private void setupRecyclerView_ProjectLinks(){
+        adapter_projectLinks = new RVAdapter_ProjectLinks(context, listOfProjectLinks) ;
+        GridLayoutManager gd = new GridLayoutManager(context, 2) ;
+
+        gd.setAutoMeasureEnabled(true);
+        rv_ProjectLinks.setLayoutManager(gd);
+        rv_ProjectLinks.setNestedScrollingEnabled(false);
+        rv_ProjectLinks.setAdapter(adapter_projectLinks);
     }
 
     private void setRadioGroup_ChartInterval_ChangedListener(){
@@ -248,13 +282,14 @@ public class Fragment_DetailPriceChart extends Fragment {
 
     }
 
+
     private void getDataFromServer_ForChart(String noOfDays, final int xAxis_ValueFormatterType){
         String url = Constants.getURL_APICALL_HISTORICAL_DATACHART(coinId, noOfDays, MySharedPreferences.getCurrencyObj_FromPreference(context.getApplicationContext()).getCurrencyId()) ;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                            setupChart(Helper_Chart.getFormattedList_from_ResponseData(response), xAxis_ValueFormatterType);
+                        setupChart(Helper_Chart.getFormattedList_from_ResponseData(response), xAxis_ValueFormatterType);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -350,15 +385,4 @@ public class Fragment_DetailPriceChart extends Fragment {
         chart.invalidate();
     }
 
-
-    private void setupRecyclerView_ProjectLinks(){
-        listOfProjectLinks = currentCoin.getlistOfLinks();
-        adapter_projectLinks = new RVAdapter_ProjectLinks(context, listOfProjectLinks) ;
-        GridLayoutManager gd = new GridLayoutManager(context, 2) ;
-
-        gd.setAutoMeasureEnabled(true);
-        rv_ProjectLinks.setLayoutManager(gd);
-        rv_ProjectLinks.setNestedScrollingEnabled(false);
-        rv_ProjectLinks.setAdapter(adapter_projectLinks);
-    }
 }

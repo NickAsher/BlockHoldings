@@ -34,12 +34,14 @@ public class NetworkDataParser {
                 ) ;
 
                 coinObj.setImageLogoLink(jsonObject.getString("image"));
-                coinObj.setTotalVolume("" + jsonObject.getDouble("current_price")); /// this is the price of coin, but stored in telegram
-                coinObj.setMarketCap( jsonObject.get("market_cap").toString());
-                coinObj.setRank(jsonObject.getInt("market_cap_rank"));
-                coinObj.setPercentageChange_1W(jsonObject.getString("price_change_percentage_7d_in_currency"));
-                coinObj.setSparklineData(jsonObject.getJSONObject("sparkline_in_7d").getJSONArray("price").toString());
+                JSONObject marketData = new JSONObject() ;
+                marketData.put("current_price",jsonObject.get("current_price").toString() ) ;
+                marketData.put("market_cap",jsonObject.get("market_cap").toString() ) ;
+                marketData.put("market_cap_rank",jsonObject.getInt("market_cap_rank")) ;
+                marketData.put("price_change_percentage_7d_in_currency",jsonObject.getString("price_change_percentage_7d_in_currency") ) ;
+                marketData.put("sparkline_in_7d",jsonObject.getJSONObject("sparkline_in_7d").getJSONArray("price")) ;
 
+                coinObj.setCachedData(marketData.toString());
                 returnList.add(coinObj) ;
             }
             return returnList ;

@@ -52,6 +52,8 @@ public interface Dao_Coin {
     @Query("UPDATE table_coin SET price_data = :priceData WHERE coin_Id = :coinId")
     void updateCoin_PriceData(String coinId, String priceData) ;
 
+    @Query("UPDATE table_coin SET cached_data = :cachedData WHERE coin_Id = :coinId")
+    void updateCoin_cachedData(String coinId, String cachedData) ;
     @Delete
     void deleteCoin(Object_Coin newsSite);
 

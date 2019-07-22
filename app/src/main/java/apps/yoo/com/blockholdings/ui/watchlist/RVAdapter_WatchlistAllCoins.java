@@ -26,6 +26,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -60,98 +61,100 @@ public class RVAdapter_WatchlistAllCoins extends RecyclerView.Adapter<RVAdapter_
 
     @Override
     public void onBindViewHolder(final YoloCartViewHolder holder, final int position) {
-        final Object_Coin currentItem = listOfitems.get(position) ;
+        try{
 
 
+            final Object_Coin currentItem = listOfitems.get(position) ;
+            JSONObject marketCachedData = new JSONObject(currentItem.getCachedData()) ;
 
-        Glide.with(context).load(currentItem.getImageLogoLink()).into(holder.imageView_Link) ;
+            Glide.with(context).load(currentItem.getImageLogoLink()).into(holder.imageView_Link) ;
+            holder.textView_Name.setText(currentItem.getName());
 
-        holder.textView_Name.setText(currentItem.getName());
-        holder.textView_SingleCoinPrice.setText(this.currencySymbol + Utils.formatNumber_ie_SingleCoinPriceCurrency(currentItem.getTotalVolume()) );
-        holder.textView_MarketCap.setText(this.currencySymbol + Utils.formatNumber_ie_MarketCap(currentItem.getMarketCap()) ) ;
-        Log.e(LOG_TAG, "Coni Rank is "  +currentItem.getRank()) ;
-        holder.textView_CoinRank.setText("" + currentItem.getRank());
-        String percentageChange = currentItem.getPercentageChange_1W() ;
+            holder.textView_SingleCoinPrice.setText(this.currencySymbol + Utils.formatNumber_ie_SingleCoinPriceCurrency(marketCachedData.getString("current_price")) );
+            holder.textView_MarketCap.setText(this.currencySymbol + Utils.formatNumber_ie_MarketCap(marketCachedData.getString("market_cap")) ) ;
+            holder.textView_CoinRank.setText("" + marketCachedData.getInt("market_cap_rank"));
+            String percentageChange = marketCachedData.getString("price_change_percentage_7d_in_currency") ;
 
-        boolean isChartGreen ;
-        if(percentageChange.charAt(0) == '-'){
-            isChartGreen = false ;
-            holder.textView_percentageChange.setText(Html.fromHtml("<font color='#FFFFFF'> - " + new BigDecimal(currentItem.getPercentageChange_1W()).setScale(2, RoundingMode.HALF_UP).toString().substring(1) + "%</font> <font color='#ee0979'><b>\u2193</b></font>"));
-//            holder.textView_percentageChange.setTextColor(ContextCompat.getColor(context, R.color.red));
-        } else {
-            isChartGreen = true ;
-            holder.textView_percentageChange.setText(Html.fromHtml("<font color='#FFFFFF'> + " +new BigDecimal(currentItem.getPercentageChange_1W()).setScale(2, RoundingMode.HALF_UP).toString() + "% </font>  <font color='#92FE9D'><b>\u2191</b></font>"));
-//            holder.textView_percentageChange.setTextColor(ContextCompat.getColor(context, R.color.green));
-
-        }
-
-
-        holder.lt_Container.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, Activity_Detail.class) ;
-                intent.putExtra("coinId", currentItem.getId()) ;
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK) ;
-                context.startActivity(intent);
+            boolean isChartGreen ;
+            if(percentageChange.charAt(0) == '-'){
+                isChartGreen = false ;
+                holder.textView_percentageChange.setText(Html.fromHtml("<font color='#FFFFFF'> - " + new BigDecimal(percentageChange).setScale(2, RoundingMode.HALF_UP).toString().substring(1) + "%</font> <font color='#ee0979'><b>\u2193</b></font>"));
+    //            holder.textView_percentageChange.setTextColor(ContextCompat.getColor(context, R.color.red));
+            } else {
+                isChartGreen = true ;
+                holder.textView_percentageChange.setText(Html.fromHtml("<font color='#FFFFFF'> + " +new BigDecimal(percentageChange).setScale(2, RoundingMode.HALF_UP).toString() + "% </font>  <font color='#92FE9D'><b>\u2191</b></font>"));
+    //            holder.textView_percentageChange.setTextColor(ContextCompat.getColor(context, R.color.green));
 
             }
-        });
 
-        List<Entry> listOfEntries = new ArrayList<>() ;
-        try{
-            JSONArray sparklineArray = new JSONArray(currentItem.getSparklineData()) ;
+
+            holder.lt_Container.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, Activity_Detail.class) ;
+                    intent.putExtra("coinId", currentItem.getId()) ;
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK) ;
+                    context.startActivity(intent);
+
+                }
+            });
+
+            List<Entry> listOfEntries = new ArrayList<>() ;
+
+            JSONArray sparklineArray = marketCachedData.getJSONArray("sparkline_in_7d") ;
 
             for(int i = 0; i<sparklineArray.length(); i++){
                 listOfEntries.add(new Entry(i, (float) sparklineArray.getDouble(i))) ;
             }
 
-        }catch (JSONException e){
+
+
+
+            LineDataSet dataSet = new LineDataSet(listOfEntries, ""); // add entries to dataset
+            dataSet.setDrawHorizontalHighlightIndicator(false); // remove the horizontal line from indicator
+            dataSet.setDrawCircles(false); // remove the circle of each point on chart
+            dataSet.setLineWidth(1.0f); /// change the thickness of line
+            dataSet.setDrawFilled(true);
+
+            if(isChartGreen){
+
+                Paint paint = holder.chart.getRenderer().getPaintRender();
+                int width = context.getResources().getDisplayMetrics().widthPixels/3 ;
+    //
+                LinearGradient linGrad = new LinearGradient(0, 0, width, 0,
+                        ContextCompat.getColor(context, R.color.positive1),
+                        ContextCompat.getColor(context, R.color.positive2),
+                        Shader.TileMode.REPEAT);
+                paint.setShader(linGrad);
+
+
+                dataSet.setFillDrawable(ContextCompat.getDrawable(context, R.drawable.gradient_fade_green));
+
+                } else {
+                Paint paint = holder.chart.getRenderer().getPaintRender();
+                int width = context.getResources().getDisplayMetrics().widthPixels/3 ;
+    //
+                LinearGradient linGrad = new LinearGradient(0, 0, width, 0,
+                        ContextCompat.getColor(context, R.color.negative1),
+                        ContextCompat.getColor(context, R.color.negative2),
+                        Shader.TileMode.REPEAT);
+                paint.setShader(linGrad);
+
+                dataSet.setFillDrawable(ContextCompat.getDrawable(context, R.drawable.gradient_fade_red));
+            }
+
+
+            LineData lineData = new LineData(dataSet);
+            lineData.setDrawValues(false);   // remove the text value of each point on chart
+
+
+            holder.chart.setData(lineData);
+            holder.chart.setScaleEnabled(false);
+            holder.chart.invalidate();
+
+        }catch (Exception e){
             Log.e(LOG_TAG, e.toString()) ;
         }
-
-
-        LineDataSet dataSet = new LineDataSet(listOfEntries, ""); // add entries to dataset
-        dataSet.setDrawHorizontalHighlightIndicator(false); // remove the horizontal line from indicator
-        dataSet.setDrawCircles(false); // remove the circle of each point on chart
-        dataSet.setLineWidth(1.0f); /// change the thickness of line
-        dataSet.setDrawFilled(true);
-
-        if(isChartGreen){
-
-            Paint paint = holder.chart.getRenderer().getPaintRender();
-            int width = context.getResources().getDisplayMetrics().widthPixels/3 ;
-//
-            LinearGradient linGrad = new LinearGradient(0, 0, width, 0,
-                    ContextCompat.getColor(context, R.color.positive1),
-                    ContextCompat.getColor(context, R.color.positive2),
-                    Shader.TileMode.REPEAT);
-            paint.setShader(linGrad);
-
-
-            dataSet.setFillDrawable(ContextCompat.getDrawable(context, R.drawable.gradient_fade_green));
-
-            } else {
-            Paint paint = holder.chart.getRenderer().getPaintRender();
-            int width = context.getResources().getDisplayMetrics().widthPixels/3 ;
-//
-            LinearGradient linGrad = new LinearGradient(0, 0, width, 0,
-                    ContextCompat.getColor(context, R.color.negative1),
-                    ContextCompat.getColor(context, R.color.negative2),
-                    Shader.TileMode.REPEAT);
-            paint.setShader(linGrad);
-
-            dataSet.setFillDrawable(ContextCompat.getDrawable(context, R.drawable.gradient_fade_red));
-        }
-
-
-        LineData lineData = new LineData(dataSet);
-        lineData.setDrawValues(false);   // remove the text value of each point on chart
-
-
-        holder.chart.setData(lineData);
-        holder.chart.setScaleEnabled(false);
-        holder.chart.invalidate();
-
     }
 
     public void refreshData(List<Object_Coin> newListOfItems){
@@ -198,32 +201,6 @@ public class RVAdapter_WatchlistAllCoins extends RecyclerView.Adapter<RVAdapter_
             chart.getAxisLeft().setEnabled(false);
             chart.getAxisRight().setEnabled(false);
             chart.getDescription().setEnabled(false);
-
-
-
-//            XAxis xAxis = chart.getXAxis();
-//            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-//            xAxis.setTextSize(3f);
-//            xAxis.setTextColor(ContextCompat.getColor(context, R.color.teal));
-//            xAxis.setDrawAxisLine(false);
-//            xAxis.setDrawGridLines(false);
-//
-//            xAxis.setDrawLabels(false);
-
-//            YAxis yAxisLeft = chart.getAxisLeft();
-//            yAxisLeft.setTextSize(10f);
-//            yAxisLeft.setTextColor(ContextCompat.getColor(context, R.color.teal));
-//            yAxisLeft.setDrawGridLines(false); // no grid lines
-//            yAxisLeft.setDrawZeroLine(false); // draw a zero line
-//            yAxisLeft.setDrawAxisLine(false);
-//            yAxisLeft.setDrawLabels(false);
-//
-//            YAxis yAxisRight = chart.getAxisRight();
-//            yAxisRight.setDrawAxisLine(false);
-//            yAxisRight.setDrawLabels(false);
-//            yAxisRight.setDrawGridLines(false);
-
-
 
 
 //         // get the legend (only possible after setting data)

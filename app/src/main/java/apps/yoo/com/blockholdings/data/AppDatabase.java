@@ -31,7 +31,7 @@ import apps.yoo.com.blockholdings.data.dao.Dao_WidgetCoinPrice;
 
 @Database(entities = {Object_NewsSite.class, Object_Coin.class, Object_Exchange.class, Object_Transaction.class,
         Object_Currency.class, Object_Portfolio.class, Object_WatchlistCoinId.class, Object_NotificationCoinId.class,
-        Object_WidgetCoinPrice.class, Object_VsSimpleCurrency.class}, version = 35, exportSchema = false)
+        Object_WidgetCoinPrice.class, Object_VsSimpleCurrency.class}, version = 39, exportSchema = false)
 @TypeConverters({MyTypeConverters.class})
 public abstract class AppDatabase extends RoomDatabase {
     private static final String LOG_TAG = AppDatabase.class.getSimpleName() + "--> ";
