@@ -96,6 +96,9 @@ public class Object_Transaction implements Cloneable{
     @ColumnInfo(name = "complementTransactionNo")
     int complementTransactionNo ;
 
+    @ColumnInfo(name = "isTransactionComplement")
+    boolean isTransactionComplement ;
+
 
 
 
@@ -311,6 +314,15 @@ public class Object_Transaction implements Cloneable{
 
     public void setComplementTransactionNo(int complementTransactionNo) {
         this.complementTransactionNo = complementTransactionNo;
+    }
+
+
+    public boolean isTransactionComplement() {
+        return isTransactionComplement;
+    }
+
+    public void setTransactionComplement(boolean transactionComplement) {
+        isTransactionComplement = transactionComplement;
     }
 
     @Override

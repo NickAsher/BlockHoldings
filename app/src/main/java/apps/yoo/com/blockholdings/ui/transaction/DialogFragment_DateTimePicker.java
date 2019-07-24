@@ -15,6 +15,7 @@ import android.widget.DatePicker;
 import android.widget.RelativeLayout;
 import android.widget.TimePicker;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
@@ -23,6 +24,9 @@ import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.joda.time.DateTime;
+
 import apps.yoo.com.blockholdings.R;
 import apps.yoo.com.blockholdings.data.AppDatabase;
 import apps.yoo.com.blockholdings.data.models.Object_Currency;
@@ -32,7 +36,7 @@ import apps.yoo.com.blockholdings.util.MyListener;
 
 public class DialogFragment_DateTimePicker extends DialogFragment {
     Context context ;
-    String LOG_TAG = "DialogFragment_Exchanges -->" ;
+    String LOG_TAG = "DialogFragment_DateTimePicker -->" ;
     AppDatabase db ;
     FragmentManager fragmentManager ;
 
@@ -91,10 +95,9 @@ public class DialogFragment_DateTimePicker extends DialogFragment {
                                                   final int monthOfYear, final int dayOfMonth) {
 
 //
-                                    String resultDate = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
-                                    Log.e(LOG_TAG, "Date is " + resultDate) ;
 
-                                        final Calendar c = Calendar.getInstance();
+
+                                final Calendar c = Calendar.getInstance();
                                         int mHour = c.get(Calendar.HOUR_OF_DAY);
                                         int mMinute = c.get(Calendar.MINUTE);
 
@@ -107,8 +110,7 @@ public class DialogFragment_DateTimePicker extends DialogFragment {
                                                                           int minute) {
 
                                                         Calendar newCalendar = Calendar.getInstance() ;
-                                                        newCalendar.set(year, monthOfYear, dayOfMonth, hourOfDay, minute);
-
+                                                        newCalendar.set(year, monthOfYear, dayOfMonth, hourOfDay, minute ) ;
                                                         long timeinLong = newCalendar.getTimeInMillis()  ;
                                                         listener_ActivityTransaction.onSelectingDateTime(timeinLong);
                                                         dismiss();

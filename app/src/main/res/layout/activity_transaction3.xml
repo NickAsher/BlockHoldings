@@ -386,7 +386,7 @@
                     />
 
                 <Switch
-                    android:id="@+id/activityTransaction_Switch_ValueCompliment"
+                    android:id="@+id/activityTransaction_Switch_ValueDeductFromBase"
                     android:layout_alignParentRight="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -398,7 +398,7 @@
                     android:paddingBottom="2dp"
                     android:paddingTop="2dp"
                     android:background="#666"
-                    android:layout_toLeftOf="@+id/activityTransaction_Switch_ValueCompliment"
+                    android:layout_toLeftOf="@+id/activityTransaction_Switch_ValueDeductFromBase"
                     />
 
 

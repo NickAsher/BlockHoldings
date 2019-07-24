@@ -29,7 +29,8 @@ public class Helper_Settings {
                 listOfCoins.add(new Object_Coin(
                         jsonObject_Coin.getString("id"),
                         jsonObject_Coin.getString("symbol"),
-                        jsonObject_Coin.getString("name")
+                        jsonObject_Coin.getString("name"),
+                        false
                 ));
 
 

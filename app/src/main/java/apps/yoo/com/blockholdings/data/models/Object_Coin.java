@@ -46,6 +46,9 @@ public class Object_Coin {
     @ColumnInfo(name = "coinName")
     String name;
 
+    @ColumnInfo(name = "isCoinFiat")
+    boolean isCoinFiat ;
+
     @ColumnInfo(name = "coinImageLogoLink")
     String imageLogoLink ;
 
@@ -62,10 +65,11 @@ public class Object_Coin {
     public static final String LOG_TAG = "Object_Coin --> " ;
 
 
-    public Object_Coin(String id, String symbol, String name) {
+    public Object_Coin(String id, String symbol, String name, boolean isCoinFiat) {
         this.id = id;
         this.symbol = symbol;
         this.name = name;
+        this.isCoinFiat = isCoinFiat ;
         this.priceData = "[]" ;
         this.cachedData = "{}" ;
     }
@@ -83,6 +87,8 @@ public class Object_Coin {
             this.imageLogoLink = jsonObject.getString("imagelogo");
             this.priceData = "[]" ;
             this.cachedData = "{}" ;
+            this.isCoinFiat = false ;
+
 
         }catch (JSONException e){
             Log.e(LOG_TAG, e.toString()) ;
@@ -99,8 +105,14 @@ public class Object_Coin {
         this.imageLogoLink = imageLogoLink ;
         this.priceData = "[]" ;
         this.cachedData = "{}" ;
+        this.isCoinFiat = false ;
+
 
     }
+
+//    public Object_Coin(String id, String name, String symbol){
+//
+//    }
 
 
 
@@ -108,8 +120,14 @@ public class Object_Coin {
     public Object_Coin() {
         this.priceData = "[]" ;
         this.cachedData = "{}" ;
+        this.isCoinFiat = false ;
+
 
     }
+
+
+
+
 
 
     @NonNull
@@ -149,7 +167,13 @@ public class Object_Coin {
         this.priceData = priceData;
     }
 
+    public boolean isCoinFiat() {
+        return isCoinFiat;
+    }
 
+    public void setCoinFiat(boolean coinFiat) {
+        isCoinFiat = coinFiat;
+    }
 
     public String getCachedData() {
         return cachedData;
@@ -172,6 +196,59 @@ public class Object_Coin {
     public String toString() {
         return id + " - " +  symbol + " - " + name + " - " + imageLogoLink  + " \n" ;
     }
+
+
+
+    public static List<Object_Coin> getListOfAllCurrencies(){
+        List<Object_Coin> listOfCurrencies = new ArrayList<>() ;
+        listOfCurrencies.add(new Object_Coin("aed", "United Arab Emirates Dirham", "DH", true)) ;
+        listOfCurrencies.add(new Object_Coin("ars", "Argentine Peso", "$", true)) ;
+        listOfCurrencies.add(new Object_Coin("aud", "Australian Dollar", "A$", true)) ;
+        listOfCurrencies.add(new Object_Coin("bdt", "Bangladeshi Taka", "\u09F3", true)) ;
+        listOfCurrencies.add(new Object_Coin("bhd", "Bahraini Dinar", "BD", true)) ;
+        listOfCurrencies.add(new Object_Coin("bmd", "Bermudian Dollar", "$", true)) ;
+        listOfCurrencies.add(new Object_Coin("brl", "Brazilian Real", "R$", true)) ;
+        listOfCurrencies.add(new Object_Coin("cad", "Canadian Dollar", "CA$", true)) ;
+        listOfCurrencies.add(new Object_Coin("chf", "Swiss Franc", "Fr.", true)) ;
+        listOfCurrencies.add(new Object_Coin("clp", "Chilean Peso", "CLP$", true)) ;
+        listOfCurrencies.add(new Object_Coin("cny", "Chinese Yuan", "\u00A5", true)) ;
+        listOfCurrencies.add(new Object_Coin("czk", "Czech Koruna", "K\u010D", true)) ;
+        listOfCurrencies.add(new Object_Coin("dkk", "Danish Krone", "kr.", true)) ;
+        listOfCurrencies.add(new Object_Coin("eur", "Euro", "\u20AC", true)) ;
+        listOfCurrencies.add(new Object_Coin("gbp", "Bristish Pound", "\u00A3", true)) ;
+        listOfCurrencies.add(new Object_Coin("hkd", "Hong Kong Dollar", "HK$", true)) ;
+        listOfCurrencies.add(new Object_Coin("huf", "Hungarian Forint", "Ft", true)) ;
+        listOfCurrencies.add(new Object_Coin("idr", "Indonesian Rupiah", "Rp", true)) ;
+        listOfCurrencies.add(new Object_Coin("ils", "Israeli Shekel", "\u20AA", true)) ;
+        listOfCurrencies.add(new Object_Coin("inr", "Indian Rupee", "\u20B9", true)) ;
+        listOfCurrencies.add(new Object_Coin("jpy", "Japanese Yen", "\u00A5", true)) ;
+        listOfCurrencies.add(new Object_Coin("krw", "South Korean Won", "\u20A9", true)) ;
+        listOfCurrencies.add(new Object_Coin("kwd", "Kuwaiti Dinar" ,"KD", true)) ;
+        listOfCurrencies.add(new Object_Coin("lkr", "Sri Lankan Rupee", "Rs", true)) ;
+        listOfCurrencies.add(new Object_Coin("mnk", "Burmese Kyat", "K", true)) ;
+        listOfCurrencies.add(new Object_Coin("mxn", "Mexican Peso", "MX$", true)) ;
+        listOfCurrencies.add(new Object_Coin("myr", "Malaysian Ringitt", "RM", true)) ;
+        listOfCurrencies.add(new Object_Coin("nok", "Norwegian Krone", "kr", true)) ;
+        listOfCurrencies.add(new Object_Coin("nzd", "New Zealand Dollar", "NZ$", true)) ;
+        listOfCurrencies.add(new Object_Coin("php", "Philippine Peso", "\u20B1", true)) ;
+        listOfCurrencies.add(new Object_Coin("pkr", "Pakistani Rupee", "Rs", true)) ;
+        listOfCurrencies.add(new Object_Coin("pln", "Polish Zloty", "z\u0142", true)) ;
+        listOfCurrencies.add(new Object_Coin("rub", "Russian Ruble", "\u20BD", true)) ;
+        listOfCurrencies.add(new Object_Coin("sar", "Saudi Arabian Riyal", "\uFDFC", true)) ;
+        listOfCurrencies.add(new Object_Coin("sek", "Swedish Krone", "kr", true)) ;
+        listOfCurrencies.add(new Object_Coin("sgd", "Singapore Dollar", "S$" , true)) ;
+        listOfCurrencies.add(new Object_Coin("thb", "Thai Baht", "\u0E3F", true)) ;
+        listOfCurrencies.add(new Object_Coin("try", "Turkish Lira", "\u20BA", true)) ;
+        listOfCurrencies.add(new Object_Coin("twd", "Taiwan New Dollar", "NT$", true)) ;
+        listOfCurrencies.add(new Object_Coin("usd", "United States Dollar", "$", true)) ;
+        listOfCurrencies.add(new Object_Coin("vef", "Venezuelan Bolívar", "Bs.", true)) ;
+        listOfCurrencies.add(new Object_Coin("zar", "South African" , "R", true)) ;
+
+
+        return listOfCurrencies ;
+
+    }
+
 
     public JSONArray getPriceData_LastItem() throws JSONException{
         JSONArray jsonArray = new JSONArray(priceData) ;

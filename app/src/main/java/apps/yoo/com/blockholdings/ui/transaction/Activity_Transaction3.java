@@ -8,12 +8,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -73,6 +75,7 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
     RadioGroup radioGroup_BuySell ;
     ProgressBar progressBarAddBtn ;
     Spinner spinner_FeeType ;
+    Switch switch_DeductFromBase ;
 
     String coinId ;
     Object_Coin currentCoin ;
@@ -135,26 +138,31 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
 
 
     private void getReferences(){
-        relLt_Exchange = findViewById(R.id.activityTransaction_RelLt_ExchangeContainer) ;
-        relLt_TradingPair = findViewById(R.id.activityTransaction_RelLt_ContainerTradingPair) ;
-
         textView_CoinName = findViewById(R.id.activityTransaction_TextView_CoinName) ;
-        textView_Exchange = findViewById(R.id.activityTransaction_TextView_ValueExchange) ;
-        textView_TradingPair = findViewById(R.id.activityTransaction_TextView_ValueTradingPair) ;
-        textView_SingleCoinPriceLabel = findViewById(R.id.activityTransaction_TextView_DescriptionSingleCoinPrice) ;
-        textView_Date = findViewById(R.id.activityTransaction_TextView_ValueDate) ;
-
-        editText_SingleCoinPrice = findViewById(R.id.activityTransaction_EditText_ValueSingleCoinPrice) ;
-        editText_Quantity = findViewById(R.id.activityTransaction_EditText_ValueQuantity) ;
-
-        spinner_FeeType = findViewById(R.id.activityTransaction_Spinner_ValueFeeType) ;
-        editText_Fee= findViewById(R.id.activityTransaction_EditText_ValueFee) ;
-
-        editText_Note= findViewById(R.id.activityTransaction_EditText_ValueNote) ;
 
         radioButton_Buy = findViewById(R.id.activityTransaction_RadioButton_Buy) ;
         radioButton_Sell = findViewById(R.id.activityTransaction_RadioButton_Sell) ;
         radioGroup_BuySell = findViewById(R.id.activityTransaction_RadioGroup_BuySell) ;
+
+        relLt_Exchange = findViewById(R.id.activityTransaction_RelLt_ExchangeContainer) ;
+        textView_Exchange = findViewById(R.id.activityTransaction_TextView_ValueExchange) ;
+
+        relLt_TradingPair = findViewById(R.id.activityTransaction_RelLt_ContainerTradingPair) ;
+        textView_TradingPair = findViewById(R.id.activityTransaction_TextView_ValueTradingPair) ;
+
+        textView_SingleCoinPriceLabel = findViewById(R.id.activityTransaction_TextView_DescriptionSingleCoinPrice) ;
+        editText_SingleCoinPrice = findViewById(R.id.activityTransaction_EditText_ValueSingleCoinPrice) ;
+
+        editText_Quantity = findViewById(R.id.activityTransaction_EditText_ValueQuantity) ;
+
+        textView_Date = findViewById(R.id.activityTransaction_TextView_ValueDate) ;
+
+        spinner_FeeType = findViewById(R.id.activityTransaction_Spinner_ValueFeeType) ;
+        editText_Fee= findViewById(R.id.activityTransaction_EditText_ValueFee) ;
+
+        switch_DeductFromBase= findViewById(R.id.activityTransaction_Switch_ValueDeductFromBase) ;
+
+        editText_Note= findViewById(R.id.activityTransaction_EditText_ValueNote) ;
 
         textView_TransactionTotalValue = findViewById(R.id.activityTransaction_TextView_TotalTransactionValue) ;
         relLt_BtnAddTransaction = findViewById(R.id.activityTransaction_relLt_BtnAddTransaction) ;
@@ -242,6 +250,7 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
         setupEditTextQuantity_TextChangeListener() ;
 
         setupFeesSpinner(true);
+        setupSwitchDeductFromBase();
 
 
 
@@ -291,6 +300,31 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
         }
 
     }
+
+    private void setupSwitchDeductFromBase(){
+        //TODO do stuff if switch if already checked
+        // TODO when value of quantity is changed, then check how much coin we have in our portfolio and
+        // depending on that chang ethe value of switch
+
+
+        switch_DeductFromBase.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // isChecked is the new state
+                if(isChecked){
+                    currentTransactionFD.getTransactionObject().setDeductFromQuoteCoin(true);
+                }else{
+                    currentTransactionFD.getTransactionObject().setDeductFromQuoteCoin(false);
+
+                }
+            }
+        });
+
+    }
+
+
+
+
 
     private void setupBuySellRadioButton(){
         // we can't check for (getType == null) because by default int are always initialized as 0
@@ -353,7 +387,7 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
             Log.e(LOG_TAG, "dudeeee" + e.toString()) ;
         }
         currentTransactionFD.getTransactionObject().setTransactionDateTime(new Date(timeInLong));
-        Log.d(LOG_TAG, currentTransactionFD.toString()) ;
+
     }
 
     private void setupEditTextQuantity_TextChangeListener(){
@@ -367,6 +401,9 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.toString().isEmpty() ){
+                    return;
+                }
                 BigDecimal quantity = new BigDecimal(s.toString().trim()) ;
                 BigDecimal totalTransactionValue = new BigDecimal(editText_SingleCoinPrice.getText().toString()).multiply(quantity) ;
 
@@ -377,6 +414,8 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
                     textView_TransactionTotalValue.setText("Total Value Of this Transaction is  " +
                             currencyObj.getCurrencySymbol() + totalTransactionValue );
                 }
+
+
             }
 
             @Override
@@ -398,7 +437,7 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
                 DialogFragment_Exchanges dfExchanges = new DialogFragment_Exchanges() ;
                 Bundle bundle = new Bundle() ;
                 bundle.putStringArrayList("exchangesList", new ArrayList<>(table_ExchangePairData.rowKeySet()));
-                String date = new SimpleDateFormat("dd-mm-yyyy")
+                String date = new SimpleDateFormat("dd-MM-yyyy")
                         .format(currentTransactionFD.getTransactionObject().getTransactionDateTime() );
                 bundle.putString("transactionDate",  date);
                 Log.e(LOG_TAG, "Date sent to exchange is " + date) ;
@@ -735,11 +774,14 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
         currentTransactionFD.getTransactionObject().setTotalValue_Current(totalValue);
 
         computeTransactionFees(tradingPairPrice_Currency);
+//        makeComplementTransaction_TradingPair() ;
 
         Log.e(LOG_TAG, Helper_Transaction.getTransactionFullDataObject().getTransactionObject().toString()) ;
 
         addTransactionToDatabase();
     }
+
+
 
 
     private void addTransactionToDatabase(){
@@ -759,6 +801,37 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
                 finish();
             }
         });
+
+    }
+
+    private void makeComplementTransaction_TradingPair(){
+        if(!currentTransactionFD.getTransactionObject().isDeductFromQuoteCoin()){
+            return;
+        }
+
+        Object_Transaction complementTransaction = new Object_Transaction() ;
+
+        complementTransaction.setCoinId(currentTransactionFD.getTransactionObject().getTradingPair().toLowerCase());
+        complementTransaction.setPortFolioId(MyGlobals.getCurrentPortfolioObj().getPortfolioId());
+        complementTransaction.setBaseCoinFiat(false);
+
+        if(currentTransactionFD.getTransactionObject().getType() == Object_Transaction.TYPE_BUY){
+            complementTransaction.setType(Object_Transaction.TYPE_SELL);
+        }else if(currentTransactionFD.getTransactionObject().getType() == Object_Transaction.TYPE_SELL){
+            complementTransaction.setType(Object_Transaction.TYPE_BUY);
+        }
+
+        complementTransaction.setExchangeId(currentTransactionFD.getTransactionObject().getExchangeId());
+        complementTransaction.setTradingPair(currentTransactionFD.getTransactionObject().getCoinId());
+
+
+        complementTransaction.setTransactionDateTime(currentTransactionFD.getTransactionObject().getTransactionDateTime());
+        complementTransaction.setNote("");
+
+        BigDecimal totalNoOfCoins = new BigDecimal(currentTransactionFD.getTransactionObject().getSingleCoinPrice_TradingPair())
+                .multiply(new BigDecimal(currentTransactionFD.getTransactionObject().getNoOfCoins())) ;
+        complementTransaction.setNoOfCoins(totalNoOfCoins.toPlainString());
+
 
     }
 

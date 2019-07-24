@@ -126,7 +126,8 @@ public class Fragment_WatchlistAllCoins extends Fragment {
                 Object_Coin coinObj = new Object_Coin(
                         jsonObject.getString("id"),
                         jsonObject.getString("symbol"),
-                        jsonObject.getString("name")
+                        jsonObject.getString("name"),
+                        false
                 ) ;
 
                 coinObj.setImageLogoLink(jsonObject.getString("image"));
