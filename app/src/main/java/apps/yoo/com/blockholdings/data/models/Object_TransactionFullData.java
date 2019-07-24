@@ -90,15 +90,7 @@ public class Object_TransactionFullData implements Cloneable{
   } ;
 
 
-  public static Comparator<Object_TransactionFullData> percentageChangeComparator = new Comparator<Object_TransactionFullData>() {
-    @Override
-    public int compare(Object_TransactionFullData o1, Object_TransactionFullData o2) {
-      BigDecimal holdingO1 = new BigDecimal(o1.getTransactionObject().getPrice24hChange()) ;
-      BigDecimal holdingO2 = new BigDecimal(o2.getTransactionObject().getPrice24hChange()) ;
 
-      return holdingO1.compareTo(holdingO2) ;
-    }
-  } ;
 
   public static Comparator<Object_TransactionFullData> singleCoinPrice = new Comparator<Object_TransactionFullData>() {
     @Override

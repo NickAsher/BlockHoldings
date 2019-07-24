@@ -36,10 +36,10 @@ public interface Dao_Transaction {
     @Query("SELECT * FROM table_transaction WHERE portfolioId = :portfolioId AND transactionDateTime <= :date ORDER BY coinId ASC")
     List<Object_Transaction> getListOfAllTransactions_OfPortfolio_BeforeADate(int portfolioId, long date);
 
-    @Query("SELECT  * FROM table_transaction INNER JOIN table_coin ON table_transaction.coinId = table_coin.coin_Id INNER JOIN table_exchange ON table_transaction.exchangeId = table_exchange.exchange_Id  ORDER BY table_transaction.transactionNo")
+    @Query("SELECT  * FROM table_transaction INNER JOIN table_coin ON table_transaction.coinId = table_coin.coin_Id INNER JOIN table_exchange ON table_transaction.exchangeId = table_exchange.exchange_Id  ORDER BY table_transaction.transactionId")
     List<Object_TransactionFullData> getListOfAllTransactionFD() ;
 
-    @Query("SELECT  * FROM table_transaction INNER JOIN table_coin ON table_transaction.coinId = table_coin.coin_Id INNER JOIN table_exchange ON table_transaction.exchangeId = table_exchange.exchange_Id  ORDER BY table_transaction.transactionNo")
+    @Query("SELECT  * FROM table_transaction INNER JOIN table_coin ON table_transaction.coinId = table_coin.coin_Id INNER JOIN table_exchange ON table_transaction.exchangeId = table_exchange.exchange_Id  ORDER BY table_transaction.transactionId")
     LiveData<List<Object_TransactionFullData>> getListOfAllTransactionFD_LiveData() ;
 
 
@@ -62,7 +62,7 @@ public interface Dao_Transaction {
 
 
 
-    @Query("SELECT  * FROM table_transaction INNER JOIN table_coin ON table_transaction.coinId = table_coin.coin_Id INNER JOIN table_exchange ON table_transaction.exchangeId = table_exchange.exchange_Id WHERE table_transaction.transactionNo = :txnId")
+    @Query("SELECT  * FROM table_transaction INNER JOIN table_coin ON table_transaction.coinId = table_coin.coin_Id INNER JOIN table_exchange ON table_transaction.exchangeId = table_exchange.exchange_Id WHERE table_transaction.transactionId = :txnId")
     Object_TransactionFullData getTransactionFullData_ById(int txnId) ;
 
 
@@ -80,10 +80,10 @@ public interface Dao_Transaction {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateTransaction(Object_Transaction transaction);
 
-    @Query("UPDATE table_transaction SET coinPrice_CurrencyCurrent = :singleCoinPriceCurrent, totalValue_Current = :totalValueCurrent WHERE transactionNo = :txnId" )
+    @Query("UPDATE table_transaction SET coinPrice_CurrencyCurrent = :singleCoinPriceCurrent, totalValue_Current = :totalValueCurrent WHERE transactionId = :txnId" )
     void updateTransactionPriceByTxnId(int txnId, String singleCoinPriceCurrent, String totalValueCurrent);
 
-    @Query("UPDATE table_transaction SET coinPrice_CurrencyCurrent = :singleCoinPriceCurrent, totalValue_Current = :totalValueCurrent, updateLog = :newUpdateLog WHERE transactionNo = :txnId" )
+    @Query("UPDATE table_transaction SET coinPrice_CurrencyCurrent = :singleCoinPriceCurrent, totalValue_Current = :totalValueCurrent, updateLog = :newUpdateLog WHERE transactionId = :txnId" )
     void updateTransactionPriceByTxnId(int txnId, String singleCoinPriceCurrent, String totalValueCurrent, String newUpdateLog);
 
 
@@ -91,7 +91,7 @@ public interface Dao_Transaction {
     @Delete
     void deleteTransaction(Object_Transaction transaction);
 
-    @Query("DELETE FROM  table_transaction  WHERE transactionNo = :transactionId")
+    @Query("DELETE FROM  table_transaction  WHERE transactionId = :transactionId")
     void deleteTransaction_ById(int transactionId) ;
 
     @Query("DELETE FROM  table_transaction  WHERE portfolioId = :portfolioId")

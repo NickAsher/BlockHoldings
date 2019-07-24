@@ -202,7 +202,7 @@ public class Activity_DetailTransactionEdit extends AppCompatActivity implements
                 AppExecutors.getInstance().diskIO().execute(new Runnable() {
                     @Override
                     public void run() {
-                        db.transactionDao().deleteTransaction_ById(currentTransactionFD.getTransactionObject().getTransactionNo()) ;
+                        db.transactionDao().deleteTransaction_ById(currentTransactionFD.getTransactionObject().getTransactionId()) ;
                         MyGlobals.refreshPortfolioValue(db);
                         finish();
                     }

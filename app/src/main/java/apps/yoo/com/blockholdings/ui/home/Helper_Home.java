@@ -108,10 +108,23 @@ public class Helper_Home {
             for (Object_TransactionFullData childTransaction: transactionMultimap.get(coinId)) {
                 txGrp.addChildTransactionFD(childTransaction);
 
+                // see the formula for SummedPriceChange
                 if(childTransaction.getTransactionObject().getType() == Object_Transaction.TYPE_BUY){
-                    txGrp.setNoOfCoins(txGrp.getNoOfCoins().add(new BigDecimal(childTransaction.getTransactionObject().getNoOfCoins())));
+                    txGrp.setNoOfCoins(txGrp.getNoOfCoins()
+                            .add(new BigDecimal(childTransaction.getTransactionObject().getNoOfCoins())));
+
+                    txGrp.setSummedPriceChange(txGrp.getSummedPriceChange()
+                            .add(new BigDecimal(childTransaction.getTransactionObject().getTotalValue_Current()))
+                            .subtract(new BigDecimal(childTransaction.getTransactionObject().getTotalValue_OriginalwFees())));
+
+
                 } else if(childTransaction.getTransactionObject().getType() == Object_Transaction.TYPE_SELL){
-                    txGrp.setNoOfCoins(txGrp.getNoOfCoins().subtract(new BigDecimal(childTransaction.getTransactionObject().getNoOfCoins())));
+                    txGrp.setNoOfCoins(txGrp.getNoOfCoins()
+                            .subtract(new BigDecimal(childTransaction.getTransactionObject().getNoOfCoins())));
+
+                    txGrp.setSummedPriceChange(txGrp.getSummedPriceChange()
+                            .add(new BigDecimal(childTransaction.getTransactionObject().getTotalValue_Original()))
+                            .subtract(new BigDecimal(childTransaction.getTransactionObject().getTotalValue_Current()))) ;
                 }
             }
 

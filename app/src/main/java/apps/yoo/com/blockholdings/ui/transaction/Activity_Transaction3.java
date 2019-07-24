@@ -457,7 +457,6 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
         currentTransactionFD.getTransactionObject().setExchangeId(selectedExchange.getId());
         currentTransactionFD.getTransactionObject().setTradingPair("");
         currentTransactionFD.getTransactionObject().setSingleCoinPrice_TradingPair("");
-        currentTransactionFD.getTransactionObject().setPrice24hChange("");
 
         textView_Exchange.setText(selectedExchange.getName());
         relLt_TradingPair.setVisibility(View.GONE);

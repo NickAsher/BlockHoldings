@@ -67,7 +67,7 @@ class RVAdapter_TransactionsExpandable
 
     @Override
     public int getGroupCount() {
-        Log.e(LOG_TAG, "" + listOfTransactionGroups.size()) ;
+        Log.e(LOG_TAG, "Size is " + listOfTransactionGroups.size()) ;
         return listOfTransactionGroups.size() ;
     }
 
@@ -83,7 +83,7 @@ class RVAdapter_TransactionsExpandable
         // The transaction whose TransactionNo is returned is first transaction from list in the group
 
         return listOfTransactionGroups.get(groupPosition).getListOfChildTransactionsFD().iterator().next()
-                .getTransactionObject().getTransactionNo() ;
+                .getTransactionObject().getTransactionId() ;
     }
 
     @Override
@@ -92,7 +92,7 @@ class RVAdapter_TransactionsExpandable
         // Since Each coin in a listOfChildTransactions will have the same coinName
         // and thus the same child Id,
         // We can use the transactionId here
-        return listOfTransactionGroups.get(groupPosition).getListOfChildTransactionsFD().get(childPosition).getTransactionObject().getTransactionNo() ;
+        return listOfTransactionGroups.get(groupPosition).getListOfChildTransactionsFD().get(childPosition).getTransactionObject().getTransactionId() ;
     }
 
     @Override
@@ -194,22 +194,7 @@ class RVAdapter_TransactionsExpandable
 
 
 
-        final BigDecimal holdingChange = listOfTransactionGroups.get(groupPosition).getMapOfPriceChange().get(currentItem.getTransactionObject().getTransactionNo()) ;
-        //listOf_PriceTimeAgo.get(currentItem.getCoinObject().getId());
 
-        if (holdingChange.toPlainString().isEmpty()) {
-            holder.textView_24hChange.setTextColor(ContextCompat.getColor(context, R.color.yellow));
-            holder.textView_24hChange.setText("Empty");
-        } else {
-            if (holdingChange.signum() >= 0) {
-                holder.textView_24hChange.setTextColor(ContextCompat.getColor(context, R.color.green));
-                holder.textView_24hChange.setText(holdingChange.toPlainString());
-            } else {
-                holder.textView_24hChange.setTextColor(ContextCompat.getColor(context, R.color.red));
-                holder.textView_24hChange.setText(holdingChange.toPlainString());
-            }
-
-        }
 
 
 

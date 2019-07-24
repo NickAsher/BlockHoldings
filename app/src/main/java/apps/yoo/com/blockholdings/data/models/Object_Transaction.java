@@ -19,8 +19,13 @@ public class Object_Transaction implements Cloneable{
 
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "transactionNo")
-    int transactionNo ;
+    @ColumnInfo(name = "transactionId")
+    int transactionId;
+
+
+    @ColumnInfo(name = "portfolioId")
+    int portFolioId ;
+
 
     @ColumnInfo(name = "coinId")
     String coinId ;
@@ -53,8 +58,6 @@ public class Object_Transaction implements Cloneable{
     @ColumnInfo(name = "coinPrice_CurrencyCurrent")
     String singleCoinPrice_CurrencyCurrent ;
 
-    @ColumnInfo(name = "price24hChange")
-    String price24hChange ;
 
 
     @ColumnInfo(name = "transactionDateTime")
@@ -72,8 +75,7 @@ public class Object_Transaction implements Cloneable{
     @ColumnInfo(name = "note")
     String note ;
 
-    @ColumnInfo(name = "portfolioId")
-    int portFolioId ;
+
 
     @ColumnInfo(name = "updateLog")
     String updateLog ;
@@ -105,8 +107,8 @@ public class Object_Transaction implements Cloneable{
 
 
 
-    public Object_Transaction(int transactionNo) {
-        this.transactionNo = transactionNo ;
+    public Object_Transaction(int transactionId) {
+        this.transactionId = transactionId ;
         this.updateLog = "[]" ;
     }
 
@@ -115,8 +117,8 @@ public class Object_Transaction implements Cloneable{
         this.updateLog = "[]" ;
     }
 
-    public int getTransactionNo() {
-        return transactionNo;
+    public int getTransactionId() {
+        return transactionId;
     }
 
 
@@ -192,13 +194,6 @@ public class Object_Transaction implements Cloneable{
         this.singleCoinPrice_CurrencyCurrent = singleCoinPrice_Currency;
     }
 
-    public String getPrice24hChange() {
-        return price24hChange;
-    }
-
-    public void setPrice24hChange(String price24hChange) {
-        this.price24hChange = price24hChange;
-    }
 
     public Date getTransactionDateTime() {
         return transactionDateTime;
@@ -328,7 +323,7 @@ public class Object_Transaction implements Cloneable{
     @Override
     public String toString() {
         String s = ""
-                + "transactionNo : " +  transactionNo + " - "
+                + "transactionId : " + transactionId + " - "
                 + "type : " + type + " - "
                 + "coinId : " +  coinId + " - "
                 + "exchangeId : " +  exchangeId + " - "
@@ -336,7 +331,6 @@ public class Object_Transaction implements Cloneable{
                 + "coinPrice_TradingPair : " +  singleCoinPrice_TradingPair + " - "
                 + "coinPrice_CurrencyOriginal : " +  singleCoinPrice_CurrencyOriginal + " - "
                 + "coinPrice_CurrencyCurrent : " +  singleCoinPrice_CurrencyCurrent + " - "
-                + "24h Change : " +  price24hChange + " - "
                 + "NoOfCoins : " +  noOfCoins + " - "
                 + "totalValue_Original : " +  totalValue_Original + " - "
                 + "totalValue_Current : " +  totalValue_Current + " - "

@@ -162,7 +162,7 @@ public class BackgroundDataUpdater extends Worker {
             for(Object_Transaction transactionObj : listOfTransactions){
                 String price = responseObj.getJSONObject(transactionObj.getCoinId()).get(currentCurrency.getCurrencyId()).toString() ;
                 String newTotalCost = new BigDecimal(price).multiply(new BigDecimal(transactionObj.getNoOfCoins())).toPlainString() ;
-                db.transactionDao().updateTransactionPriceByTxnId(transactionObj.getTransactionNo(), price, newTotalCost);
+                db.transactionDao().updateTransactionPriceByTxnId(transactionObj.getTransactionId(), price, newTotalCost);
             }
 
             Helper_Portfolio.recomputeAllPortfolios(db); ;

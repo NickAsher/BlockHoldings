@@ -86,7 +86,7 @@ public class RVAdapter_ProjectLinks extends RecyclerView.Adapter<RVAdapter_Proje
             public void onClick(View v) {
                 Message.display(context, "Link is " + currentItem.getLink());
 //                Intent intent = new Intent(context, Activity_DetailTransactionEdit.class) ;
-//                intent.putExtra("transactionId", currentItemTransaction.getTransactionNo()) ;
+//                intent.putExtra("transactionId", currentItemTransaction.getTransactionId()) ;
 //                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK) ;
 //                context.startActivity(intent);
             }

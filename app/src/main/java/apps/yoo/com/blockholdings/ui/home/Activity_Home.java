@@ -69,7 +69,6 @@ public class Activity_Home extends AppCompatActivity{
     TextView textView_NameSort, textView_PercentageSort, textView_HoldingsSort, textView_SingleCoinPriceSort ;
     RelativeLayout layout_MainContainer ;
     Fragment_PortfolioBrief fragment_portfolioBrief ;
-    RadioRealButtonGroup radioGrp_PriceChange ;
     Map<String, BigDecimal> holdingsChangeValueSet_TotalDollarDifference;
     Table<String, Integer, BigDecimal> table_PriceChange_TotalDollarDifference ;
 
@@ -120,7 +119,6 @@ public class Activity_Home extends AppCompatActivity{
         setupListOfTransactions() ;
         setupRecyclerView();
         setupBasicUI() ;
-        setupRadioBtn_PriceDifference_ChangeListener() ;
 
         textView_HoldingsSort.performClick() ; // this will sort the items by holdings
 
@@ -137,7 +135,6 @@ public class Activity_Home extends AppCompatActivity{
         textView_PercentageSort = findViewById(R.id.activityPortfolio_TextView_SortPercentage) ;
         textView_HoldingsSort = findViewById(R.id.activityPortfolio_TextView_SortTotalHoldings) ;
 
-        radioGrp_PriceChange = findViewById(R.id.activityHome_RadioGroup_PriceChange) ;
 
     }
 
@@ -239,8 +236,6 @@ public class Activity_Home extends AppCompatActivity{
 
                 listOfPortfolioTransactions = newList ;
                 listOfTransactionGroups = Helper_Home.getListOfTransactionGroups(listOfPortfolioTransactions) ;
-                refreshPriceCurrencyChange(Constants.TIMEFRAME_MAX);
-                radioGrp_PriceChange.setPosition(3);
                 adapter_transactionsExpandable.refreshAdapter(listOfTransactionGroups);
                 initialLoad = false ;
 
@@ -393,70 +388,6 @@ public class Activity_Home extends AppCompatActivity{
     }
 
 
-    public void setupRadioBtn_PriceDifference_ChangeListener(){
-        radioGrp_PriceChange.setOnPositionChangedListener(new RadioRealButtonGroup.OnPositionChangedListener() {
-            @Override
-            public void onPositionChanged(RadioRealButton button, int currentPosition, int lastPosition) {
-                switch (button.getId()){
-                    case R.id.activityHome_RadioBtn_1DayChange :
-                        refreshPriceCurrencyChange(Constants.TIMEFRAME_1DAY);
-                        adapter_transactionsExpandable.refreshAdapter(listOfTransactionGroups);
-
-                        break;
-
-                    case R.id.activityHome_RadioBtn_1WeekChange :
-                        refreshPriceCurrencyChange(Constants.TIMEFRAME_1WEEK);
-                        adapter_transactionsExpandable.refreshAdapter(listOfTransactionGroups);
-                        break;
-
-                    case R.id.activityHome_RadioBtn_1MonthChange :
-                        refreshPriceCurrencyChange(Constants.TIMEFRAME_1MONTH);
-                        adapter_transactionsExpandable.refreshAdapter(listOfTransactionGroups);
-                        break;
-
-                    case R.id.activityHome_RadioBtn_MaxChange :
-                        refreshPriceCurrencyChange(Constants.TIMEFRAME_MAX);
-                        adapter_transactionsExpandable.refreshAdapter(listOfTransactionGroups);
-                        break;
-
-
-                }
-            }
-        });
-
-
-    }
-
-
-
-
-
-
-    private void refreshPriceCurrencyChange(int caseTimeAgo){
-        for(Object_TransactionGroup trxGrp : listOfTransactionGroups){
-            BigDecimal summedChange = new BigDecimal(0) ;
-
-            for(Object_TransactionFullData childTransactionFD : trxGrp.getListOfChildTransactionsFD()){
-                String priceTimeAgo = Object_Coin.getPriceOfCoin_FromPriceLog_TimeAgo(childTransactionFD.getTransactionObject(), childTransactionFD.getCoinObject(), caseTimeAgo) ;
-                BigDecimal priceChange = new BigDecimal(childTransactionFD.getTransactionObject().getSingleCoinPrice_CurrencyCurrent()).subtract(new BigDecimal(priceTimeAgo)) ;
-                BigDecimal totalPriceChange = priceChange.multiply(new BigDecimal(childTransactionFD.getTransactionObject().getNoOfCoins())) ;
-
-                trxGrp.getMapOfPriceChange().put(childTransactionFD.getTransactionObject().getTransactionNo(), totalPriceChange) ;
-                summedChange = summedChange.add(totalPriceChange) ;
-
-            }
-
-            trxGrp.setSummedPriceChange(summedChange);
-            Log.d(LOG_TAG, trxGrp.toString()) ;
-        }
-    }
-
-
-
-
-
-
-
 
 
 
@@ -464,8 +395,5 @@ public class Activity_Home extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
 
-        // THis is needed because everytime RecyclerView if refreshed, the priceChange shows the MAX change in price
-        // But the radioButton might be showing some other position, so need to reset it to max price change
-        radioGrp_PriceChange.setPosition(3);
     }
 }

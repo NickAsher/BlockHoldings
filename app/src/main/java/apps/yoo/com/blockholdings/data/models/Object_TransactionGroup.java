@@ -11,16 +11,23 @@ import java.util.Map;
 public class Object_TransactionGroup {
     ArrayList<Object_TransactionFullData> listOfChildTransactionsFD;
     Map<Integer, BigDecimal> mapOfPriceChange ;
-    BigDecimal summedPriceChange ;
+
     BigDecimal noOfCoins ;
     BigDecimal singleCoinPrice_CurrencyCurrent;
 
 
-//    public Object_TransactionGroup(Object_TransactionFullData baseTransaction){
-//        this.summedTransaction.setCoinObject(baseTransaction.getCoinObject());
-//
-//
-//    }
+    //Formula for summed price change =
+    // Market Value of Holdings + Sum of proceeds from Sell - Sum of purchases with fees
+
+    // Market Value of Holdings = Current NoOfCoins * current value  i.e.   TotalValue_Current (Buy Only) - TotalValue_Current(Sell Only)
+    // Sum Of proceeds from sell = TotalValue_Original(Sell only)
+    // Sum of purchases with fees = TotalValue_OriginalwFees(Buy only)
+
+    // = TotalValue_Current Buy Only) - TotalValue_Current(Sell Only) + TotalValue_Original(Sell only) - TotalValue_OriginalwFees(Buy only)
+    BigDecimal summedPriceChange ;
+
+
+
 
     public Object_TransactionGroup(Object_TransactionFullData anyChildTransactionFullData) {
         this.listOfChildTransactionsFD = new ArrayList<>() ;
@@ -51,7 +58,7 @@ public class Object_TransactionGroup {
 
     public void addChildTransactionFD(Object_TransactionFullData childTransactionFD){
         this.listOfChildTransactionsFD.add(childTransactionFD) ;
-        mapOfPriceChange.put(childTransactionFD.getTransactionObject().getTransactionNo(), new BigDecimal(0)) ;
+        mapOfPriceChange.put(childTransactionFD.getTransactionObject().getTransactionId(), new BigDecimal(0)) ;
     }
 
     public BigDecimal getNoOfCoins() {

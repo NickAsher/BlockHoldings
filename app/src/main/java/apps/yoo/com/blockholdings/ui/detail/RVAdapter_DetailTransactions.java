@@ -98,7 +98,7 @@ public class RVAdapter_DetailTransactions extends RecyclerView.Adapter<RVAdapter
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, Activity_DetailTransactionEdit.class) ;
-                intent.putExtra("transactionId", currentItemTransaction.getTransactionNo()) ;
+                intent.putExtra("transactionId", currentItemTransaction.getTransactionId()) ;
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK) ;
                 context.startActivity(intent);
             }

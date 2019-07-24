@@ -116,7 +116,7 @@ public class Worker_UpdateCoinCurrentPrice extends Worker {
             JSONObject responseObject = new JSONObject(response) ;
 
             for (Object_Transaction object_transaction : listOfTransactions ){
-                int txnId = object_transaction.getTransactionNo() ;
+                int txnId = object_transaction.getTransactionId() ;
                 String coinId = object_transaction.getCoinId() ;
                 String newSingleCoinPrice_Currency = responseObject.getJSONObject(coinId).getString(currentCurrency.getCurrencyId()) ;
                 BigDecimal noOfCoins = new BigDecimal(Utils.removeMinusSign(object_transaction.getNoOfCoins())) ;

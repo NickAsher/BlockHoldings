@@ -473,7 +473,6 @@ public class Activity_Transaction extends AppCompatActivity implements MyListene
 
 
 
-        currentTransactionFD.getTransactionObject().setPrice24hChange(p24hChange);
         currentTransactionFD.getTransactionObject().setSingleCoinPrice_CurrencyOriginal(singleCoinPrice_Currency);
         currentTransactionFD.getTransactionObject().setSingleCoinPrice_CurrencyCurrent(singleCoinPrice_Currency);
 
