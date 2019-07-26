@@ -23,7 +23,7 @@ import apps.yoo.com.blockholdings.R;
 import apps.yoo.com.blockholdings.data.AppDatabase;
 import apps.yoo.com.blockholdings.data.MySharedPreferences;
 import apps.yoo.com.blockholdings.data.models.Object_TransactionFullData;
-import apps.yoo.com.blockholdings.ui.transaction.Activity_Transaction;
+import apps.yoo.com.blockholdings.ui.transaction.Activity_Transaction3;
 
 
 public class Fragment_DetailTransactions extends Fragment {
@@ -111,8 +111,8 @@ public class Fragment_DetailTransactions extends Fragment {
         imageView_AddTransactionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, Activity_Transaction.class) ;
-                intent.putExtra("coin", db.coinDao().getCoinById(coinId).toJson().toString()) ;
+                Intent intent = new Intent(context, Activity_Transaction3.class) ;
+                intent.putExtra("coinId", coinId) ;
                 context.startActivity(intent);
             }
         });

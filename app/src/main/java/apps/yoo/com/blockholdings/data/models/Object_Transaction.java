@@ -60,9 +60,6 @@ public class Object_Transaction implements Cloneable{
 
 
 
-    @ColumnInfo(name = "transactionDateTime")
-    Date transactionDateTime ;
-
     @ColumnInfo(name = "totalValue_Original")
     String totalValue_Original ;
 
@@ -72,8 +69,13 @@ public class Object_Transaction implements Cloneable{
     @ColumnInfo(name = "totalValue_OriginalwFees")
     String totalValue_OriginalwFees ;
 
+
+    @ColumnInfo(name = "transactionDateTime")
+    Date transactionDateTime ;
+
     @ColumnInfo(name = "note")
     String note ;
+
 
 
 
@@ -268,7 +270,19 @@ public class Object_Transaction implements Cloneable{
         if(this.feeInDollar == null || feeInDollar.isEmpty()){
             this.totalValue_OriginalwFees = this.totalValue_Current ;
         } else {
-            this.totalValue_OriginalwFees = new BigDecimal(totalValue_Current).add(new BigDecimal(feeInDollar)).toPlainString() ;
+            // if the transaction type is buy, then we add the fees to TotalValu_OriginalwFees
+            // But if the transaction type is sell, we subtract the fees because
+            // TotalValue_Original  in sell Transaction means how much money we made from that transaction
+            // So if there is fees, it means that fees has to be subtracted from the money we made.
+
+            if(this.type == Object_Transaction.TYPE_SELL){
+                this.totalValue_OriginalwFees = new BigDecimal(totalValue_Current).subtract(new BigDecimal(feeInDollar)).toPlainString() ;
+
+            }else {
+                // when trx is buy
+                this.totalValue_OriginalwFees = new BigDecimal(totalValue_Current).add(new BigDecimal(feeInDollar)).toPlainString() ;
+
+            }
         }
     }
 

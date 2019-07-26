@@ -80,6 +80,7 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
     String coinId ;
     Object_Coin currentCoin ;
     Object_TransactionFullData currentTransactionFD ;
+    Object_Transaction complementTransaction  ;
     Object_Currency currencyObj ;
     Table<String, String, String> table_ExchangePairData ;
     String p24hChange ;
@@ -116,7 +117,6 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
         getReferences() ;
         initTransaction();
         setBasicUi();
-
         getFromServer_CoinTickers();
 
 
@@ -773,7 +773,7 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
         currentTransactionFD.getTransactionObject().setTotalValue_Current(totalValue);
 
         computeTransactionFees(tradingPairPrice_Currency);
-//        makeComplementTransaction_TradingPair() ;
+        makeComplementTransaction_TradingPair(tradingPairPrice_Currency) ;
 
         Log.e(LOG_TAG, Helper_Transaction.getTransactionFullDataObject().getTransactionObject().toString()) ;
 
@@ -788,6 +788,9 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
             @Override
             public void run() {
                 db.transactionDao().insertTransaction(currentTransactionFD.getTransactionObject());
+                if(currentTransactionFD.getTransactionObject().isDeductFromQuoteCoin()){
+                    db.transactionDao().insertTransaction(complementTransaction);
+                }
                 MyGlobals.refreshPortfolioValue(db);
                 Log.d(LOG_TAG, "Transaction is added : " + currentTransactionFD) ;
 
@@ -803,16 +806,17 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
 
     }
 
-    private void makeComplementTransaction_TradingPair(){
+    private void makeComplementTransaction_TradingPair(String tradingPairPrice_Currency){
         if(!currentTransactionFD.getTransactionObject().isDeductFromQuoteCoin()){
             return;
         }
 
-        Object_Transaction complementTransaction = new Object_Transaction() ;
+        complementTransaction = new Object_Transaction() ;
 
-        complementTransaction.setCoinId(currentTransactionFD.getTransactionObject().getTradingPair().toLowerCase());
         complementTransaction.setPortFolioId(MyGlobals.getCurrentPortfolioObj().getPortfolioId());
+        complementTransaction.setCoinId(currentTransactionFD.getTransactionObject().getTradingPair().toLowerCase());
         complementTransaction.setBaseCoinFiat(false);
+
 
         if(currentTransactionFD.getTransactionObject().getType() == Object_Transaction.TYPE_BUY){
             complementTransaction.setType(Object_Transaction.TYPE_SELL);
@@ -823,13 +827,39 @@ public class Activity_Transaction3 extends AppCompatActivity implements MyListen
         complementTransaction.setExchangeId(currentTransactionFD.getTransactionObject().getExchangeId());
         complementTransaction.setTradingPair(currentTransactionFD.getTransactionObject().getCoinId());
 
+        complementTransaction.setSingleCoinPrice_TradingPair(null); //not needed  value = 1/currentTransaction.getSingleCoinPrice_TradingPair
 
-        complementTransaction.setTransactionDateTime(currentTransactionFD.getTransactionObject().getTransactionDateTime());
-        complementTransaction.setNote("");
 
         BigDecimal totalNoOfCoins = new BigDecimal(currentTransactionFD.getTransactionObject().getSingleCoinPrice_TradingPair())
                 .multiply(new BigDecimal(currentTransactionFD.getTransactionObject().getNoOfCoins())) ;
         complementTransaction.setNoOfCoins(totalNoOfCoins.toPlainString());
+
+
+        complementTransaction.setSingleCoinPrice_CurrencyOriginal(tradingPairPrice_Currency);
+        Log.d(LOG_TAG, "TradingPairPrice_Currency : "  + tradingPairPrice_Currency) ;
+
+        BigDecimal totalValue_Original = new BigDecimal(tradingPairPrice_Currency).multiply(totalNoOfCoins) ;
+        Log.d(LOG_TAG, "totalValue_Original : "  + totalValue_Original) ;
+
+        complementTransaction.setTotalValue_Original(new BigDecimal(tradingPairPrice_Currency).multiply(totalNoOfCoins).toPlainString());
+        complementTransaction.setTotalValue_OriginalwFees(complementTransaction.getTotalValue_Original()); //No point of fees in compliment trx
+
+        complementTransaction.setSingleCoinPrice_CurrencyCurrent(tradingPairPrice_Currency);
+        complementTransaction.setTotalValue_Current(complementTransaction.getTotalValue_Original());
+
+        complementTransaction.setTransactionDateTime(currentTransactionFD.getTransactionObject().getTransactionDateTime());
+        complementTransaction.setNote("");
+
+        complementTransaction.setTransactionComplement(true);
+
+
+
+
+
+
+
+
+
 
 
     }
